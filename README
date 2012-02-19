@@ -1,0 +1,3 @@
+timer.jquery is a simple timer plugin for jquery. It shows a text based timer inside a div or span or any other valid HTML element.
+
+This plugin is Work In Progress at the moment. It will only start off a timer in the provided HTML element with no way to stop or pause it right now.

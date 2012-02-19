@@ -13,11 +13,13 @@
   
 */
 
-jQuery.fn.timer = function()
+jQuery.fn.timer = function(options)
 {
     
     var element = $(this);
+    var params = jQuery.extend({showHours: false}, options);
 
+    
     var secs = 0;
     var mins = 0;
     var hrs = 0;
@@ -27,7 +29,6 @@ jQuery.fn.timer = function()
     var timerId = null;
     var isTimerRunning = false;
     var delay = 1000;
-    var showHours = true; //set to false in case of timers less than 60 mins
     var type = "string";
     
     initTimer();
@@ -37,12 +38,13 @@ jQuery.fn.timer = function()
         console.log("start");
         timerId = setInterval(incrementTime, delay);
         isTimerRunning = true;
+        $(element).attr("isTimerRunning", true);            //check this attr later for pausing or restarting
     }
     
     function showTime()
     {
         console.log("show time");
-        if(showHours) $(element).html(hrsStr + ":" + minsStr + ":" + secsStr);
+        if(params.showHours) $(element).html(hrsStr + ":" + minsStr + ":" + secsStr);
         else $(element).html(minsStr + ":" + secsStr);
     }
     
