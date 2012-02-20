@@ -9,8 +9,8 @@
  * Author: Walmik Deshpande
  
  usage:
- $("#timerDiv").initTimer();
- $("#timerDiv").initTimer(120); //provide seconds to start from
+ $("#timerDiv").startTimer();
+ $("#timerDiv").startTimer(120); //provide seconds to start from
  
  $("#timerDiv").pauseTimer();   //not implemented yet
  $("#timerDiv").resetTimer();   //not implemented yet
@@ -26,9 +26,9 @@
     var minsStr = "00";
     var hrsStr = "00";
     var timerId = null;
-    var isTimerRunning = false;
     var delay = 1000;
     var type = "string";
+    var isTimerRunning = false;
     
     
     $.fn.timer = function(method)
@@ -38,31 +38,46 @@
 
         switch(method)
         {
-            case "init":
-                showTimer();
-                secs++;     //to avoid the 1 second gap that gets created if the seconds are not incremented
-                initTimer();
+            case "start":
+                if(!isTimerRunning) startTimer();
                 break;
             
             case "pause":
                 pauseTimer();
+                break;
+            
+            case "resume":
+                if(!isTimerRunning) startTimerInterval();
+                break;
+            
+            case "reset":
+                secs = 0;
+                mins = 0;
+                hrs = 0;
                 break;
         }
 
         function pauseTimer()
         {
             clearInterval(timerId);
+            isTimerRunning = false;
         }
         
-        function initTimer()
+        function startTimer()
         {
             console.log("start");
-            timerId = setInterval(incrementTime, delay);
-            isTimerRunning = true;
-            $(element).attr("isTimerRunning", true);            //check this attr later for pausing or restarting
+            updateTimerDisplay();
+            secs++;     //to avoid the 1 second gap that gets created if the seconds are not incremented
+            startTimerInterval();
         }
         
-        function showTimer()
+        function startTimerInterval()
+        {
+            timerId = setInterval(incrementTime, delay);
+            isTimerRunning = true;
+        }
+        
+        function updateTimerDisplay()
         {
             //console.log("show time");
             if(settings.showHours) $(element).html(hrsStr + ":" + minsStr + ":" + secsStr);
@@ -81,7 +96,7 @@
             if(hrs < 10) hrsStr = "0" + hrs;
             else hrsStr = hrs;
             
-            showTimer();
+            updateTimerDisplay();
             
             secs++;
             

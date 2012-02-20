@@ -3,15 +3,104 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
     <title>jQuery timer plugin</title>
+    <style>
+
+        body
+        {
+            margin: 10px;
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        div
+        {
+            text-align: center;
+        }
+        
+        button
+        {
+            width: 50%;
+            height: 30px;
+            font-weight: bold;
+            color: #f00;
+            cursor: pointer;
+        }
+        
+        p, ul
+        {
+            text-align: left;
+        }
+        
+        li { padding: 5px; }
+        
+        #wrapper
+        {
+            margin: 10px auto;
+            width: 300px;
+        }
+        
+        #t
+        {
+            font-size: 52px;
+
+            color: #333;
+            text-shadow: 1px 1px 1px #fff;
+            text-align: center;
+            background-color: #ccc;
+            margin: 5px;
+            box-shadow: 2px 2px 8px #999;
+            padding: 5px;
+            height: 53px;
+        }
+        
+    </style>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
     <script src="timer.jquery.js"></script>
     <script>
         $(document).ready(function(){
-            $("#t").timer("init");
+            
+            
+            //timer actions
+            $("#btn").click(function(){
+                switch($(this).html().toLowerCase())
+                {
+                    case "start":
+                        $("#t").timer("start");
+                        $(this).html("Pause");
+                        break;
+                    
+                    case "resume":
+                        $("#t").timer("resume");
+                        $(this).html("Pause")
+                        break;
+                    
+                    case "pause":
+                        $("#t").timer("pause");
+                        $(this).html("Resume")
+                        break;
+                }
+                
+            });
         });
     </script>
 </head>
 <body>
-    <div id="t"></div>
+    <div id="wrapper">
+        <h2>jQuery Timer Plugin</h2>
+        <p>A simple timer plugin that makes use of the jQuery library.</p>
+        <h3>Demo</h3>
+        <div id="t"></div>
+        <button id="btn">Start</button>
+        <h3>Usage</h3>
+        <p>The plugin currently has 3 methods which can be called on the DIV element or any other HTML element that you wish
+        to display a timer in. These methods are:</p>
+        <ul>
+            <li>Start: Initializes the timer on the HTML element. Example: $("#divId").timer("start")</li>
+            <li>Pause: Pauses an existing timer. Example: $("#divId").timer("pause")</li>
+            <li>Resume: Resumes a paused timer. Example: $("#divId").timer("resume")</li>
+        </ul>
+        <a href="https://github.com/walmik/timer.jquery/downloads">Download</a> | <a href="http://walmik.info">Author</a>
+    </div>
 </body>
 </html>
