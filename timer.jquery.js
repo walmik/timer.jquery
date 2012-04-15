@@ -31,11 +31,20 @@
     var isTimerRunning = false;
     
     
-    $.fn.timer = function(method)
+    $.fn.timer = function(method, options)
     {
         var element = this;
-        var settings = $.extend({showHours: false});
-
+        var settings = $.extend({showHours: false}, options);
+        
+        if (settings.seconds !== undefined)
+        {
+            hrs = Math.floor(settings.seconds / 3600);
+            mins = Math.floor((settings.seconds - (hrs * 3600))/60);
+            secs = settings.seconds - (hrs * 3600) - (mins * 60);
+            
+            timeToString();
+        }
+        
         switch(method)
         {
             case "start":
@@ -65,9 +74,8 @@
         
         function startTimer()
         {
-            console.log("start");
             updateTimerDisplay();
-            secs++;     //to avoid the 1 second gap that gets created if the seconds are not incremented
+            incrementTime(); //to avoid the 1 second gap that gets created if the seconds are not incremented
             startTimerInterval();
         }
         
@@ -79,14 +87,13 @@
         
         function updateTimerDisplay()
         {
-            //console.log("show time");
+            if(hrs > 0) settings.showHours = true;
             if(settings.showHours) $(element).html(hrsStr + ":" + minsStr + ":" + secsStr);
             else $(element).html(minsStr + ":" + secsStr);
         }
         
-        function incrementTime()
+        function timeToString()
         {
-            //console.log("increment time");
             if(secs < 10) secsStr = "0" + secs;
             else secsStr = secs;
             
@@ -95,11 +102,14 @@
             
             if(hrs < 10) hrsStr = "0" + hrs;
             else hrsStr = hrs;
-            
+        }
+        
+        function incrementTime()
+        {
+            timeToString();
             updateTimerDisplay();
             
             secs++;
-            
             if(secs % 60 == 0)
             {
                 mins++;
