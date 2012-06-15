@@ -1,4 +1,2 @@
-timer.jquery is a simple timer plugin for jquery. It shows a text based timer inside a div or span or any other valid HTML element.
-Currently it has only 3 methods as of now, start, pause and resume.
-
-TODO: enable a functionality to initialize the timer with a number of seconds or a time format like 03:20:10
+timer.jquery is a simple timer plugin using jquery. It shows a text based timer inside a div or span or any other valid HTML element.
+It has 3 methods => start, pause and resume. You can specify the number of seconds to initialize the timer from.
