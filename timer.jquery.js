@@ -64,6 +64,10 @@
                 mins = 0;
                 hrs = 0;
                 break;
+            
+            case "get_seconds":
+                return secs;
+                break;
         }
 
         function pauseTimer()

@@ -92,7 +92,10 @@
                         $(this).html("Resume")
                         break;
                 }
-                
+            });
+            
+            $("#get-seconds-btn").click(function(){
+                console.log($("#t").timer("get_seconds"));
             });
         });
     </script>
@@ -105,14 +108,16 @@
         <div id="t"></div>
         <input type="text" maxlength="5" size="4" name="s" value="0" /> 
         <button id="btn">Start</button>
+        <button id="get-seconds-btn">Get seconds</button>
         <a href="./">Reset</a>
         <h3>Usage</h3>
-        <p>The plugin currently has 3 methods which can be called on the DIV element or any other HTML element that you wish
+        <p>The plugin currently has 4 methods which can be called on the DIV element or any other HTML element that you wish
         to display a timer in. These methods are:</p>
         <ul>
             <li>Start: Initializes the timer on the HTML element. Example: $("#divId").timer("start"). You can even start the timer from a particular time by specifying seconds. $("#divId").timer("start", 3400)</li>
             <li>Pause: Pauses an existing timer. Example: $("#divId").timer("pause")</li>
             <li>Resume: Resumes a paused timer. Example: $("#divId").timer("resume")</li>
+            <li>Get Seconds: Returns the currently displayed time in seconds. Example: $("#divId").timer("get_seconds")</li>
         </ul>
         <a href="https://github.com/walmik/timer.jquery/downloads">Download</a> | <a href="http://walmik.info">Author</a>
     </div>
