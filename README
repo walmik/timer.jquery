@@ -2,3 +2,5 @@ timer.jquery is a simple timer plugin using jquery. It shows a text based timer 
 It has 4 methods => start, pause, resume and get_seconds.
 
 You can specify the number of seconds to initialize the timer from and get the currently displayed time in seconds.
+
+To initialize it from a specific number of seconds, use $('#divId').timer('start', {seconds: 3000});
