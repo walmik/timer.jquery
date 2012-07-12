@@ -9,12 +9,11 @@
  * Author: Walmik Deshpande
  
  usage:
- $("#timerDiv").startTimer();
- $("#timerDiv").startTimer(120); //provide seconds to start from
+ $("#timerDiv").timer('start');
+ $("#timerDiv").timer('start', {seconds: 100}); //provide 100 seconds to start from
+ $("#timerDiv").timer('pause');
+ $("#timerDiv").timer('reset');
  
- $("#timerDiv").pauseTimer();   //not implemented yet
- $("#timerDiv").resetTimer();   //not implemented yet
- $("#timerDiv").startTimer();   //not implemented yet
   
 */
 ;(function($)
@@ -66,7 +65,7 @@
                 break;
             
             case "get_seconds":
-                return secs;
+                return ( (hrs*3600) + (mins*60) + secs - 1 );
                 break;
         }
 
