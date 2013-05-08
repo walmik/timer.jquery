@@ -21,5 +21,4 @@ jQuery(function($) {
 ```
 
 ## Demo
-_(Coming soon)_
-[Click here]: http://walmik.info/demos/timer.jquery/ for a demo
+http://walmik.info/demos/timer.jquery/
