@@ -1,21 +1,19 @@
-/*!
- * jQuery timer plugin: display a timer inside a div or span or any valid html tag
- * Examples and documentation at: http://walmik.info/demos/timer.jquery
- * version 1 (20-FEB-2012)
- * Requires jQuery v1.3.2 or later
- * Dual licensed under the MIT and GPL licenses:
- * http://www.opensource.org/licenses/mit-license.php
- * http://www.gnu.org/licenses/gpl.html
- * Author: Walmik Deshpande
- 
- usage:
+/*
+ * timer.jquery
+ * https://github.com/walmik/timer.jquery
+ *
+ * Copyright (c) 2013 Walmik Deshpande
+ * Licensed under the MIT license.
+ */
+
+ /*
+ Usage:
  $("#timerDiv").timer('start');
  $("#timerDiv").timer('start', {seconds: 100}); //provide 100 seconds to start from
  $("#timerDiv").timer('pause');
  $("#timerDiv").timer('reset');
- 
-  
-*/
+ */
+
 ;(function($)
 {
     var secs = 0;
