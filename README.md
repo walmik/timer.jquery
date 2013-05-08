@@ -3,10 +3,9 @@
 Start/Stop/Resume a timer inside any HTML element.
 
 ## Getting Started
-Download the [production version][min] or the [development version][max].
+Download the [production version][min].
 
-[min]: https://raw.github.com/walmik/timer.jquery/master/dist/timer.jquery.min.js
-[max]: https://raw.github.com/walmik/timer.jquery/master/dist/timer.jquery.js
+[min]: https://github.com/walmik/timer.jquery/archive/master.zip
 
 In your web page:
 
