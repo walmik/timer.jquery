@@ -16,16 +16,16 @@
 
 ;(function($)
 {
-    var secs = 0;
-    var mins = 0;
-    var hrs = 0;
-    var secsStr = "00";
-    var minsStr = "00";
-    var hrsStr = "00";
-    var timerId = null;
-    var delay = 1000;
-    var type = "string";
-    var isTimerRunning = false;
+    var secs = 0,
+        mins = 0,
+        hrs = 0,
+        secsStr = "00",
+        minsStr = "00",
+        hrsStr = "00",
+        timerId = null,
+        delay = 1000,
+        type = "string",
+        isTimerRunning = false;
     
     
     $.fn.timer = function(method, options)

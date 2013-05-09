@@ -4,7 +4,7 @@
     <title>jQuery timer plugin | Start/Stop/Resume timer on any HTML element</title>
     <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
     <script src="libs/jquery/jquery.js" type="text/javascript"></script>
-    <script src="src/timer.jquery.js"></script>
+    <script src="dist/timer.jquery.min.js"></script>
     <script>
         $(document).ready(function(){
             
@@ -23,16 +23,19 @@
                         $("#t").timer("start", {seconds:s});
                         $(this).html("Pause");
                         $("input[name='s']").attr("disabled", "disabled");
+                        $("#t").addClass("badge-important");
                         break;
                     
                     case "resume":
                         $("#t").timer("resume");
                         $(this).html("Pause")
+                        $("#t").addClass("badge-important");
                         break;
                     
                     case "pause":
                         $("#t").timer("pause");
                         $(this).html("Resume")
+                        $("#t").removeClass("badge-important");
                         break;
                 }
             });

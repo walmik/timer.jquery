@@ -7,7 +7,7 @@ module.exports = function (grunt) {
           },
           dist: {
             src: ['src/timer.jquery.js'],
-            dest: 'dist/timer.query.min.js'
+            dest: 'dist/timer.jquery.min.js'
           },
         },
         watch: {
