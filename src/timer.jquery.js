@@ -16,28 +16,30 @@
 
 ;(function($)
 {
-    var secs = 0,
-        mins = 0,
-        hrs = 0,
+    var secsNum = 0,
+        minsNum = 0,
+        hrsNum = 0,
         secsStr = "00",
         minsStr = "00",
         hrsStr = "00",
         timerId = null,
         delay = 1000,
-        type = "string",
         isTimerRunning = false;
     
-    
+    /*
+        @method STRING = start,pause,resume
+        @options OBJECT = { seconds NUMBER: 2000 }
+    */
     $.fn.timer = function(method, options)
     {
-        var element = this;
-        var settings = $.extend({showHours: false}, options);
+        var element = this,
+            settings = $.extend({ showHours: false }, options );
         
         if (settings.seconds !== undefined)
         {
-            hrs = Math.floor(settings.seconds / 3600);
-            mins = Math.floor((settings.seconds - (hrs * 3600))/60);
-            secs = settings.seconds - (hrs * 3600) - (mins * 60);
+            hrsNum = Math.floor(settings.seconds / 3600);
+            minsNum = Math.floor((settings.seconds - (hrsNum * 3600))/60);
+            secsNum = settings.seconds - (hrsNum * 3600) - (minsNum * 60);
             
             timeToString();
         }
@@ -57,13 +59,13 @@
                 break;
             
             case "reset":
-                secs = 0;
-                mins = 0;
-                hrs = 0;
+                secsNum = 0;
+                minsNum = 0;
+                hrsNum = 0;
                 break;
             
             case "get_seconds":
-                return ( (hrs*3600) + (mins*60) + secs - 1 );
+                return ( (hrsNum*3600) + (minsNum*60) + secsNum - 1 );
                 break;
         }
 
@@ -88,21 +90,16 @@
         
         function updateTimerDisplay()
         {
-            if(hrs > 0) settings.showHours = true;
+            if(hrsNum > 0) settings.showHours = true;
             if(settings.showHours) $(element).html(hrsStr + ":" + minsStr + ":" + secsStr);
             else $(element).html(minsStr + ":" + secsStr);
         }
         
         function timeToString()
         {
-            if(secs < 10) secsStr = "0" + secs;
-            else secsStr = secs;
-            
-            if(mins < 10) minsStr = "0" + mins;
-            else minsStr = mins;
-            
-            if(hrs < 10) hrsStr = "0" + hrs;
-            else hrsStr = hrs;
+            secsStr = secsNum < 10 ? "0" + secsNum : secsNum;
+            minsStr = minsNum < 10 ? "0" + minsNum : minsNum;
+            hrsStr = hrsNum < 10 ? "0" + hrsNum : hrsNum;
         }
         
         function incrementTime()
@@ -110,18 +107,18 @@
             timeToString();
             updateTimerDisplay();
             
-            secs++;
-            if(secs % 60 == 0)
+            secsNum++;
+            if(secsNum % 60 == 0)
             {
-                mins++;
-                secs = 0;
+                minsNum++;
+                secsNum = 0;
             }
             
-            //handle time exceeding 60 mins!
-            if(mins > 59 && mins % 60 == 0)
+            //handle time exceeding 60 minsNum!
+            if(minsNum > 59 && minsNum % 60 == 0)
             {
-                hrs++;
-                mins = 0;
+                hrsNum++;
+                minsNum = 0;
             }
         }
         
