@@ -57,7 +57,6 @@
         break;
       
       case "pause":
-        console.log(this.timerId);
         this.pauseTimer();
         break;
       
