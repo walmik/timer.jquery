@@ -1,126 +1,148 @@
 /*
- * timer.jquery
- * https://github.com/walmik/timer.jquery
- *
- * Copyright (c) 2013 Walmik Deshpande
- * Licensed under the MIT license.
+ * =======================
+ * jQuery Timer Plugin
+ * =======================
+ * 
+ * Depends on:		jquery
+ * 
+ * --------
+ * Summary:
+ * --------
+ * Start/Stop/Resume a time in any HTML element
  */
 
- /*
- Usage:
- $("#timerDiv").timer('start');
- $("#timerDiv").timer('start', {seconds: 100}); //provide 100 seconds to start from
- $("#timerDiv").timer('pause');
- $("#timerDiv").timer('reset');
- */
+ (function($){
 
-;(function($)
-{
-    var secsNum = 0,
-        minsNum = 0,
-        hrsNum = 0,
-        secsStr = "00",
-        minsStr = "00",
-        hrsStr = "00",
-        timerId = null,
-        delay = 1000,
-        isTimerRunning = false;
-    
-    /*
-        @method STRING = start,pause,resume
-        @options OBJECT = { seconds NUMBER: 2000 }
-    */
-    $.fn.timer = function(method, options)
-    {
-        var element = this,
-            settings = $.extend({ showHours: false }, options );
-        
-        if (settings.seconds !== undefined)
-        {
-            hrsNum = Math.floor(settings.seconds / 3600);
-            minsNum = Math.floor((settings.seconds - (hrsNum * 3600))/60);
-            secsNum = settings.seconds - (hrsNum * 3600) - (minsNum * 60);
-            
-            timeToString();
-        }
-        
-        switch(method)
-        {
-            case "start":
-                if(!isTimerRunning) startTimer();
-                break;
-            
-            case "pause":
-                pauseTimer();
-                break;
-            
-            case "resume":
-                if(!isTimerRunning) startTimerInterval();
-                break;
-            
-            case "reset":
-                secsNum = 0;
-                minsNum = 0;
-                hrsNum = 0;
-                break;
-            
-            case "get_seconds":
-                return ( (hrsNum*3600) + (minsNum*60) + secsNum - 1 );
-                break;
-        }
+	var jQueryTimer = function(element, options) {
+		var defaults = {
+			action: 'start'
+		};
 
-        function pauseTimer()
-        {
-            clearInterval(timerId);
-            isTimerRunning = false;
-        }
-        
-        function startTimer()
-        {
-            updateTimerDisplay();
-            incrementTime(); //to avoid the 1 second gap that gets created if the seconds are not incremented
-            startTimerInterval();
-        }
-        
-        function startTimerInterval()
-        {
-            timerId = setInterval(incrementTime, delay);
-            isTimerRunning = true;
-        }
-        
-        function updateTimerDisplay()
-        {
-            if(hrsNum > 0) settings.showHours = true;
-            if(settings.showHours) $(element).html(hrsStr + ":" + minsStr + ":" + secsStr);
-            else $(element).html(minsStr + ":" + secsStr);
-        }
-        
-        function timeToString()
-        {
-            secsStr = secsNum < 10 ? "0" + secsNum : secsNum;
-            minsStr = minsNum < 10 ? "0" + minsNum : minsNum;
-            hrsStr = hrsNum < 10 ? "0" + hrsNum : hrsNum;
-        }
-        
-        function incrementTime()
-        {
-            timeToString();
-            updateTimerDisplay();
-            
-            secsNum++;
-            if(secsNum % 60 == 0)
-            {
-                minsNum++;
-                secsNum = 0;
-            }
-            
-            //handle time exceeding 60 minsNum!
-            if(minsNum > 59 && minsNum % 60 == 0)
-            {
-                hrsNum++;
-                minsNum = 0;
-            }
-        }
-        
+		this.options = $.extend(defaults, options);
+		this.$el = $(element);
+
+
+    //setup
+    this.secsNum           = 0;
+    this.minsNum           = 0;
+    this.hrsNum            = 0;
+    this.secsStr           = "00";
+    this.minsStr           = "00";
+    this.hrsStr            = "00";
+    this.timerId           = null;
+    this.delay             = 1000;
+    this.isTimerRunning    = false;
+
+    if (this.options.seconds !== undefined) {
+      this.hrsNum = Math.floor(this.options.seconds / 3600);
+      this.minsNum = Math.floor((this.options.seconds - (this.hrsNum * 3600))/60);
+      this.secsNum = this.options.seconds - (this.hrsNum * 3600) - (this.minsNum * 60);
+      
+      this.timeToString();
     }
-})(jQuery);
+		
+		//this.init();
+	};
+
+	/*
+		Initialize the plugin with common properties
+	*/
+	jQueryTimer.prototype.init = function() {
+    
+    
+    switch(this.options.action)
+    {
+      case "start":
+        if(!this.isTimerRunning) this.startTimer();
+        break;
+      
+      case "pause":
+        console.log(this.timerId);
+        this.pauseTimer();
+        break;
+      
+      case "resume":
+        if(!this.isTimerRunning) this.startTimerInterval();
+        break;
+      
+      case "reset":
+        this.secsNum = 0;
+        this.minsNum = 0;
+        this.hrsNum = 0;
+        break;
+      
+      case "get_seconds":
+        return ( (this.hrsNum*3600) + (this.minsNum*60) + this.secsNum - 1 );
+        break;
+    }
+	};
+
+  jQueryTimer.prototype.pauseTimer = function () {
+    clearInterval(this.timerId);
+    this.isTimerRunning = false;
+  }
+  
+  jQueryTimer.prototype.startTimer = function () {
+    this.updateTimerDisplay();
+    this.incrementTime(); //to avoid the 1 second gap that gets created if the seconds are not incremented
+    this.startTimerInterval();
+  }
+  
+  jQueryTimer.prototype.startTimerInterval = function () {
+    var self = this;
+    this.timerId = setInterval(function() { self.incrementTime() }, this.delay);
+    this.isTimerRunning = true;
+  }
+  
+  jQueryTimer.prototype.updateTimerDisplay = function () {
+    if(this.hrsNum > 0) this.options.showHours = true;
+    if(this.options.showHours) this.$el.html(this.hrsStr + ":" + this.minsStr + ":" + this.secsStr);
+    else this.$el.html(this.minsStr + ":" + this.secsStr);
+  }
+  
+  jQueryTimer.prototype.timeToString = function () {
+    this.secsStr = this.secsNum < 10 ? "0" + this.secsNum : this.secsNum;
+    this.minsStr = this.minsNum < 10 ? "0" + this.minsNum : this.minsNum;
+    this.hrsStr = this.hrsNum < 10 ? "0" + this.hrsNum : this.hrsNum;
+  }
+  
+  jQueryTimer.prototype.incrementTime = function () {
+    this.timeToString();
+    this.updateTimerDisplay();
+    
+    this.secsNum++;
+    if(this.secsNum % 60 == 0) {
+      this.minsNum++;
+      this.secsNum = 0;
+    }
+    
+    //handle time exceeding 60 minsNum!
+    if(this.minsNum > 59 && this.minsNum % 60 == 0)
+    {
+      this.hrsNum++;
+      this.minsNum = 0;
+    }
+  }
+	
+
+	///////////////////////////////////////////////////
+	///////////////INITIALIZE THE PLUGIN///////////////
+  var pluginName = 'timer';
+	$.fn[pluginName] = function(options) {
+
+    // only allow the plugin to be instantiated once
+    if (!( this.data( 'plugin_' + pluginName ) instanceof jQueryTimer )) {
+      this.data( 'plugin_' + pluginName, new jQueryTimer( this, options ) );
+    }
+
+    var instance = this.data( 'plugin_' + pluginName );
+    instance.options.action = options.action;
+
+    instance.init();
+
+	};
+	////////////////////////////////////////////////////
+	////////////////////////////////////////////////////
+
+
+ })(jQuery);
