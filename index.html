@@ -20,10 +20,10 @@
         <p class="lead">The plugin currently has 4 methods which can be called on the DIV element or any other HTML element that you wish
         to display a timer in. These methods are:</p>
         <ul>
-            <li>Start: Initializes the timer on the HTML element. Example: $("#divId").timer("start"). You can even start the timer from a particular time by specifying seconds. $("#divId").timer("start", {seconds: 3400})</li>
+            <li>Start: Initializes the timer on the HTML element. Example: $("#divId").timer("start"). You can even start the timer from a particular time by specifying seconds. $("#divId").timer({action:"start", seconds: 3400})</li>
             <li>Pause: Pauses an existing timer. Example: $("#divId").timer("pause")</li>
             <li>Resume: Resumes a paused timer. Example: $("#divId").timer("resume")</li>
-            <li>Get Seconds: Returns the currently displayed time in seconds. Example: $("#divId").timer("get_seconds")</li>
+            <!-- <li>Get Seconds: Returns the currently displayed time in seconds. Example: $("#divId").timer("get_seconds")</li> -->
         </ul>
         <br />
         <a class="btn btn-inverse" href="https://github.com/walmik/timer.jquery/downloads">Download</a> 
@@ -47,6 +47,7 @@
                             s = 0;
                             $("input[name='s']").val(0);
                         }
+                        //you can specify action via object or a string
                         $("#t").timer({
                             action: 'start', 
                             seconds:s
@@ -57,12 +58,14 @@
                         break;
                     
                     case "resume":
-                        $("#t").timer({action: 'resume'});
+                        //you can specify action via string
+                        $("#t").timer('resume');
                         $(this).html("Pause")
                         $("#t").addClass("badge-important");
                         break;
                     
                     case "pause":
+                        //you can specify action via object
                         $("#t").timer({action: 'pause'});
                         $(this).html("Resume")
                         $("#t").removeClass("badge-important");

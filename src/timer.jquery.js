@@ -71,7 +71,7 @@
         break;
       
       case "get_seconds":
-        return ( (this.hrsNum*3600) + (this.minsNum*60) + this.secsNum - 1 );
+        return ((this.hrsNum*3600) + (this.minsNum*60) + this.secsNum - 1);
         break;
     }
 	};
@@ -128,7 +128,9 @@
 	///////////////INITIALIZE THE PLUGIN///////////////
   var pluginName = 'timer';
 	$.fn[pluginName] = function(options) {
-
+    if (typeof options == 'string') {
+      options = { action: options }
+    }
     // only allow the plugin to be instantiated once
     if (!( this.data( 'plugin_' + pluginName ) instanceof jQueryTimer )) {
       this.data( 'plugin_' + pluginName, new jQueryTimer( this, options ) );
