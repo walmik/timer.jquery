@@ -14,7 +14,7 @@ In your web page:
 <script src="src/timer.jquery.js"></script>
 <script>
 jQuery(function($) {
-  $("#div-id").timer("start", {seconds: 3000});
+  $("#div-id").timer({ action: "start", seconds: 3000 });
 });
 </script>
 ```
