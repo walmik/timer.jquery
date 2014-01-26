@@ -26,9 +26,9 @@
     this.secsNum           = 0;
     this.minsNum           = 0;
     this.hrsNum            = 0;
-    this.secsStr           = "00";
-    this.minsStr           = "00";
-    this.hrsStr            = "00";
+    this.secsStr           = "0 sec";
+    this.minsStr           = "";
+    this.hrsStr            = "";
     this.timerId           = null;
     this.delay             = 1000;
     this.isTimerRunning    = false;
@@ -94,15 +94,22 @@
   }
   
   jQueryTimer.prototype.updateTimerDisplay = function () {
-    if(this.hrsNum > 0) this.options.showHours = true;
-    if(this.options.showHours) this.$el.html(this.hrsStr + ":" + this.minsStr + ":" + this.secsStr);
-    else this.$el.html(this.minsStr + ":" + this.secsStr);
+    //if(this.hrsNum > 0) this.options.showHours = true;
+    /*if(this.options.showHours) this.$el.html(this.hrsStr + ":" + this.minsStr + ":" + this.secsStr);
+    else this.$el.html(this.minsStr + ":" + this.secsStr);*/
+    if(this.hrsNum == 0) {
+      if(this.secsNum < 60 && this.minsNum == 0) this.$el.html(this.secsStr + ' sec');
+      else this.$el.html(this.minsStr + ":" + this.secsStr + ' min');
+    } else {
+      this.$el.html(this.hrsStr + ':' + this.minsStr + ':' + this.secsStr);
+    }
+    
   }
   
   jQueryTimer.prototype.timeToString = function () {
-    this.secsStr = this.secsNum < 10 ? "0" + this.secsNum : this.secsNum;
-    this.minsStr = this.minsNum < 10 ? "0" + this.minsNum : this.minsNum;
-    this.hrsStr = this.hrsNum < 10 ? "0" + this.hrsNum : this.hrsNum;
+    this.secsStr = (this.minsNum > 0 && this.secsNum < 10) ?  '0' + this.secsNum : this.secsNum;
+    this.minsStr = (this.hrsNum > 0 && this.minsNum < 10) ?  '0' + this.minsNum : this.minsNum;
+    this.hrsStr = this.hrsNum;
   }
   
   jQueryTimer.prototype.incrementTime = function () {
