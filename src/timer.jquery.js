@@ -23,6 +23,17 @@
 		this.$el = $(element);
 
 
+    
+
+    this.init();
+		
+	};
+
+	/*
+		Initialize the plugin with common properties
+	*/
+	jQueryTimer.prototype.init = function() {
+
     //setup
     this.secsNum           = 0;
     this.minsNum           = 0;
@@ -41,44 +52,11 @@
       
       this.timeToString();
     }
-
-    this.init();
-		
-	};
-
-	/*
-		Initialize the plugin with common properties
-	*/
-	jQueryTimer.prototype.init = function() {
     
     this.elType = this.$el.prop('tagName').toLowerCase();
 
     if(this.options.editable) this.initEditable();
 
-    switch(this.options.action)
-    {
-      case "start":
-        if(!this.isTimerRunning) this.start();
-        break;
-      
-      case "pause":
-        this.pause();
-        break;
-      
-      case "resume":
-        this.resume();
-        break;
-      
-      case "reset":
-        this.secsNum = 0;
-        this.minsNum = 0;
-        this.hrsNum = 0;
-        break;
-      
-      case "get_seconds":
-        return ((this.hrsNum*3600) + (this.minsNum*60) + this.secsNum - 1);
-        break;
-    }
 	};
 
   jQueryTimer.prototype.start = function () {
@@ -95,6 +73,7 @@
   jQueryTimer.prototype.resume = function () {
     if(!this.isTimerRunning) this.startTimerInterval();
   }
+
   
   
   
@@ -186,12 +165,22 @@
 
     if(this.elType == 'input' || this.elType == 'textarea') this.$el.val(displayStr);
     else this.$el.html(displayStr);
+
+    //assign the number of seconds to this element's data attribute for seconds
+    this.$el.data('seconds', this.get_seconds());
   }
   
   jQueryTimer.prototype.timeToString = function () {
     this.secsStr = ((this.minsNum > 0 || this.hrsNum > 0) && this.secsNum < 10) ?  '0' + this.secsNum : this.secsNum;
     this.minsStr = (this.hrsNum > 0 && this.minsNum < 10) ?  '0' + this.minsNum : this.minsNum;
     this.hrsStr = this.hrsNum;
+  }
+
+  /*
+    Get the timer's value in seconds
+  */
+  jQueryTimer.prototype.get_seconds = function () {
+    return ((this.hrsNum*3600) + (this.minsNum*60) + this.secsNum);
   }
   
   jQueryTimer.prototype.incrementTime = function () {
@@ -213,36 +202,33 @@
   }
 	
 
-	///////////////////////////////////////////////////
-	///////////////INITIALIZE THE PLUGIN///////////////
+
+
+
+  ///////////////////////////////////////////////////
+  ///////////////INITIALIZE THE PLUGIN///////////////
   var pluginName = 'timer';
-	$.fn[pluginName] = function(options) {
-    if (typeof options == 'string') {
-      options = { action: options }
-    }
-    // only allow the plugin to be instantiated once
-    if (!( this.data( 'plugin_' + pluginName ) instanceof jQueryTimer )) {
-      this.data( 'plugin_' + pluginName, new jQueryTimer( this, options ) );
-    }
+  $.fn[pluginName] = function(options) {
 
-    var instance = this.data( 'plugin_' + pluginName );
-    
-    if (typeof options == 'string') {
-      if (typeof instance[options] == 'function') {
-        /*
-          Pass in 'instance' to provide for the value of 'this' in the called function
-        */
-        instance[options].call(instance);
+    return this.each(function() {
+
+      // only allow the plugin to be instantiated once
+      if (!( $.data( this, 'plugin_' + pluginName ) instanceof jQueryTimer )) {
+        $.data( this, 'plugin_' + pluginName, new jQueryTimer(this, options) );
       }
-    }
 
-    
+      var instance = $.data( this, 'plugin_' + pluginName );
 
-    return this;
+      if(typeof options == 'string') {
+        if(typeof instance[options] == 'function') {
+          instance[options].call(instance); //passing in 'instance' to provide for the value of 'this' in the called function
+        }
+      }
+    });
+  }
+  ////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////
 
-	};
-	////////////////////////////////////////////////////
-	////////////////////////////////////////////////////
 
 
  })(jQuery);
