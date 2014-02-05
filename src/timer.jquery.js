@@ -41,6 +41,8 @@
       
       this.timeToString();
     }
+
+    this.init();
 		
 	};
 
@@ -56,15 +58,15 @@
     switch(this.options.action)
     {
       case "start":
-        if(!this.isTimerRunning) this.startTimer();
+        if(!this.isTimerRunning) this.start();
         break;
       
       case "pause":
-        this.pauseTimer();
+        this.pause();
         break;
       
       case "resume":
-        if(!this.isTimerRunning) this.startTimerInterval();
+        this.resume();
         break;
       
       case "reset":
@@ -79,16 +81,22 @@
     }
 	};
 
-  jQueryTimer.prototype.pauseTimer = function () {
-    clearInterval(this.timerId);
-    this.isTimerRunning = false;
-  }
-  
-  jQueryTimer.prototype.startTimer = function () {
+  jQueryTimer.prototype.start = function () {
     this.updateTimerDisplay();
     this.incrementTime(); //to avoid the 1 second gap that gets created if the seconds are not incremented
     this.startTimerInterval();
   }
+
+  jQueryTimer.prototype.pause = function () {
+    clearInterval(this.timerId);
+    this.isTimerRunning = false;
+  }
+
+  jQueryTimer.prototype.resume = function () {
+    if(!this.isTimerRunning) this.startTimerInterval();
+  }
+  
+  
   
   jQueryTimer.prototype.startTimerInterval = function () {
     var self = this;
@@ -102,11 +110,25 @@
   jQueryTimer.prototype.initEditable = function () {
     var self = this;
     this.$el.on('focus', function(){
-      self.$el.timer('pause');
+      self.pause();
     });
 
     this.$el.on('blur', function(){
-      self.$el.timer('resume');
+      console.log('blur');
+      //get the value and update the number of seconds if necessary
+      var timerDisplayStr;
+
+      if(this.elType == 'input' || this.elType == 'textarea') timerDisplayStr = $(this).val();
+      else timerDisplayStr = $(this).html();
+
+      console.log(timerDisplayStr);
+
+      //check for seconds
+
+      //check for minutes
+
+      //check for hours
+      self.resume();
     });
   }
   
@@ -164,9 +186,17 @@
     }
 
     var instance = this.data( 'plugin_' + pluginName );
-    instance.options.action = options.action;
+    
+    if (typeof options == 'string') {
+      if (typeof instance[options] == 'function') {
+        /*
+          Pass in 'instance' to provide for the value of 'this' in the called function
+        */
+        instance[options].call(instance);
+      }
+    }
 
-    instance.init();
+    
 
     return this;
 
