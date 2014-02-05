@@ -15,7 +15,8 @@
 
 	var jQueryTimer = function(element, options) {
 		var defaults = {
-			action: 'start'
+			action: 'start',
+      editable: true   //this will let users make changes to the time
 		};
 
 		this.options = $.extend(defaults, options);
@@ -41,7 +42,6 @@
       this.timeToString();
     }
 		
-		//this.init();
 	};
 
 	/*
@@ -50,6 +50,8 @@
 	jQueryTimer.prototype.init = function() {
     
     this.elType = this.$el.prop('tagName').toLowerCase();
+
+    if(this.options.editable) this.initEditable();
 
     switch(this.options.action)
     {
@@ -92,6 +94,20 @@
     var self = this;
     this.timerId = setInterval(function() { self.incrementTime() }, this.delay);
     this.isTimerRunning = true;
+  }
+
+  /*
+    Allow users to click and edit the timer value by typing in
+  */
+  jQueryTimer.prototype.initEditable = function () {
+    var self = this;
+    this.$el.on('focus', function(){
+      self.$el.timer('pause');
+    });
+
+    this.$el.on('blur', function(){
+      self.$el.timer('resume');
+    });
   }
   
   jQueryTimer.prototype.updateTimerDisplay = function () {
