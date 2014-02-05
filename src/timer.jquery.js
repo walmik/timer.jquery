@@ -114,20 +114,60 @@
     });
 
     this.$el.on('blur', function(){
-      console.log('blur');
       //get the value and update the number of seconds if necessary
       var timerDisplayStr;
 
-      if(this.elType == 'input' || this.elType == 'textarea') timerDisplayStr = $(this).val();
-      else timerDisplayStr = $(this).html();
-
-      console.log(timerDisplayStr);
+      //remove any spaces while getting the string
+      if(self.elType == 'input' || self.elType == 'textarea') timerDisplayStr = $(this).val().replace(/\s+/, '');
+      else timerDisplayStr = $(this).html().replace(/\s+/, '');
 
       //check for seconds
-
       //check for minutes
-
       //check for hours
+
+      var matchSeconds  = /\d+sec/,
+          matchMinutes  = /\d+\:\d+min/,
+          matchHours    = /\d+\:\d+\:\d+/;
+
+      if(timerDisplayStr.match(matchSeconds)) {
+        //extract the seconds from this
+        self.secsNum = parseInt(timerDisplayStr.replace(/sec/, ''), 10) + 1;
+        if (self.secsNum > 59) {
+          self.secsNum = 00;
+          self.minsNum++;
+        }
+      } else if(timerDisplayStr.match(matchMinutes)) {
+        timerDisplayStr = timerDisplayStr.replace(/min/, '');
+        var timerDisplayArr = timerDisplayStr.split(':');
+        self.minsNum = parseInt(timerDisplayArr[0], 10);
+        self.secsNum = parseInt(timerDisplayArr[1], 10) + 1;
+
+        if (self.secsNum > 59) {
+          self.secsNum = 00;
+          self.minsNum++;
+        }
+
+        if (self.minsNum > 59) {
+          self.minsNum = 00;
+          self.hrsNum++;
+        }
+
+      } else if(timerDisplayStr.match(matchHours)) {
+        var timerDisplayArr = timerDisplayStr.split(':');
+        self.hrsNum = parseInt(timerDisplayArr[0], 10);
+        self.minsNum = parseInt(timerDisplayArr[1], 10);
+        self.secsNum = parseInt(timerDisplayArr[2], 10) + 1;
+
+        if (self.secsNum > 59) {
+          self.secsNum = 00;
+          self.minsNum++;
+        }
+
+        if (self.minsNum > 59) {
+          self.minsNum = 00;
+          self.hrsNum++;
+        }
+      }
       self.resume();
     });
   }
@@ -149,7 +189,7 @@
   }
   
   jQueryTimer.prototype.timeToString = function () {
-    this.secsStr = (this.minsNum > 0 && this.secsNum < 10) ?  '0' + this.secsNum : this.secsNum;
+    this.secsStr = ((this.minsNum > 0 || this.hrsNum > 0) && this.secsNum < 10) ?  '0' + this.secsNum : this.secsNum;
     this.minsStr = (this.hrsNum > 0 && this.minsNum < 10) ?  '0' + this.minsNum : this.minsNum;
     this.hrsStr = this.hrsNum;
   }
