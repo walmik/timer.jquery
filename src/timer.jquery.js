@@ -49,7 +49,8 @@
 	*/
 	jQueryTimer.prototype.init = function() {
     
-    
+    this.elType = this.$el.prop('tagName').toLowerCase();
+
     switch(this.options.action)
     {
       case "start":
@@ -97,13 +98,16 @@
     //if(this.hrsNum > 0) this.options.showHours = true;
     /*if(this.options.showHours) this.$el.html(this.hrsStr + ":" + this.minsStr + ":" + this.secsStr);
     else this.$el.html(this.minsStr + ":" + this.secsStr);*/
+    var displayStr;
     if(this.hrsNum == 0) {
-      if(this.secsNum < 60 && this.minsNum == 0) this.$el.html(this.secsStr + ' sec');
-      else this.$el.html(this.minsStr + ":" + this.secsStr + ' min');
+      if(this.secsNum < 60 && this.minsNum == 0) displayStr = this.secsStr + ' sec';
+      else displayStr = this.minsStr + ":" + this.secsStr + ' min';
     } else {
-      this.$el.html(this.hrsStr + ':' + this.minsStr + ':' + this.secsStr);
+      displayStr = this.hrsStr + ':' + this.minsStr + ':' + this.secsStr;
     }
-    
+
+    if(this.elType == 'input' || this.elType == 'textarea') this.$el.val(displayStr);
+    else this.$el.html(displayStr);
   }
   
   jQueryTimer.prototype.timeToString = function () {
