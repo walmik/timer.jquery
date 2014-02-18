@@ -2,79 +2,74 @@
 <html>
 <head>
     <title>jQuery timer plugin | Start/Stop/Resume timer on any HTML element</title>
-    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
-    
+    <link href="bootstrap.min.css" rel="stylesheet">
+
 </head>
-<body>
+<body>`
     <div class="container">
-        <h1>jQuery Timer Plugin</h1>
-        <p class="lead">Start/Stop/Resume a timer inside any HTML element.</p>
-        <h3>Demo</h3>
-        <div id="t" class="badge">0 sec</div>
-        <input type="text" class="input-medium search-query" maxlength="5" name="s" placeholder="Set seconds?" /> <br /><br />
-        <button id="btn" class="btn btn-success">Start</button>
-        <!--<button id="get-seconds-btn">Get seconds</button>-->
-        <a href="./" class="btn">Reset</a>
-        <hr />
-        <h3>Usage</h3>
-        <p class="lead">The plugin currently has 4 methods which can be called on the DIV element or any other HTML element that you wish
-        to display a timer in. These methods are:</p>
-        <ul>
-            <li>Start: Initializes the timer on the HTML element. Example: $("#divId").timer("start"). You can even start the timer from a particular time by specifying seconds. $("#divId").timer({action:"start", seconds: 3400})</li>
-            <li>Pause: Pauses an existing timer. Example: $("#divId").timer("pause")</li>
-            <li>Resume: Resumes a paused timer. Example: $("#divId").timer("resume")</li>
-            <!-- <li>Get Seconds: Returns the currently displayed time in seconds. Example: $("#divId").timer("get_seconds")</li> -->
-        </ul>
+        <h1>jQuery Timer</h1>
+        <p>Start/Stop/Resume a timer inside any HTML element.</p>
+        <br /><br />
+        <h4>Demo</h4>
+        <div class='row'>
+            <div class='col-md-2'>
+                <input type='text' class='form-control timer' placeholder='0 sec' />
+            </div>
+            <div class='col-md-1'>
+                <button class='btn btn-success start-timer-btn'>Track</button>
+                <button class='btn btn-danger pause-timer-btn hidden'>Pause</button>
+            </div>
+            <div class='col-md-9'>
+                
+            </div>
+        </div>
         <br />
+        <h4>Usage</h4>
+        <table class='table'>
+            <tr>
+                <td>Start:</td>
+                <td>$("#divId").timer("start") OR $("#divId").timer({action:"start", seconds: 3400})</td>
+            </tr>
+            <tr>
+                <td>Pause:</td>
+                <td>$("#divId").timer("pause")</td>
+            </tr>
+            <tr>
+                <td>Resume:</td>
+                <td>$("#divId").timer("resume")</td>
+            </tr>
+        </table>
+        
+        <br />
+        
         <a class="btn btn-inverse" href="https://github.com/walmik/timer.jquery/downloads">Download</a> 
-        <a class="btn btn-info" href="https://github.com/walmik/timer.jquery">Fork me on Github</a>
+        <a class="btn btn-primary" href="https://github.com/walmik/timer.jquery">Fork me on Github</a>
+
+        
     </div>
 
-    <script src="libs/jquery/jquery.js" type="text/javascript"></script>
-    <script src="dist/timer.jquery.min.js"></script>
+    <script src="libs/jquery/jquery-1.11.0.min.js" type="text/javascript"></script>
+    <script src="src/timer.jquery.js"></script>
     <script>
        (function(){
-            
-            
-            //timer actions
-            $("#btn").click(function(){
-                switch($(this).html().toLowerCase())
-                {
-                    case "start":
-                        s = parseInt($("input[name='s']").val());
-                        if(isNaN(s))
-                        {
-                            s = 0;
-                            $("input[name='s']").val(0);
-                        }
-                        //you can specify action via object or a string
-                        $("#t").timer({
-                            action: 'start', 
-                            seconds:s
-                        });
-                        $(this).html("Pause");
-                        $("input[name='s']").attr("disabled", "disabled");
-                        $("#t").addClass("badge-important");
-                        break;
-                    
-                    case "resume":
-                        //you can specify action via string
-                        $("#t").timer('resume');
-                        $(this).html("Pause")
-                        $("#t").addClass("badge-important");
-                        break;
-                    
-                    case "pause":
-                        //you can specify action via object
-                        $("#t").timer({action: 'pause'});
-                        $(this).html("Resume")
-                        $("#t").removeClass("badge-important");
-                        break;
-                }
+            /*
+                Init timer start
+            */
+            $('.start-timer-btn').on('click', function(){
+                $('.timer').timer('start');
+                $(this).addClass('hidden');
+                $('.pause-timer-btn').removeClass('hidden');
             });
-            
-            $("#get-seconds-btn").click(function(){
-                console.log($("#t").timer("get_seconds"));
+
+
+
+            /*
+                Init timer stop
+            */
+            $('.pause-timer-btn').on('click', function(){
+                $('.timer').timer('pause');
+                $(this).addClass('hidden');
+                $('.start-timer-btn').removeClass('hidden');
             });
         })();
     </script>

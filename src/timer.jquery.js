@@ -60,9 +60,11 @@
 	};
 
   jQueryTimer.prototype.start = function () {
-    this.updateTimerDisplay();
-    this.incrementTime(); //to avoid the 1 second gap that gets created if the seconds are not incremented
-    this.startTimerInterval();
+    if(!this.isTimerRunning) {
+      this.updateTimerDisplay();
+      this.incrementTime(); //to avoid the 1 second gap that gets created if the seconds are not incremented
+      this.startTimerInterval();
+    }
   }
 
   jQueryTimer.prototype.pause = function () {
