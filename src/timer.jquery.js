@@ -210,20 +210,39 @@
   ///////////////////////////////////////////////////
   ///////////////INITIALIZE THE PLUGIN///////////////
   var pluginName = 'timer';
-  $.fn[pluginName] = function(options) {
-
+  $.fn[pluginName] = function(options, params) {
     return this.each(function() {
-
-      // only allow the plugin to be instantiated once
-      if (!( $.data( this, 'plugin_' + pluginName ) instanceof jQueryTimer )) {
-        $.data( this, 'plugin_' + pluginName, new jQueryTimer(this, options) );
+      /*
+        Allow the plugin to be initialized on an element only once
+        This way we can call the plugin's internal function
+        without having to reinitialize the plugin all over again.
+      */
+      if (!($.data(this, 'plugin_' + pluginName) instanceof jQueryTimer)) {
+        /*
+          Create a new data attribute on the element to hold the plugin name
+          This way we can know which plugin(s) is/are initialized on the element later
+        */
+        $.data(this, 'plugin_' + pluginName, new jQueryTimer(this, options));
       }
 
-      var instance = $.data( this, 'plugin_' + pluginName );
+      /*
+        Use the instance of this plugin derived from the data attribute for this element
+        to conduct whatever action requested as a string parameter.
+      */
+      var instance = $.data(this, 'plugin_' + pluginName);
 
-      if(typeof options == 'string') {
-        if(typeof instance[options] == 'function') {
-          instance[options].call(instance); //passing in 'instance' to provide for the value of 'this' in the called function
+      /*
+        Provision for calling a function from this plugin
+        without initializing it all over again
+        (params will be passed in case the called function needs a param)
+      */
+      if (typeof options == 'string') {
+        if (typeof instance[options] == 'function') {
+          /*
+            Pass in 'instance' to provide for the value of 'this' in the called function
+            Pass in params if any
+          */
+          instance[options].call(instance, params);
         }
       }
     });
