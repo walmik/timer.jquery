@@ -2,13 +2,12 @@
 
 Start/Stop/Resume/Remove a timer inside any HTML element.
 
-### Demo
-http://walmik.info/demos/timer.jquery/
+[Demo][demo] | [Download][min]
 
-## Getting Started
-[Download][min].
-
+[demo]: http://walmik.info/demos/timer.jquery/
 [min]: https://github.com/walmik/timer.jquery/archive/master.zip
+
+### How to use
 
 In your web page:
 
