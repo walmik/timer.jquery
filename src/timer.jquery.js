@@ -57,29 +57,29 @@
 
 	    
 
-	};
+	  };
 
-	jQueryTimer.prototype.start = function () {
-		if(!this.isTimerRunning) {
-			this.updateTimerDisplay();
+	  jQueryTimer.prototype.start = function () {
+	  	if(!this.isTimerRunning) {
+	  		this.updateTimerDisplay();
 		    this.incrementTime(); //to avoid the 1 second gap that gets created if the seconds are not incremented
 		    this.startTimerInterval();
+		  }
 		}
-	}
 
-	jQueryTimer.prototype.pause = function () {
-		clearInterval(this.timerId);
-		this.isTimerRunning = false;
-		
-	}
+		jQueryTimer.prototype.pause = function () {
+			clearInterval(this.timerId);
+			this.isTimerRunning = false;
 
-	jQueryTimer.prototype.resume = function () {
-		if(!this.isTimerRunning) this.startTimerInterval();
-		
-	}
+		}
 
-	jQueryTimer.prototype.remove = function () {
-		this.pause();
+		jQueryTimer.prototype.resume = function () {
+			if(!this.isTimerRunning) this.startTimerInterval();
+
+		}
+
+		jQueryTimer.prototype.remove = function () {
+			this.pause();
 		//Use the original DOM element (not jQuery object) to remove data attributes
 		$.removeData(this.element, 'plugin_' + pluginName);
 		$.removeData(this.element, 'seconds');
@@ -95,15 +95,18 @@
 	}
 
 	  /*
-	    Allow users to click and edit the timer value by typing in
-	    */
-	    jQueryTimer.prototype.initEditable = function () {
-	    	var self = this;
-	    	this.$el.on('focus', function(){
-	    		self.pause();
-	    	});
+    Allow users to click and edit the timer value by typing in
+    */
+    jQueryTimer.prototype.initEditable = function () {
+    	
+    	var self = this;
 
-	    	this.$el.on('blur', function(){
+    	this.$el.on('focus', function(){
+    		self.pause();
+    	});
+
+    	this.$el.on('blur', function(){
+
 	      //get the value and update the number of seconds if necessary
 	      var timerDisplayStr;
 
@@ -120,49 +123,55 @@
 	      matchHours    = /\d+\:\d+\:\d+/;
 
 	      if(timerDisplayStr.match(matchSeconds)) {
+
 	        //extract the seconds from this
 	        self.secsNum = parseInt(timerDisplayStr.replace(/sec/, ''), 10) + 1;
 	        if (self.secsNum > 59) {
 	        	self.secsNum = 00;
 	        	self.minsNum++;
 	        }
-	    } else if(timerDisplayStr.match(matchMinutes)) {
-	    	timerDisplayStr = timerDisplayStr.replace(/min/, '');
-	    	var timerDisplayArr = timerDisplayStr.split(':');
-	    	self.minsNum = parseInt(timerDisplayArr[0], 10);
-	    	self.secsNum = parseInt(timerDisplayArr[1], 10) + 1;
 
-	    	if (self.secsNum > 59) {
-	    		self.secsNum = 00;
-	    		self.minsNum++;
-	    	}
+	      } else if(timerDisplayStr.match(matchMinutes)) {
 
-	    	if (self.minsNum > 59) {
-	    		self.minsNum = 00;
-	    		self.hrsNum++;
-	    	}
+	      	timerDisplayStr = timerDisplayStr.replace(/min/, '');
+	      	var timerDisplayArr = timerDisplayStr.split(':');
+	      	self.minsNum = parseInt(timerDisplayArr[0], 10);
+	      	self.secsNum = parseInt(timerDisplayArr[1], 10) + 1;
 
-	    } else if(timerDisplayStr.match(matchHours)) {
-	    	var timerDisplayArr = timerDisplayStr.split(':');
-	    	self.hrsNum = parseInt(timerDisplayArr[0], 10);
-	    	self.minsNum = parseInt(timerDisplayArr[1], 10);
-	    	self.secsNum = parseInt(timerDisplayArr[2], 10) + 1;
+	      	if (self.secsNum > 59) {
+	      		self.secsNum = 00;
+	      		self.minsNum++;
+	      	}
 
-	    	if (self.secsNum > 59) {
-	    		self.secsNum = 00;
-	    		self.minsNum++;
-	    	}
+	      	if (self.minsNum > 59) {
+	      		self.minsNum = 00;
+	      		self.hrsNum++;
+	      	}
 
-	    	if (self.minsNum > 59) {
-	    		self.minsNum = 00;
-	    		self.hrsNum++;
-	    	}
-	    }
-	    self.resume();
-	});
-	}
+	      } else if(timerDisplayStr.match(matchHours)) {
 
-	jQueryTimer.prototype.updateTimerDisplay = function () {
+	      	var timerDisplayArr = timerDisplayStr.split(':');
+	      	self.hrsNum = parseInt(timerDisplayArr[0], 10);
+	      	self.minsNum = parseInt(timerDisplayArr[1], 10);
+	      	self.secsNum = parseInt(timerDisplayArr[2], 10) + 1;
+
+	      	if (self.secsNum > 59) {
+	      		self.secsNum = 00;
+	      		self.minsNum++;
+	      	}
+
+	      	if (self.minsNum > 59) {
+	      		self.minsNum = 00;
+	      		self.hrsNum++;
+	      	}
+
+	      }
+	      
+	      self.resume();
+	    });
+}
+
+jQueryTimer.prototype.updateTimerDisplay = function () {
 	    //if(this.hrsNum > 0) this.options.showHours = true;
 	    /*if(this.options.showHours) this.$el.html(this.hrsStr + ":" + this.minsStr + ":" + this.secsStr);
 	    else this.$el.html(this.minsStr + ":" + this.secsStr);*/
@@ -181,20 +190,20 @@
 	    this.$el.data('seconds', this.get_seconds());
 
 	    
-	}
+	  }
 
-	jQueryTimer.prototype.timeToString = function () {
-		this.secsStr = ((this.minsNum > 0 || this.hrsNum > 0) && this.secsNum < 10) ?  '0' + this.secsNum : this.secsNum;
-		this.minsStr = (this.hrsNum > 0 && this.minsNum < 10) ?  '0' + this.minsNum : this.minsNum;
-		this.hrsStr = this.hrsNum;
-	}
+	  jQueryTimer.prototype.timeToString = function () {
+	  	this.secsStr = ((this.minsNum > 0 || this.hrsNum > 0) && this.secsNum < 10) ?  '0' + this.secsNum : this.secsNum;
+	  	this.minsStr = (this.hrsNum > 0 && this.minsNum < 10) ?  '0' + this.minsNum : this.minsNum;
+	  	this.hrsStr = this.hrsNum;
+	  }
 
 	/*
     Get the timer's value in seconds
     */
     jQueryTimer.prototype.get_seconds = function () {
     	return ((this.hrsNum*3600) + (this.minsNum*60) + this.secsNum);
-	}
+    }
 
     jQueryTimer.prototype.incrementTime = function () {
     	this.timeToString();
@@ -215,7 +224,7 @@
 
 	    
 
-	}
+	  }
 
 
 
@@ -233,13 +242,13 @@
 		without having to reinitialize the plugin all over again.
 		*/
 		if (!($.data(this, 'plugin_' + pluginName) instanceof jQueryTimer)) {
-		
+
 			/*
 			Create a new data attribute on the element to hold the plugin name
 			This way we can know which plugin(s) is/are initialized on the element later
 			*/
 			$.data(this, 'plugin_' + pluginName, new jQueryTimer(this, options));
-		
+
 		}
 
 		/*
@@ -252,16 +261,16 @@
 			Provision for calling a function from this plugin
 			without initializing it all over again
 			(params will be passed in case the called function needs a param)
-		*/
-		if (typeof options == 'string') {
-			if (typeof instance[options] == 'function') {
+			*/
+			if (typeof options == 'string') {
+				if (typeof instance[options] == 'function') {
 				/*
 				Pass in 'instance' to provide for the value of 'this' in the called function
 				Pass in params if any
 				*/
 				instance[options].call(instance, params);
 			}
-    	}
+		}
 
 
 	});
