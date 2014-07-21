@@ -19,5 +19,5 @@ In your web page:
 </script>
 ```
 
-## Demo
+### Demo
 http://walmik.info/demos/timer.jquery/
