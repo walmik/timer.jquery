@@ -55,7 +55,7 @@
 
 	    if(this.options.editable) this.initEditable();
 
-	    return this;
+	    
 
 	};
 
@@ -65,19 +65,17 @@
 		    this.incrementTime(); //to avoid the 1 second gap that gets created if the seconds are not incremented
 		    this.startTimerInterval();
 		}
-
-		return this;
 	}
 
 	jQueryTimer.prototype.pause = function () {
 		clearInterval(this.timerId);
 		this.isTimerRunning = false;
-		return this;
+		
 	}
 
 	jQueryTimer.prototype.resume = function () {
 		if(!this.isTimerRunning) this.startTimerInterval();
-		return this;
+		
 	}
 
 	jQueryTimer.prototype.remove = function () {
@@ -93,8 +91,7 @@
 	jQueryTimer.prototype.startTimerInterval = function () {
 		var self = this;
 		this.timerId = setInterval(function() { self.incrementTime() }, this.delay);
-		this.isTimerRunning = true;
-		return this;
+		this.isTimerRunning = true;	
 	}
 
 	  /*
@@ -183,7 +180,7 @@
 	    //assign the number of seconds to this element's data attribute for seconds
 	    this.$el.data('seconds', this.get_seconds());
 
-	    return this;
+	    
 	}
 
 	jQueryTimer.prototype.timeToString = function () {
@@ -216,7 +213,7 @@
 	    	this.minsNum = 0;
 	    }
 
-	    return this;
+	    
 
 	}
 
@@ -228,7 +225,7 @@
   ///////////////INITIALIZE THE PLUGIN///////////////
   var pluginName = 'timer';
   $.fn[pluginName] = function(options, params) {
-  	
+
   	return this.each(function() {
 		/*
 		Allow the plugin to be initialized on an element only once

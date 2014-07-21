@@ -15,11 +15,13 @@
             <div class='col-md-2'>
                 <input type='text' class='form-control timer' placeholder='0 sec' />
             </div>
-            <div class='col-md-1'>
+            <div class='col-md-4'>
                 <button class='btn btn-success start-timer-btn'>Start</button>
-                <button class='btn btn-danger pause-timer-btn hidden'>Pause</button>
+                <button class='btn btn-success resume-timer-btn hidden'>Resume</button>
+                <button class='btn pause-timer-btn hidden'>Pause</button>
+                <button class='btn btn-danger remove-timer-btn hidden'>Remove Timer</button>
             </div>
-            <div class='col-md-9'>
+            <div class='col-md-6'>
                 
             </div>
         </div>
@@ -66,18 +68,37 @@
             $('.start-timer-btn').on('click', function(){
                 $('.timer').timer('start');
                 $(this).addClass('hidden');
-                $('.pause-timer-btn').removeClass('hidden');
+                $('.pause-timer-btn, .remove-timer-btn').removeClass('hidden');
+            });
+
+            /*
+                Init timer resume
+            */
+            $('.resume-timer-btn').on('click', function(){
+                $('.timer').timer('resume');
+                $(this).addClass('hidden');
+                $('.pause-timer-btn, .remove-timer-btn').removeClass('hidden');
             });
 
 
 
             /*
-                Init timer stop
+                Init timer pause
             */
             $('.pause-timer-btn').on('click', function(){
                 $('.timer').timer('pause');
                 $(this).addClass('hidden');
+                $('.resume-timer-btn').removeClass('hidden');
+            });
+
+            /*
+                Remove timer
+            */
+            $('.remove-timer-btn').on('click', function(){
+                $('.timer').timer('remove');
+                $(this).addClass('hidden');
                 $('.start-timer-btn').removeClass('hidden');
+                $('.pause-timer-btn, .resume-timer-btn').addClass('hidden');
             });
         })();
     </script>
