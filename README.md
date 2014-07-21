@@ -1,6 +1,6 @@
 # jQuery Timer plugin
 
-Start/Stop/Resume a timer inside any HTML element.
+Start/Stop/Resume/Remove a timer inside any HTML element.
 
 ## Getting Started
 [Download][min].
@@ -13,11 +13,9 @@ In your web page:
 <script src="libs/jquery/jquery.js" type="text/javascript"></script>
 <script src="src/timer.jquery.js"></script>
 <script>
-jQuery(function($) {
-  $("#div-id").timer({ action: "start", seconds: 3000 });
-  //OR
+(function($) {
   $("#div-id").timer('start');
-});
+}());
 </script>
 ```
 
