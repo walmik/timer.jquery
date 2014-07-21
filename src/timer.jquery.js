@@ -55,23 +55,29 @@
 
 	    if(this.options.editable) this.initEditable();
 
+	    return this;
+
 	};
 
 	jQueryTimer.prototype.start = function () {
 		if(!this.isTimerRunning) {
 			this.updateTimerDisplay();
-	      this.incrementTime(); //to avoid the 1 second gap that gets created if the seconds are not incremented
-	      this.startTimerInterval();
-	  }
+		    this.incrementTime(); //to avoid the 1 second gap that gets created if the seconds are not incremented
+		    this.startTimerInterval();
+		}
+
+		return this;
 	}
 
 	jQueryTimer.prototype.pause = function () {
 		clearInterval(this.timerId);
 		this.isTimerRunning = false;
+		return this;
 	}
 
 	jQueryTimer.prototype.resume = function () {
 		if(!this.isTimerRunning) this.startTimerInterval();
+		return this;
 	}
 
 	jQueryTimer.prototype.remove = function () {
@@ -88,6 +94,7 @@
 		var self = this;
 		this.timerId = setInterval(function() { self.incrementTime() }, this.delay);
 		this.isTimerRunning = true;
+		return this;
 	}
 
 	  /*
@@ -175,6 +182,8 @@
 
 	    //assign the number of seconds to this element's data attribute for seconds
 	    this.$el.data('seconds', this.get_seconds());
+
+	    return this;
 	}
 
 	jQueryTimer.prototype.timeToString = function () {
@@ -188,17 +197,17 @@
     */
     jQueryTimer.prototype.get_seconds = function () {
     	return ((this.hrsNum*3600) + (this.minsNum*60) + this.secsNum);
-	    }
+	}
 
-	    jQueryTimer.prototype.incrementTime = function () {
-	    	this.timeToString();
-	    	this.updateTimerDisplay();
+    jQueryTimer.prototype.incrementTime = function () {
+    	this.timeToString();
+    	this.updateTimerDisplay();
 
-	    	this.secsNum++;
-	    	if(this.secsNum % 60 == 0) {
-	    		this.minsNum++;
-	    		this.secsNum = 0;
-	    	}
+    	this.secsNum++;
+    	if(this.secsNum % 60 == 0) {
+    		this.minsNum++;
+    		this.secsNum = 0;
+    	}
 
 	    //handle time exceeding 60 minsNum!
 	    if(this.minsNum > 59 && this.minsNum % 60 == 0)
@@ -206,6 +215,9 @@
 	    	this.hrsNum++;
 	    	this.minsNum = 0;
 	    }
+
+	    return this;
+
 	}
 
 
@@ -216,6 +228,7 @@
   ///////////////INITIALIZE THE PLUGIN///////////////
   var pluginName = 'timer';
   $.fn[pluginName] = function(options, params) {
+  	
   	return this.each(function() {
 		/*
 		Allow the plugin to be initialized on an element only once
@@ -239,9 +252,9 @@
 		var instance = $.data(this, 'plugin_' + pluginName);
 
 		/*
-		Provision for calling a function from this plugin
-		without initializing it all over again
-		(params will be passed in case the called function needs a param)
+			Provision for calling a function from this plugin
+			without initializing it all over again
+			(params will be passed in case the called function needs a param)
 		*/
 		if (typeof options == 'string') {
 			if (typeof instance[options] == 'function') {
@@ -252,6 +265,8 @@
 				instance[options].call(instance, params);
 			}
     	}
+
+
 	});
 }
   ////////////////////////////////////////////////////
