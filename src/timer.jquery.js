@@ -93,7 +93,7 @@
 		this.start();
 
 		var duration = params[0];
-		var msg = 'Time up! ' + this.$el.data('seconds');
+		var msg = 'Time up!';
 		//if duration is just a number then use that as the number of seconds
 		if(!isNaN(Number(duration))) {
 			//a number was found
