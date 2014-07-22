@@ -34,43 +34,43 @@
             <tr>
                 <td>Start:</td>
                 <td>
-                	<pre>$("#divId").timer() <em>//Same as $('#divId').timer('start')</em></pre>
+                	<pre>$('#divId').timer(); <em>//Same as $('#divId').timer('start')</em></pre>
                 </td>
             </tr>
             <tr>
                 <td>Pause:</td>
                 <td>
-                	<pre>$("#divId").timer("pause")</pre>
+                	<pre>$('#divId').timer('pause');</pre>
                 </td>
             </tr>
             <tr>
                 <td>Resume:</td>
                 <td>
-                	<pre>$("#divId").timer("resume")</pre>
+                	<pre>$('#divId').timer('resume');</pre>
                 </td>
             </tr>
             <tr>
                 <td>Remove Timer:</td>
                 <td>
-                	<pre>$("#divId").timer("remove")</pre>
+                	<pre>$('#divId').timer('remove');</pre>
                 </td>
             </tr>
             <tr>
                 <td>Get number of seconds:</td>
                 <td>
-                	<pre>$("#divId").data("seconds")</pre>
+                	<pre>$('#divId').data('seconds');</pre>
                 </td>
             </tr>
             <tr>
                 <td>Get notified:</td>
                 <td>
-                	<pre>$("#divId").timer("notify", "5m"); <em>//start a timer & show an alert box in 5 minutes</em></pre>
+                	<pre>$('#divId').timer('notify', '5m'); <em>//start a timer & show an alert box in 5 minutes</em></pre>
                 </td>
             </tr>
             <tr>
                 <td>Get notified:</td>
                 <td>
-                	<pre>$("#divId").timer("notify", "5m", "Hello World!");<em>//start a timer & show an alert box with the text Hello World in 5 minutes</em></pre>
+                	<pre>$('#divId').timer('notify', '5m', 'Hello World!');<em>//start a timer & show an alert box with the text Hello World in 5 minutes</em></pre>
                 </td>
             </tr>
             <tr>
@@ -78,7 +78,7 @@
                 <td>
 <pre>
 <em>//start a timer & execute a function in 15 minutes & 30 seconds</em>
-$("#divId").timer("notify", "15m30s", function() { 
+$('#divId').timer('notify', '15m30s', function() { 
 	alert('Howdy!'); 
 });
 </pre>
@@ -98,11 +98,13 @@ $("#divId").timer("notify", "15m30s", function() {
     <script src="src/timer.jquery.js"></script>
     <script>
        (function(){
+       		var hasTimer = false;
             /*
                 Init timer start
             */
             $('.start-timer-btn').on('click', function(){
-                $('.timer').timer('start');
+            	hasTimer = true;
+                $('.timer').timer('notify', '5', 123);
                 $(this).addClass('hidden');
                 $('.pause-timer-btn, .remove-timer-btn').removeClass('hidden');
             });
@@ -115,7 +117,6 @@ $("#divId").timer("notify", "15m30s", function() {
                 $(this).addClass('hidden');
                 $('.pause-timer-btn, .remove-timer-btn').removeClass('hidden');
             });
-
 
 
             /*
@@ -131,6 +132,7 @@ $("#divId").timer("notify", "15m30s", function() {
                 Remove timer
             */
             $('.remove-timer-btn').on('click', function(){
+            	hasTimer = false;
                 $('.timer').timer('remove');
                 $(this).addClass('hidden');
                 $('.start-timer-btn').removeClass('hidden');
@@ -141,14 +143,14 @@ $("#divId").timer("notify", "15m30s", function() {
             	Additional focus event for this demo
             */
 			$('.timer').on('focus', function(){
-				$('.pause-timer-btn').click();
+				if(hasTimer) $('.pause-timer-btn').click();
 			});
 
 			/*
             	Additional blur event for this demo
             */
 			$('.timer').on('blur', function(){
-				$('.resume-timer-btn').click();
+				if(hasTimer) $('.resume-timer-btn').click();
 			});
         })();
     </script>

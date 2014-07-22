@@ -42,6 +42,7 @@
 		this.timerId           = null;
 		this.delay             = 1000;
 		this.isTimerRunning    = false;
+		this.timeOutId;			//store the timeout in this
 
 		if (this.options.seconds !== undefined) {
 			this.hrsNum = Math.floor(this.options.seconds / 3600);
@@ -80,9 +81,32 @@
 
 	Timer.prototype.remove = function () {
 		this.pause();
+		//clear timeout
+		clearTimeout(this.timeOutId);
 		//Use the original DOM element (not jQuery object) to remove data attributes
 		$.removeData(this.element, 'plugin_' + pluginName);
 		$.removeData(this.element, 'seconds');
+	};
+
+	Timer.prototype.notify = function (params) {
+
+		this.start();
+
+		var duration = params[0];
+		var msg = 'Time up! ' + this.$el.data('seconds');
+		//if duration is just a number then use that as the number of seconds
+		if(!isNaN(Number(duration))) {
+			//a number was found
+			
+		} else {
+			//duration is specified with units
+			//eg. 5m (for 5 minutes) OR 45s (for 45 seconds) OR 3m45s (for 3 minutes 45 seconds) and so on
+			
+		}
+
+		this.timeOutId = setTimeout(function(){
+			alert(msg);
+		}, duration*1000);
 	};
 
 
@@ -237,7 +261,18 @@
 	///////////////////////////////////////////////////
 	///////////////INITIALIZE THE PLUGIN///////////////
 	var pluginName = 'timer';
-	$.fn[pluginName] = function(options, params) {
+	$.fn[pluginName] = function(options) {
+
+		options = options || 'start';
+
+		/**
+		 * Get params if any
+		 * @type {Array}
+		 * Example: 
+		 * In case of $('#divId').timer('notify', '5m', 'Hello there');
+		 * Here params will compute to ['5m', 'Hello there']
+		 */
+		var params = Array.prototype.slice.call(arguments, 1);
 
 		return this.each(function() {
 
