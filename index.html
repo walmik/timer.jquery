@@ -10,7 +10,8 @@
 <body>`
     <div class="container">
         <h1>jQuery Timer</h1>
-        <p>Start/Stop/Resume a timer inside any HTML element.</p>
+        <p>Start/Stop/Resume/Remove a timer inside any HTML element. <br>
+        	Get notified at a set time or at regular intervals.</p>
         <br /><br />
         <h4>Demo</h4>
         <div class='row'>
@@ -33,7 +34,7 @@
             <tr>
                 <td>Start:</td>
                 <td>
-                	<pre>$("#divId").timer("start")</pre>
+                	<pre>$("#divId").timer() <em>//Same as $('#divId').timer('start')</em></pre>
                 </td>
             </tr>
             <tr>
@@ -63,21 +64,21 @@
             <tr>
                 <td>Get notified:</td>
                 <td>
-                	<pre>$('div').timer("notify", "5m"); <em>//shows an alert box in 5 minutes</em></pre>
+                	<pre>$("#divId").timer("notify", "5m"); <em>//start a timer & show an alert box in 5 minutes</em></pre>
                 </td>
             </tr>
             <tr>
                 <td>Get notified:</td>
                 <td>
-                	<pre>$('div').timer("notify", "5m", "Hello World!");<em>//shows an alert box with the text Hello World in 5 minutes</em></pre>
+                	<pre>$("#divId").timer("notify", "5m", "Hello World!");<em>//start a timer & show an alert box with the text Hello World in 5 minutes</em></pre>
                 </td>
             </tr>
             <tr>
                 <td>Get notified:</td>
                 <td>
 <pre>
-<em>//executes the provided function in 5 minutes</em>
-$('div').timer("notify", "5m", function() { 
+<em>//start a timer & execute a function in 15 minutes & 30 seconds</em>
+$("#divId").timer("notify", "15m30s", function() { 
 	alert('Howdy!'); 
 });
 </pre>
