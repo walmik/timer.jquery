@@ -3,7 +3,9 @@
 <head>
     <title>jQuery timer plugin | Start/Stop/Resume timer on any HTML element</title>
     <link href="bootstrap.min.css" rel="stylesheet">
-
+    <style type="text/css">
+    	em { color: #999; font-size: 12px; }
+    </style>
 </head>
 <body>`
     <div class="container">
@@ -30,23 +32,56 @@
         <table class='table'>
             <tr>
                 <td>Start:</td>
-                <td>$("#divId").timer("start")</td>
+                <td>
+                	<pre>$("#divId").timer("start")</pre>
+                </td>
             </tr>
             <tr>
                 <td>Pause:</td>
-                <td>$("#divId").timer("pause")</td>
+                <td>
+                	<pre>$("#divId").timer("pause")</pre>
+                </td>
             </tr>
             <tr>
                 <td>Resume:</td>
-                <td>$("#divId").timer("resume")</td>
+                <td>
+                	<pre>$("#divId").timer("resume")</pre>
+                </td>
             </tr>
             <tr>
                 <td>Remove Timer:</td>
-                <td>$("#divId").timer("remove")</td>
+                <td>
+                	<pre>$("#divId").timer("remove")</pre>
+                </td>
             </tr>
             <tr>
                 <td>Get number of seconds:</td>
-                <td>$("#divId").data("seconds")</td>
+                <td>
+                	<pre>$("#divId").data("seconds")</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>Get notified:</td>
+                <td>
+                	<pre>$('div').timer("notify", "5m"); <em>//shows an alert box in 5 minutes</em></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>Get notified:</td>
+                <td>
+                	<pre>$('div').timer("notify", "5m", "Hello World!");<em>//shows an alert box with the text Hello World in 5 minutes</em></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>Get notified:</td>
+                <td>
+<pre>
+<em>//executes the provided function in 5 minutes</em>
+$('div').timer("notify", "5m", function() { 
+	alert('Howdy!'); 
+});
+</pre>
+				</td>
             </tr>
         </table>
         
