@@ -89,8 +89,8 @@
 	};
 
 	Timer.prototype.notify = function (params) {
-
-		this.start();
+		alert('Not yet implemented!');
+		/*this.start();
 
 		var duration = params[0];
 		var msg = 'Time up!';
@@ -106,7 +106,7 @@
 
 		this.timeOutId = setTimeout(function(){
 			alert(msg);
-		}, duration*1000);
+		}, duration*1000);*/
 	};
 
 

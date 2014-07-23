@@ -62,19 +62,19 @@
                 </td>
             </tr>
             <tr>
-                <td>Get notified:</td>
+                <td>Get notified(WIP):</td>
                 <td>
                 	<pre>$('#divId').timer('notify', '5m'); <em>//start a timer & show an alert box in 5 minutes</em></pre>
                 </td>
             </tr>
             <tr>
-                <td>Get notified:</td>
+                <td>Get notified(WIP):</td>
                 <td>
                 	<pre>$('#divId').timer('notify', '5m', 'Hello World!');<em>//start a timer & show an alert box with the text Hello World in 5 minutes</em></pre>
                 </td>
             </tr>
             <tr>
-                <td>Get notified:</td>
+                <td>Get notified(WIP):</td>
                 <td>
 <pre>
 <em>//start a timer & execute a function in 15 minutes & 30 seconds</em>
@@ -104,7 +104,7 @@ $('#divId').timer('notify', '15m30s', function() {
             */
             $('.start-timer-btn').on('click', function(){
             	hasTimer = true;
-                $('.timer').timer('notify', '5', 123);
+                $('.timer').timer();
                 $(this).addClass('hidden');
                 $('.pause-timer-btn, .remove-timer-btn').removeClass('hidden');
             });
