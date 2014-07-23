@@ -15,7 +15,8 @@
 
 	var Timer = function(element, options) {
 		var defaults = {
-			editable: true			//this will let users make changes to the time
+			editable: true,			//this will let users make changes to the time
+			restart: false			//this will enable stop or continue after a timer callback
 		};
 
 		this.options = $.extend(defaults, options);
@@ -60,17 +61,18 @@
 		 * Convert the duration to seconds (for notifications)
 		 */
 		if(this.options.duration) {
+			
 			//the duration can be a number or string
 			//eg. 5m OR 5m30s or 2h15m30s OR 15
 			//In case it s just a number, then use that as number of seconds
 			
-			this.interval = this.duration = this.options.duration; //interval stays the same, duration increments over time
+			this.duration = this.options.duration; //duration increments by options.duration over time
 			
-
-
 		}
 
 	};
+
+	Timer.prototype.convertToSeconds = function() {},
 
 	Timer.prototype.start = function () {
 		if(!this.isTimerRunning) {
@@ -233,15 +235,14 @@
 	 * Notify - Call callback function if any when the options.duration is complete
 	 */
 	Timer.prototype.notify = function() {
-		this.options.callback.call();
 
-		//Check if notification needs to be repeated or not
-		if(this.options.repeat) {
-			this.duration += this.interval;
+		//If user has specified a callback, then use that or just alert a simple 'Time up!' message.
+		if(this.options.callback) {
+			this.options.callback();
 		} else {
-			this.duration = null;
-			this.callback = null;
+			alert('Time up!');
 		}
+		
 	};
 
 	Timer.prototype.incrementTime = function () {
@@ -250,6 +251,7 @@
 
 		if(this.secsNum === this.duration) {
 			this.notify();
+			this.pause();
 		}
 
 		this.secsNum++;

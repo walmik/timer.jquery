@@ -111,11 +111,7 @@ $('#divId').timer({
             $('.start-timer-btn').on('click', function(){
             	hasTimer = true;
                 $('.timer').timer({
-                	duration: 5,
-                	callback: function() {
-                		alert('Time up!');
-                	},
-                	repeat: true
+                	duration: 5
                 });
                 $(this).addClass('hidden');
                 $('.pause-timer-btn, .remove-timer-btn').removeClass('hidden');
