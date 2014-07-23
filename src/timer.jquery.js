@@ -62,17 +62,36 @@
 		 */
 		if(this.options.duration) {
 			
-			//the duration can be a number or string
-			//eg. 5m OR 5m30s or 2h15m30s OR 15
-			//In case it s just a number, then use that as number of seconds
-			
-			this.duration = this.options.duration; //duration increments by options.duration over time
+			this.duration = this.convertToSeconds(this.options.duration); //duration increments by options.duration over time
 			
 		}
 
 	};
 
-	Timer.prototype.convertToSeconds = function() {},
+	Timer.prototype.convertToSeconds = function(time) {
+		//the duration can be a number or string
+		//eg. 5m OR 5m30s or 2h15m30s OR 15
+		
+		//In case it s just a number, then use that as number of seconds
+		if(!isNaN(Number(time))) {
+			return time;
+		}
+
+		time = time.toLowerCase();
+
+		//@todo: throw an error in case of faulty time value
+		
+
+		//Convert pretty time to seconds
+		var seconds = 0;
+		time.replace(/([0-9]{1,2}h)?([0-9]{1,2}m)?([0-9]{1,2}s)/, function($match, $1, $2, $3){
+			if($1) seconds += Number($1.replace('h', '')) * 3600;
+			if($2) seconds += Number($2.replace('m', '')) * 60;
+			if($3) seconds += Number($3.replace('s', ''));
+		});
+
+		return seconds;
+	};
 
 	Timer.prototype.start = function () {
 		if(!this.isTimerRunning) {
