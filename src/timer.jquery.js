@@ -15,8 +15,7 @@
 
 	var Timer = function(element, options) {
 		var defaults = {
-			action: 'start',
-			editable: true   //this will let users make changes to the time
+			editable: true			//this will let users make changes to the time
 		};
 
 		this.options = $.extend(defaults, options);
@@ -42,7 +41,6 @@
 		this.timerId           = null;
 		this.delay             = 1000;
 		this.isTimerRunning    = false;
-		this.timeOutId;			//store the timeout in this
 
 		if (this.options.seconds !== undefined) {
 			this.hrsNum = Math.floor(this.options.seconds / 3600);
@@ -56,6 +54,20 @@
 
 		if(this.options.editable) {
 			this.initEditable();
+		}
+
+		/**
+		 * Convert the duration to seconds (for notifications)
+		 */
+		if(this.options.duration) {
+			//the duration can be a number or string
+			//eg. 5m OR 5m30s or 2h15m30s OR 15
+			//In case it s just a number, then use that as number of seconds
+			
+			this.interval = this.duration = this.options.duration; //interval stays the same, duration increments over time
+			
+
+
 		}
 
 	};
@@ -86,27 +98,6 @@
 		//Use the original DOM element (not jQuery object) to remove data attributes
 		$.removeData(this.element, 'plugin_' + pluginName);
 		$.removeData(this.element, 'seconds');
-	};
-
-	Timer.prototype.notify = function (params) {
-		alert('Not yet implemented!');
-		/*this.start();
-
-		var duration = params[0];
-		var msg = 'Time up!';
-		//if duration is just a number then use that as the number of seconds
-		if(!isNaN(Number(duration))) {
-			//a number was found
-			
-		} else {
-			//duration is specified with units
-			//eg. 5m (for 5 minutes) OR 45s (for 45 seconds) OR 3m45s (for 3 minutes 45 seconds) and so on
-			
-		}
-
-		this.timeOutId = setTimeout(function(){
-			alert(msg);
-		}, duration*1000);*/
 	};
 
 
@@ -197,6 +188,8 @@
 		});
 	};
 
+
+
 	Timer.prototype.updateTimerDisplay = function () {
 		//if(this.hrsNum > 0) this.options.showHours = true;
 		/*if(this.options.showHours) this.$el.html(this.hrsStr + ":" + this.minsStr + ":" + this.secsStr);
@@ -236,9 +229,28 @@
 		return ((this.hrsNum*3600) + (this.minsNum*60) + this.secsNum);
 	};
 
+	/**
+	 * Notify - Call callback function if any when the options.duration is complete
+	 */
+	Timer.prototype.notify = function() {
+		this.options.callback.call();
+
+		//Check if notification needs to be repeated or not
+		if(this.options.repeat) {
+			this.duration += this.interval;
+		} else {
+			this.duration = null;
+			this.callback = null;
+		}
+	};
+
 	Timer.prototype.incrementTime = function () {
 		this.timeToString();
 		this.updateTimerDisplay();
+
+		if(this.secsNum === this.duration) {
+			this.notify();
+		}
 
 		this.secsNum++;
 		if(this.secsNum % 60 === 0) {
@@ -265,14 +277,6 @@
 
 		options = options || 'start';
 
-		/**
-		 * Get params if any
-		 * @type {Array}
-		 * Example: 
-		 * In case of $('#divId').timer('notify', '5m', 'Hello there');
-		 * Here params will compute to ['5m', 'Hello there']
-		 */
-		var params = Array.prototype.slice.call(arguments, 1);
 
 		return this.each(function() {
 
@@ -300,16 +304,21 @@
 			/*
 			Provision for calling a function from this plugin
 			without initializing it all over again
-			(params will be passed in case the called function needs a param)
 			*/
 			if (typeof options === 'string') {
 				if (typeof instance[options] === 'function') {
 					/*
 					Pass in 'instance' to provide for the value of 'this' in the called function
-					Pass in params if any
 					*/
-					instance[options].call(instance, params);
+					instance[options].call(instance);
 				}
+			}
+
+			/**
+			 * Provision for passing an object for notification feature
+			 */
+			if( typeof options === 'object' ) {
+				instance['start'].call(instance, options);
 			}
 
 

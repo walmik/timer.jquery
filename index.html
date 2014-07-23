@@ -64,22 +64,28 @@
             <tr>
                 <td>Get notified(WIP):</td>
                 <td>
-                	<pre>$('#divId').timer('notify', '5m'); <em>//start a timer & show an alert box in 5 minutes</em></pre>
-                </td>
+<pre>
+<em>//start a timer & execute a function in 5 minutes & 30 seconds</em>
+$('#divId').timer({
+	<strong>duration:</strong> '5m30s',
+	<strong>callback:</strong> function() {
+		alert('Time up!');
+	}
+});
+</pre>
+				</td>
             </tr>
-            <tr>
-                <td>Get notified(WIP):</td>
-                <td>
-                	<pre>$('#divId').timer('notify', '5m', 'Hello World!');<em>//start a timer & show an alert box with the text Hello World in 5 minutes</em></pre>
-                </td>
-            </tr>
-            <tr>
+                        <tr>
                 <td>Get notified(WIP):</td>
                 <td>
 <pre>
-<em>//start a timer & execute a function in 15 minutes & 30 seconds</em>
-$('#divId').timer('notify', '15m30s', function() { 
-	alert('Howdy!'); 
+<em>//start a timer & execute a function <strong>every</strong> 2 minutes</em>
+$('#divId').timer({
+	<strong>duration:</strong> '2m',
+	<strong>callback:</strong> function() {
+		alert('Why, Hello there');
+	},
+	<strong>loop:</strong> true <em>//repeatedly calls the callback you specify</em>
 });
 </pre>
 				</td>
@@ -104,7 +110,13 @@ $('#divId').timer('notify', '15m30s', function() {
             */
             $('.start-timer-btn').on('click', function(){
             	hasTimer = true;
-                $('.timer').timer();
+                $('.timer').timer({
+                	duration: 5,
+                	callback: function() {
+                		alert('Time up!');
+                	},
+                	repeat: true
+                });
                 $(this).addClass('hidden');
                 $('.pause-timer-btn, .remove-timer-btn').removeClass('hidden');
             });
