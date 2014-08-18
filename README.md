@@ -12,8 +12,8 @@ Start/Stop/Resume/Remove a timer inside any HTML element.
 In your web page:
 
 ```html
-<script src="libs/jquery/jquery.js" type="text/javascript"></script>
-<script src="src/timer.jquery.js"></script>
+<script src="path/to/jquery.js" type="text/javascript"></script>
+<script src="path/to/timer.jquery.js"></script>
 <script>
 (function($) {
 
