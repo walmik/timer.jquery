@@ -60,6 +60,7 @@ $('#div-id').timer({
 ```
 
 Start a timer and execute a function repeatedly at a certain duration. You can use this to sync current state with the backend by initiating a ajax request at regular intervals.
+
 ```javascript
 //start a timer & execute a function every 2 minutes
 $('#div-id').timer({
@@ -69,4 +70,16 @@ $('#div-id').timer({
 	},
 	repeat: true //repeatedly calls the callback you specify
 });
+```
+
+#### Duration Syntax
+
+When you initialize a timer with the `duration` and `callback` parameters, the timer plugin executes the callback function at the set duration. The syntax for specifying the duration is verbose. `h` for hours. `m` for minutes and `s` for seconds. Here are some examples:
+
+```javascript
+'3h15m'		// 3 hours, 15 minutes
+'15m'		// 15 minutes
+'30s'		// 30 seconds
+'2m30s'		// 2 minutes 30 seconds
+'2h15m30s'	// 2 hours 15 minutes and 30 seconds
 ```
