@@ -42,6 +42,13 @@ $("#div-id").timer('remove');  //leaves the display intact (only removes the tim
 //get elapsed time in seconds
 $("#div-id").data('seconds');
 
+```
+
+### Advanced Methods
+
+Start a timer and execute a function after a certain duration. You can use this to simulate a timed event.
+
+```javascript
 //start a timer & execute a function in 5 minutes & 30 seconds
 $('#div-id').timer({
 	duration: '5m30s',
@@ -50,11 +57,15 @@ $('#div-id').timer({
 	}
 });
 
+```
+
+Start a timer and execute a function repeatedly at a certain duration. You can use this to sync current state with the backend by initiating a ajax request at regular intervals.
+```javascript
 //start a timer & execute a function every 2 minutes
 $('#div-id').timer({
 	duration: '2m',
 	callback: function() {
-		alert('Why, Hello there');
+		alert('Why, Hello there');	//you could have a ajax call here instead
 	},
 	repeat: true //repeatedly calls the callback you specify
 });
