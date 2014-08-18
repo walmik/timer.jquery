@@ -41,5 +41,21 @@ $("#div-id").timer('remove');  //leaves the display intact (only removes the tim
   
 //get elapsed time in seconds
 $("#div-id").data('seconds');
-  
+
+//start a timer & execute a function in 5 minutes & 30 seconds
+$('#div-id').timer({
+	duration: '5m30s',
+	callback: function() {
+		alert('Time up!');
+	}
+});
+
+//start a timer & execute a function every 2 minutes
+$('#div-id').timer({
+	duration: '2m',
+	callback: function() {
+		alert('Why, Hello there');
+	},
+	repeat: true //repeatedly calls the callback you specify
+});
 ```
