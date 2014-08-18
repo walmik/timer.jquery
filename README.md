@@ -44,7 +44,7 @@ $("#div-id").data('seconds');
 
 ```
 
-### Advanced Methods
+### Timed Events
 
 Start a timer and execute a function after a certain duration. You can use this to simulate a timed event.
 
