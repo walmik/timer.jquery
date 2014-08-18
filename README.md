@@ -37,7 +37,7 @@ $("#div-id").timer('pause');
 $("#div-id").timer('resume');
   
 //remove an existing timer
-$("#div-id").timer('remove');  //leaves the display intact (only removes the timer from the element)
+$("#div-id").timer('remove');  //leaves the display intact
   
 //get elapsed time in seconds
 $("#div-id").data('seconds');
