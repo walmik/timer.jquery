@@ -2,7 +2,7 @@
 
 Start/Stop/Resume/Remove a timer inside any HTML element.
 
-[Demo][demo] | [Download][min]
+[Demo & Instructions][demo] | [Download][min]
 
 [demo]: http://walmik.info/demos/timer.jquery/
 [min]: https://github.com/walmik/timer.jquery/archive/master.zip
@@ -16,7 +16,30 @@ In your web page:
 <script src="src/timer.jquery.js"></script>
 <script>
 (function($) {
+
+  //start a timer
   $("#div-id").timer('start');
+  
 }());
 </script>
+```
+
+### Usage Instructions
+
+Methods available on an initialized timer:
+
+```javascript
+
+//pause an existing timer
+$("#div-id").timer('pause');
+  
+//resume a paused timer
+$("#div-id").timer('resume');
+  
+//remove an existing timer
+$("#div-id").timer('remove');  //leaves the display intact (only removes the timer from the element)
+  
+//get elapsed time in seconds
+$("#div-id").data('seconds');
+  
 ```
