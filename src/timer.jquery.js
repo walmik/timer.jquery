@@ -117,9 +117,9 @@
 		this.pause();
 		//clear timeout
 		clearTimeout(this.timeOutId);
-		//Use the original DOM element (not jQuery object) to remove data attributes
-		$.removeData(this.element, 'plugin_' + pluginName);
-		$.removeData(this.element, 'seconds');
+		//Remove data attributes
+		this.$el.data('plugin_' + pluginName, null);
+		this.$el.data('seconds', null);
 	};
 
 
