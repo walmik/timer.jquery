@@ -1,15 +1,21 @@
 {
   "name": "timer.jquery",
   "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/walmik/timer.jquery.git"
+  },
   "engines": {
     "node": ">= 0.8.0"
   },
   "scripts": {
-    "test": "grunt qunit"
+    "test": "./node_modules/cucumber/bin/cucumber.js"
   },
   "devDependencies": {
+    "cucumber": "^0.4.4",
+    "grunt": "~0.4.1",
     "grunt-contrib-uglify": "~0.1.1",
     "grunt-contrib-watch": "~0.2.0",
-    "grunt": "~0.4.1"
+    "zombie": "^2.1.1"
   }
 }
