@@ -1,5 +1,5 @@
 var assert = require('assert');
-var myStepsDef = function () {
+var basicFeaturesDefinitions = function () {
 
 	var seconds;	//To keep a count of time elapsed since start button was pressed
 
@@ -13,13 +13,12 @@ var myStepsDef = function () {
 	this.When(/^I click the Start Timer button$/, function (callback) {
 		seconds = (new Date()).getSeconds();
 		this.browser.pressButton('Start', function () {
-			console.log('button pressed!');
 			callback();
 		});
 
 	});
 
-	this.Then(/^the timer field should display number of seconds elapsed since time was started$/, function (callback) {
+	this.Then(/^the timer field should display the number of seconds elapsed since time it was started$/, function (callback) {
 
 		//Update seconds since 'Start timer' was clicked
 		seconds = ( new Date() ).getSeconds() - seconds;
@@ -39,4 +38,4 @@ var myStepsDef = function () {
 	});
 };
 
-module.exports = myStepsDef;
+module.exports = basicFeaturesDefinitions;
