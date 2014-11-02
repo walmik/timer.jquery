@@ -44,7 +44,7 @@ var basicFeaturesDefinitions = function () {
 	///////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////PAUSE///////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////
-	this.Given(/^the timer is started on a page$/, function (callback) {
+	this.Given(/^the page with the timer plugin is loaded$/, function (callback) {
 		//open browser and point to a page with the timer
 		var self = this;
 		this.browser.visit('http://127.0.0.1:8000', function () {
