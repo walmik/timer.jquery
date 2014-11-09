@@ -83,13 +83,13 @@
 
 		//Convert pretty time to seconds
 		var seconds = 0;
-		console.log('time:', time);
+
 		time.replace(/((\d{1,2}h)|(\d{1,2}m)|(\d{1,2}s))/, function($match, $1, $2, $3, $4){
 			if($2) seconds += Number($2.replace('h', '')) * 3600;
 			if($3) seconds += Number($3.replace('m', '')) * 60;
 			if($4) seconds += Number($4.replace('s', ''));
 		});
-		console.log('seconds:', seconds);
+		
 		return seconds;
 	};
 
