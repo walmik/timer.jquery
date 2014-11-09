@@ -5,6 +5,9 @@ var basicFeaturesDefinitions = function () {
 
 	this.World = require('../support/world').World;
 
+	///////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////START///////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
 	this.Given(/^the page with the timer plugin is loaded$/, function (callback) {
 		// Write code here that turns the phrase above into concrete actions
 		this.browser.visit('http://127.0.0.1:8000', callback);
@@ -35,6 +38,42 @@ var basicFeaturesDefinitions = function () {
 
 		this.browser.close();
 
+	});
+
+
+	///////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////PAUSE///////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
+	this.Given(/^the timer is started on a page$/, function (callback) {
+		//open browser and point to a page with the timer
+		var self = this;
+		this.browser.visit('http://127.0.0.1:8000', function () {
+			self.browser.pressButton('Start', function () {
+				callback();
+			});
+		});
+	});
+
+	this.When(/^I click the Pause Timer button$/, function (callback) {
+		this.browser.pressButton('Pause', function () {
+			callback();
+		});
+	});
+
+	this.Then(/^the timer should pause$/, function (callback) {
+		var self = this;
+		//Get the timer input field
+		var timerFieldValue = this.browser.field('.timer').value;
+
+		//wait for a bit and check the timer field value
+		this.browser.wait(3000, function () {
+			if( timerFieldValue == self.browser.field('.timer').value ) {
+				callback();
+			} else {
+				callback.fail(new Error('Timer failed to pause!'));
+			}
+			
+		});
 	});
 };
 
