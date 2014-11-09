@@ -63,9 +63,7 @@
 		 * Convert the duration to seconds (for notifications)
 		 */
 		if(this.options.duration) {
-			
 			this.duration = this.options.duration = this.convertToSeconds(this.options.duration); //duration increments by options.duration over time
-
 		}
 
 	};
@@ -82,7 +80,6 @@
 		time = time.toLowerCase();
 
 		//@todo: throw an error in case of faulty time value
-		
 
 		//Convert pretty time to seconds
 		var seconds = 0;
@@ -95,11 +92,11 @@
 		return seconds;
 	};
 
-	Timer.prototype.start = function () {
+	Timer.prototype.start = function () {	
 		if(!this.isTimerRunning) {
 			this.updateTimerDisplay();
 			//initialize seconds
-			this.initSecs = new Date().getSeconds() - 1;
+			this.initSecs = Math.round(new Date().getTime() / 1000) - 1;
 			this.incrementTime();
 			this.startTimerInterval();
 			this.updateTimerDisplay();
@@ -113,7 +110,7 @@
 
 	Timer.prototype.resume = function () {
 		if(!this.isTimerRunning) {
-			this.initSecs = new Date().getSeconds() - this.initSecs + 1;
+			this.initSecs = Math.round(new Date().getTime() / 1000) - this.secsNum;
 			this.startTimerInterval();
 		}
 	};
@@ -149,8 +146,7 @@
 		this.$el.on('blur', function(){
 
 			//get the value and update the number of seconds if necessary
-			var timerDisplayStr;
-			var timerDisplayArr;
+			var timerDisplayStr, timerDisplayArr;
 
 			//remove any spaces while getting the string
 			if(self.elType === 'input' || self.elType === 'textarea') {
@@ -211,7 +207,10 @@
 				}
 
 			}
-			
+			//Update initSecs
+			self.initSecs = Math.round(new Date().getTime() / 1000) - self.secsNum;
+
+			//resume timer
 			self.resume();
 		});
 	};
@@ -287,18 +286,13 @@
 		}
 
 		//get the difference in seconds from current moment and initSecs
-		var diff = new Date().getSeconds() - this.initSecs;
-		//if the diff is a negative number, subtract it from 60
-		//else use it as is
-		if(diff < 0) {
-			diff = 60 + diff; //diff is a -ve num hence it will be subtracted
-		}
+		var diff = Math.round(new Date().getTime() / 1000)  - this.initSecs;
 		this.secsNum = diff;
-		console.log(this.secsNum);
+
 		if(this.secsNum % 60 === 0) {
 			this.minsNum++;
 			this.secsNum = 0;
-			console.log('updated minutes', this.minsNum);
+			this.initSecs = Math.round(new Date().getTime() / 1000);
 		}
 
 		//handle time exceeding 60 minsNum!
