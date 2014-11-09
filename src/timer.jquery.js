@@ -34,10 +34,11 @@
 	Timer.prototype.init = function() {
 
 		//setup
+		this.initSecs 		   = 0;
 		this.secsNum           = 0;
 		this.minsNum           = 0;
 		this.hrsNum            = 0;
-		this.secsStr           = "0 sec";
+		this.secsStr           = "0";
 		this.minsStr           = "";
 		this.hrsStr            = "";
 		this.timerId           = null;
@@ -97,8 +98,11 @@
 	Timer.prototype.start = function () {
 		if(!this.isTimerRunning) {
 			this.updateTimerDisplay();
-			this.incrementTime(); //to avoid the 1 second gap that gets created if the seconds are not incremented
+			//initialize seconds
+			this.initSecs = new Date().getSeconds() - 1;
+			this.incrementTime();
 			this.startTimerInterval();
+			this.updateTimerDisplay();
 		}
 	};
 
@@ -109,6 +113,7 @@
 
 	Timer.prototype.resume = function () {
 		if(!this.isTimerRunning) {
+			this.initSecs = new Date().getSeconds() - this.initSecs + 1;
 			this.startTimerInterval();
 		}
 	};
@@ -117,6 +122,7 @@
 		this.pause();
 		//clear timeout
 		clearTimeout(this.timeOutId);
+
 		//Remove data attributes
 		this.$el.data('plugin_' + pluginName, null);
 		this.$el.data('seconds', null);
@@ -125,7 +131,7 @@
 
 	Timer.prototype.startTimerInterval = function () {
 		var self = this;
-		this.timerId = setInterval(function() { self.incrementTime(); }, this.delay);
+		this.timerId = setInterval(function() { self.incrementTime() }, this.delay);
 		this.isTimerRunning = true;	
 	};
 
@@ -280,16 +286,23 @@
 			}
 		}
 
-		//increment
-		this.secsNum++;
+		//get the difference in seconds from current moment and initSecs
+		var diff = new Date().getSeconds() - this.initSecs;
+		//if the diff is a negative number, subtract it from 60
+		//else use it as is
+		if(diff < 0) {
+			diff = 60 + diff; //diff is a -ve num hence it will be subtracted
+		}
+		this.secsNum = diff;
+		console.log(this.secsNum);
 		if(this.secsNum % 60 === 0) {
 			this.minsNum++;
 			this.secsNum = 0;
+			console.log('updated minutes', this.minsNum);
 		}
 
 		//handle time exceeding 60 minsNum!
-		if(this.minsNum > 59 && this.minsNum % 60 === 0)
-		{
+		if(this.minsNum > 59 && this.minsNum % 60 === 0) {
 			this.hrsNum++;
 			this.minsNum = 0;
 		}

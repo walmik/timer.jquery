@@ -11,6 +11,6 @@ Feature: Basic Timer Functionality
 
 	@pause
 	Scenario: Pause timer
-		Given the page with the timer plugin is loaded
+		Given the timer is started on a page
 		When I click the Pause Timer button
 		Then the timer should pause
