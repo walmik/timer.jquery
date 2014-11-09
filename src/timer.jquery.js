@@ -79,16 +79,17 @@
 
 		time = time.toLowerCase();
 
-		//@todo: throw an error in case of faulty time value
+		//@todo: throw an error in case of faulty time value like 5m61s or 61m
 
 		//Convert pretty time to seconds
 		var seconds = 0;
-		time.replace(/([0-9]{1,2}h)?([0-9]{1,2}m)?([0-9]{1,2}s)/, function($match, $1, $2, $3){
-			if($1) seconds += Number($1.replace('h', '')) * 3600;
-			if($2) seconds += Number($2.replace('m', '')) * 60;
-			if($3) seconds += Number($3.replace('s', ''));
+		console.log('time:', time);
+		time.replace(/((\d{1,2}h)|(\d{1,2}m)|(\d{1,2}s))/, function($match, $1, $2, $3, $4){
+			if($2) seconds += Number($2.replace('h', '')) * 3600;
+			if($3) seconds += Number($3.replace('m', '')) * 60;
+			if($4) seconds += Number($4.replace('s', ''));
 		});
-
+		console.log('seconds:', seconds);
 		return seconds;
 	};
 
@@ -277,7 +278,7 @@
 		/**
 		 * Check if a duration was specified 
 		 * If so pass control over to `notify` for a moment
-		 */
+		 */	
 		if(this.$el.data('seconds') === this.duration) {
 			this.notify();
 			if(this.options.repeat === true) {
