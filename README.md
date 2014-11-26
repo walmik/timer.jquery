@@ -27,7 +27,7 @@ In your web page:
 ### Usage Instructions
 
 Start a timer from 100 seconds (1:40)
-```
+```javascript
 $("#div-id").timer({
     seconds: 100
 });
