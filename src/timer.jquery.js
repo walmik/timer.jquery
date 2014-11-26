@@ -38,9 +38,9 @@
 		this.secsNum           = 0;
 		this.minsNum           = 0;
 		this.hrsNum            = 0;
-		this.secsStr           = "0";
-		this.minsStr           = "";
-		this.hrsStr            = "";
+		this.secsStr           = '0';
+		this.minsStr           = '';
+		this.hrsStr            = '';
 		this.timerId           = null;
 		this.delay             = 1000;
 		this.isTimerRunning    = false;
@@ -220,15 +220,15 @@
 
 	Timer.prototype.updateTimerDisplay = function () {
 		//if(this.hrsNum > 0) this.options.showHours = true;
-		/*if(this.options.showHours) this.$el.html(this.hrsStr + ":" + this.minsStr + ":" + this.secsStr);
-		else this.$el.html(this.minsStr + ":" + this.secsStr);*/
+		/*if(this.options.showHours) this.$el.html(this.hrsStr + ':' + this.minsStr + ':' + this.secsStr);
+		else this.$el.html(this.minsStr + ':' + this.secsStr);*/
 		var displayStr;
 
 		if(this.hrsNum === 0) {
 			if(this.secsNum < 60 && this.minsNum === 0) {
 				displayStr = this.secsStr + ' sec';
 			} else {
-				displayStr = this.minsStr + ":" + this.secsStr + ' min';
+				displayStr = this.minsStr + ':' + this.secsStr + ' min';
 			}
 		} else {
 			displayStr = this.hrsStr + ':' + this.minsStr + ':' + this.secsStr;
