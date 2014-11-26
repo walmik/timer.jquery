@@ -18,7 +18,7 @@ In your web page:
 (function($) {
 
   //start a timer
-  $("#div-id").timer('start');
+  $("#div-id").timer();
   
 }());
 </script>
@@ -26,6 +26,12 @@ In your web page:
 
 ### Usage Instructions
 
+Start a timer from 100 seconds (1:40)
+```
+$("#div-id").timer({
+    seconds: 100
+});
+```
 Methods available on an initialized timer:
 
 ```javascript
