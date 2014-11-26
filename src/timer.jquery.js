@@ -96,7 +96,7 @@
 		if(!this.isTimerRunning) {
 			this.updateTimerDisplay();
 			//initialize seconds
-			this.initSecs = Math.round(new Date().getTime() / 1000) - 1;
+			this.initSecs = Math.round(new Date().getTime() / 1000) - 1 - this.secsNum;
 			this.incrementTime();
 			this.startTimerInterval();
 			this.updateTimerDisplay();
