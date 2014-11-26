@@ -15,9 +15,10 @@
 
 	var Timer = function(element, options) {
 		var defaults = {
+			seconds: 0,				//default seconds value to start timer from
 			editable: true,			//this will let users make changes to the time
 			restart: false,			//this will enable stop or continue after a timer callback
-			repeat: false				//this will enable us to repeat the callback passed by user
+			repeat: false			//this will enable us to repeat the callback passed by user
 		};
 
 		this.options = $.extend(defaults, options);
@@ -28,13 +29,13 @@
 
 	};
 
-	/*
-	Initialize the plugin with common properties
-	*/
+	/**
+	 * Initialize the plugin with common properties
+	 */
 	Timer.prototype.init = function() {
 
-		//setup
-		this.initSecs 		   = 0;
+		//Setup
+		this.initSecs 		   = this.options.seconds;
 		this.secsNum           = 0;
 		this.minsNum           = 0;
 		this.hrsNum            = 0;
@@ -45,13 +46,11 @@
 		this.delay             = 1000;
 		this.isTimerRunning    = false;
 
-		if (this.options.seconds !== undefined) {
-			this.hrsNum = Math.floor(this.options.seconds / 3600);
-			this.minsNum = Math.floor((this.options.seconds - (this.hrsNum * 3600))/60);
-			this.secsNum = this.options.seconds - (this.hrsNum * 3600) - (this.minsNum * 60);
-
-			this.timeToString();
-		}
+		//Initial time display
+		this.hrsNum = Math.floor(this.options.seconds / 3600);
+		this.minsNum = Math.floor((this.options.seconds - (this.hrsNum * 3600))/60);
+		this.secsNum = this.options.seconds - (this.hrsNum * 3600) - (this.minsNum * 60);
+		this.timeToString();
 		
 		this.elType = this.$el.prop('tagName').toLowerCase();
 
@@ -169,42 +168,37 @@
 				//extract the seconds from this
 				self.secsNum = parseInt(timerDisplayStr.replace(/sec/, ''), 10) + 1;
 				if (self.secsNum > 59) {
-					self.secsNum = 0;
-					self.minsNum++;
+					self.adjustSeconds();
 				}
 
 			} else if(timerDisplayStr.match(matchMinutes)) {
-
 				timerDisplayStr = timerDisplayStr.replace(/min/, '');
 				timerDisplayArr = timerDisplayStr.split(':');
 				self.minsNum = parseInt(timerDisplayArr[0], 10);
 				self.secsNum = parseInt(timerDisplayArr[1], 10) + 1;
 
 				if (self.secsNum > 59) {
-					self.secsNum = 0;
-					self.minsNum++;
+					self.adjustSeconds();
 				}
 
 				if (self.minsNum > 59) {
-					self.minsNum = 0;
-					self.hrsNum++;
+					self.adjustMinutes();
 				}
 
 			} else if(timerDisplayStr.match(matchHours)) {
 
+				//adjust hours
 				timerDisplayArr = timerDisplayStr.split(':');
 				self.hrsNum = parseInt(timerDisplayArr[0], 10);
 				self.minsNum = parseInt(timerDisplayArr[1], 10);
 				self.secsNum = parseInt(timerDisplayArr[2], 10) + 1;
 
 				if (self.secsNum > 59) {
-					self.secsNum = 0;
-					self.minsNum++;
+					self.adjustSeconds();
 				}
 
 				if (self.minsNum > 59) {
-					self.minsNum = 0;
-					self.hrsNum++;
+					self.adjustMinutes();
 				}
 
 			}
@@ -216,12 +210,27 @@
 		});
 	};
 
+	/**
+	 * Function to adjust time in case seconds are more than 60
+	 */
+	Timer.prototype.adjustSeconds = function() {
+		//get the number of minutes
+		var minutes = Math.floor(this.secsNum / 60);
+		this.minsNum += minutes;
+		//get the number of seconds that remain
+		this.secsNum = this.secsNum - (minutes * 60);
+	}
 
+	Timer.prototype.adjustMinutes = function () {
+		//get the number of hours
+		var hours = Math.floor(this.minsNum / 60);
+		this.hrsNum += hours;
+		//get the number of minutes that remain
+		this.minsNum = this.minsNum - (hours * 60);
+	}
 
 	Timer.prototype.updateTimerDisplay = function () {
-		//if(this.hrsNum > 0) this.options.showHours = true;
-		/*if(this.options.showHours) this.$el.html(this.hrsStr + ':' + this.minsStr + ':' + this.secsStr);
-		else this.$el.html(this.minsStr + ':' + this.secsStr);*/
+
 		var displayStr;
 
 		if(this.hrsNum === 0) {
