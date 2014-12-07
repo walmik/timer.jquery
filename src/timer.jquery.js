@@ -17,30 +17,50 @@
 		totalSeconds = 0,
 		isTimerRunning,
 		startTime,
-		el;
+		$el,
+		display = 'html';	//to be used as $el.html in case of div and $el.val in case of input type text
 
 	///////////////////////////////////////////////////
 	//////////////////////HELPERS//////////////////////
 
+	/**
+	 * Common function to start or resume a timer interval
+	 */
 	function startTimerInterval() {
 		console.log('startTimerInterval');
 		intr = setInterval(incrementSeconds, 500);
 	}
 
+	/**
+	 * Increment total seconds by subtracting startTime from the current unix timestamp in seconds 
+	 * and call render to display pretty time
+	 */
 	function incrementSeconds() {
 		totalSeconds = getUnixSeconds() - startTime;
 		//console.log('incrementSeconds', totalSeconds);
 		render();
 	}
 
+	/**
+	 * Render pretty time
+	 */
 	function render() {
-		el.val(secondsToTime(totalSeconds));
+		$el[display](secondsToTime(totalSeconds));
 	}
 
+	/**
+	 * Get the current unix timestamp in seconds
+	 * @return {Number} [unix timestamp in seconds]
+	 */
 	function getUnixSeconds() {
 		return Math.round(new Date().getTime() / 1000);
 	}
 
+	/**
+	 * Convert a number of seconds into an object of hours, minutes and seconds
+	 * @param  {Number} sec [Number of seconds]
+	 * @return {Object}     [An object with hours, minutes and seconds representation of the given seconds]
+	 */
 	function sec2TimeObj(sec) {
 		var hours = 0, minutes = Math.floor(sec / 60), seconds;
 
@@ -70,6 +90,11 @@
 		}
 	}
 
+	/**
+	 * Convert the given seconds to an object made up of hours, minutes and seconds and return a pretty display
+	 * @param  {Number} sec [Second to display as pretty time]
+	 * @return {String}     [Pretty time]
+	 */
 	function secondsToTime(sec) {
 		var time = '',
 			timeObj = sec2TimeObj(sec);
@@ -93,15 +118,22 @@
 	//////////////////TIMER PROTOTYPE//////////////////
 	var Timer = function(element, options) {
 
-		var defaults = {
-			seconds: 0,				//default seconds value to start timer from
-			editable: true,			//this will let users make changes to the time
-			restart: false,			//this will enable stop or continue after a timer callback
-			repeat: false			//this will enable us to repeat the callback passed by user
-		};
+		var elementType, 
+			defaults = {
+				seconds: 0,				//default seconds value to start timer from
+				editable: true,			//this will let users make changes to the time
+				restart: false,			//this will enable stop or continue after a timer callback
+				repeat: false			//this will enable us to repeat the callback passed by user
+			};
 
 		this.options = $.extend(defaults, options);
-		el = this.$el = $(element);
+		$el = $(element);
+
+		//check if this is a input/textarea element or not
+		elementType = $el.prop('tagName').toLowerCase();
+		if(elementType === 'input' || elementType === 'textarea') {
+			display = 'val';
+		}
 		this.element = element;	//to remove the Timer object on remove
 		this.init();
 
