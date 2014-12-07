@@ -1,5 +1,6 @@
 {
   "name": "timer.jquery",
+  "description": "Start/Stop/Resume/Remove a timer inside any HTML element.",
   "version": "0.2.0",
   "repository": {
     "type": "git",
@@ -8,14 +9,9 @@
   "engines": {
     "node": ">= 0.8.0"
   },
-  "scripts": {
-    "test": "./node_modules/cucumber/bin/cucumber.js"
-  },
   "devDependencies": {
-    "cucumber": "^0.4.4",
     "grunt": "~0.4.1",
     "grunt-contrib-uglify": "~0.1.1",
     "grunt-contrib-watch": "~0.2.0",
-    "zombie": "^2.1.1"
   }
 }
