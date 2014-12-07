@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>jQuery Timer Test Suite</title>
+	<!-- Load local jQuery, removing access to $ (use jQuery, not $). -->
+	<script src="../libs/jquery/jquery.js"></script>
+	<script>jQuery.noConflict()</script>
+	<!-- Load local QUnit (grunt requires v1.0.0 or newer). -->
+	<link rel="stylesheet" href="../libs/qunit/qunit.css" media="screen">
+
+</head>
+<body>
+	<h1 id="qunit-header">jQuery Timer Test Suite</h1>
+	<input type='text' id='timer' />
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+	<div id="qunit-fixture">
+		<p>this is some text <span>with a totally awesome quote</span></p>
+		<div><h2>Quote</h2></div>
+	</div>
+
+
+	<script src="../libs/qunit/qunit.js"></script>
+	<!-- Load local lib and tests. -->
+	<script src="../src/timer.jquery.js"></script>
+	<script src="timer.jquery.test.js"></script>
+</body>
+</html>
