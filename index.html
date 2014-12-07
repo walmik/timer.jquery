@@ -119,7 +119,7 @@ $('#divId').timer({
 			*/
 			$('.start-timer-btn').on('click', function(){
 				hasTimer = true;
-				$('.timer').timer();
+				$('.timer').timer({editable: true});
 				$(this).addClass('hidden');
 				$('.pause-timer-btn, .remove-timer-btn').removeClass('hidden');
 			});
@@ -158,14 +158,20 @@ $('#divId').timer({
 				Additional focus event for this demo
 			*/
 			$('.timer').on('focus', function(){
-				if(hasTimer) $('.pause-timer-btn').click();
+				if(hasTimer) {
+					$('.pause-timer-btn').addClass('hidden');
+					$('.resume-timer-btn').removeClass('hidden');
+				}
 			});
 
 			/*
 				Additional blur event for this demo
 			*/
 			$('.timer').on('blur', function(){
-				if(hasTimer) $('.resume-timer-btn').click();
+				if(hasTimer) {
+					$('.pause-timer-btn').removeClass('hidden');
+					$('.resume-timer-btn').addClass('hidden');
+				}
 			});
 		})();
 	</script>
