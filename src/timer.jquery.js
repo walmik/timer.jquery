@@ -17,6 +17,19 @@
 		totalSeconds = 0,
 		isTimerRunning = false,
 		startTime,
+		duration = null,
+		options = {
+			seconds: 0,									//default seconds value to start timer from
+			editable: true,								//this will let users make changes to the time
+			restart: false,								//this will enable stop or continue after a timer callback
+			duration: null,								//duration to run callback after
+			//callback to run after elapsed duration
+			callback: function() { 
+				alert('Time up!');
+				stopTimerInterval();
+			},	
+			repeat: false								//this will repeat callback every n times duration is elapsed
+		},
 		$el,
 		display = 'html';	//to be used as $el.html in case of div and $el.val in case of input type text
 
@@ -43,8 +56,16 @@
 	 */
 	function incrementSeconds() {
 		totalSeconds = getUnixSeconds() - startTime;
-		//console.log('incrementSeconds', totalSeconds);
 		render();
+
+		//check if totalSeconds is equal to duration if any
+		if(duration && totalSeconds === duration) {
+			options.callback();
+			if(options.repeat) {
+				//reset duration
+				duration += options.duration;
+			}
+		}
 	}
 
 	/**
@@ -52,6 +73,17 @@
 	 */
 	function render() {
 		$el[display](secondsToTime(totalSeconds));
+		$el.data('seconds', totalSeconds);
+	}
+
+	/**
+	 * Remove timer object and data from element
+	 */
+	function removeTimer() {
+		stopTimerInterval();
+		$el.data('plugin_' + pluginName, null);
+		$el.data('seconds', null);
+		$el[display]('');
 	}
 
 	/**
@@ -119,27 +151,65 @@
 		return time;
 	}
 
+	/**
+	 * Convert a string time like 5m30s to seconds
+	 * If a number (eg 300) is provided, then return as is
+	 * @param  {Number|String} time [The human time to convert to seconds]
+	 * @return {Number}      [Number of seconds]
+	 */
+	function timeToSeconds(time) {
+		//In case it s just a number, then use that as number of seconds
+		if(!isNaN(Number(time))) {
+			return time;
+		}
+
+		var hMatch = time.match(/\d{1,2}h/), 
+			mMatch = time.match(/\d{1,2}m/), 
+			sMatch = time.match(/\d{1,2}s/), 
+			seconds = 0;
+
+		//convert to lowercase in case of string
+		time = time.toLowerCase();
+
+		//@todo: throw an error in case of faulty time value like 5m61s or 61m
+
+		if(hMatch) {
+			seconds += Number(hMatch[0].replace('h', '')) * 3600;
+		}
+
+		if(mMatch) {
+			seconds += Number(mMatch[0].replace('m', '')) * 60;
+		}
+
+		if(sMatch) {
+			seconds += Number(sMatch[0].replace('s', ''));
+		}
+
+		return seconds;
+	}
+
 
 	//////////////////TIMER PROTOTYPE//////////////////
-	var Timer = function(element, options) {
-		var elementType, 
-			defaults = {
-				seconds: 0,				//default seconds value to start timer from
-				editable: true,			//this will let users make changes to the time
-				restart: false,			//this will enable stop or continue after a timer callback
-				repeat: false			//this will enable us to repeat the callback passed by user
-			};
+	var Timer = function(element, userOptions) {
+		var elementType;
 
-		this.options = $.extend(defaults, options);
+		options = $.extend(options, userOptions);
 		$el = $(element);
 
-		this.element = element;	//to remove the Timer object on remove
+		//setup
+		totalSeconds = options.seconds;
+		$el.data('seconds', totalSeconds);
 		
 		//check if this is a input/textarea element or not
 		elementType = $el.prop('tagName').toLowerCase();
 		if(elementType === 'input' || elementType === 'textarea') {
 			display = 'val';
 		}
+
+		if(options.duration) {
+			duration = options.duration = timeToSeconds(options.duration);
+		}
+
 	};
 
 	/**
@@ -149,6 +219,7 @@
 		start: function() {
 			if(!isTimerRunning) {
 				startTime = getUnixSeconds();
+				render();
 				startTimerInterval();
 			}
 		},
@@ -165,6 +236,10 @@
 				startTime = getUnixSeconds() - totalSeconds;
 				startTimerInterval();
 			}
+		},
+
+		remove: function() {
+			removeTimer();
 		}
 	};
 
@@ -174,7 +249,6 @@
 		options = options || 'start';
 
 		return this.each(function() {
-
 			/*
 			Allow the plugin to be initialized on an element only once
 			This way we can call the plugin's internal function
@@ -215,13 +289,7 @@
 			if( typeof options === 'object' ) {
 				instance['start'].call(instance, options);
 			}
-
-
 		});
 	};
-	////////////////////////////////////////////////////
-	////////////////////////////////////////////////////
-
-
 
 })(jQuery);
