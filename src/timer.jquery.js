@@ -12,16 +12,13 @@
  */
 
 (function($){
-
+	//////////////////////PRIVATE//////////////////////
 	var intr,
 		totalSeconds = 0,
 		isTimerRunning = false,
 		startTime,
 		$el,
 		display = 'html';	//to be used as $el.html in case of div and $el.val in case of input type text
-
-	///////////////////////////////////////////////////
-	//////////////////////PRIVATE//////////////////////
 
 	/**
 	 * Common function to start or resume a timer interval
@@ -123,7 +120,6 @@
 	}
 
 
-	///////////////////////////////////////////////////
 	//////////////////TIMER PROTOTYPE//////////////////
 	var Timer = function(element, options) {
 		var elementType, 
@@ -172,9 +168,6 @@
 		}
 	};
 
-
-
-	///////////////////////////////////////////////////
 	///////////////INITIALIZE THE PLUGIN///////////////
 	var pluginName = 'timer';
 	$.fn[pluginName] = function(options) {
