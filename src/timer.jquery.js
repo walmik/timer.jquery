@@ -15,20 +15,29 @@
 
 	var intr,
 		totalSeconds = 0,
-		isTimerRunning,
+		isTimerRunning = false,
 		startTime,
 		$el,
 		display = 'html';	//to be used as $el.html in case of div and $el.val in case of input type text
 
 	///////////////////////////////////////////////////
-	//////////////////////HELPERS//////////////////////
+	//////////////////////PRIVATE//////////////////////
 
 	/**
 	 * Common function to start or resume a timer interval
 	 */
 	function startTimerInterval() {
-		console.log('startTimerInterval');
 		intr = setInterval(incrementSeconds, 500);
+		isTimerRunning = true;
+	}
+
+	/**
+	 * Common function to stop timer interval
+	 * @return {[type]} [description]
+	 */
+	function stopTimerInterval() {
+		clearInterval(intr);
+		isTimerRunning = false;
 	}
 
 	/**
@@ -117,7 +126,6 @@
 	///////////////////////////////////////////////////
 	//////////////////TIMER PROTOTYPE//////////////////
 	var Timer = function(element, options) {
-
 		var elementType, 
 			defaults = {
 				seconds: 0,				//default seconds value to start timer from
@@ -129,36 +137,39 @@
 		this.options = $.extend(defaults, options);
 		$el = $(element);
 
+		this.element = element;	//to remove the Timer object on remove
+		
 		//check if this is a input/textarea element or not
 		elementType = $el.prop('tagName').toLowerCase();
 		if(elementType === 'input' || elementType === 'textarea') {
 			display = 'val';
 		}
-		this.element = element;	//to remove the Timer object on remove
-		this.init();
-
 	};
 
 	/**
-	 * Initialize the plugin with common properties
+	 * Initialize the plugin with public methods
 	 */
 	Timer.prototype = {
-
-		init: function() {
-
-		},
-
 		start: function() {
-			console.log('start');
-			startTime = getUnixSeconds();
-			startTimerInterval();
+			if(!isTimerRunning) {
+				startTime = getUnixSeconds();
+				startTimerInterval();
+			}
 		},
 
 		pause: function() {
 			console.log('pause');
-			clearInterval(intr);
-		}
+			if(isTimerRunning) {
+				stopTimerInterval();
+			}
+		},
 
+		resume: function() {
+			if(!isTimerRunning) {
+				startTime = getUnixSeconds() - totalSeconds;
+				startTimerInterval();
+			}
+		}
 	};
 
 
@@ -167,9 +178,7 @@
 	///////////////INITIALIZE THE PLUGIN///////////////
 	var pluginName = 'timer';
 	$.fn[pluginName] = function(options) {
-
 		options = options || 'start';
-
 
 		return this.each(function() {
 
