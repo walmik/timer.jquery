@@ -20,7 +20,7 @@
 		duration = null,
 		options = {
 			seconds: 0,									//default seconds value to start timer from
-			editable: true,								//this will let users make changes to the time
+			editable: false,							//this will let users make changes to the time
 			restart: false,								//this will enable stop or continue after a timer callback
 			duration: null,								//duration to run callback after
 			//callback to run after elapsed duration
@@ -76,14 +76,15 @@
 		$el.data('seconds', totalSeconds);
 	}
 
-	/**
-	 * Remove timer object and data from element
-	 */
-	function removeTimer() {
-		stopTimerInterval();
-		$el.data('plugin_' + pluginName, null);
-		$el.data('seconds', null);
-		$el[display]('');
+
+	function makeEditable() {
+		$el.on('focus', function() {
+			pauseTimer();
+		});
+
+		$el.on('blur', function() {
+			
+		});
 	}
 
 	/**
@@ -188,6 +189,36 @@
 		return seconds;
 	}
 
+	//////////////////TIMER INTERFACE//////////////////
+	
+	function startTimer() {
+		if(!isTimerRunning) {
+			startTime = getUnixSeconds();
+			render();
+			startTimerInterval();
+		}
+	}
+
+	function pauseTimer() {
+		if(isTimerRunning) {
+			stopTimerInterval();
+		}
+	}
+
+	function resumeTimer() {
+		if(!isTimerRunning) {
+			startTime = getUnixSeconds() - totalSeconds;
+			startTimerInterval();
+		}
+	}
+
+	function removeTimer() {
+		stopTimerInterval();
+		$el.data('plugin_' + pluginName, null);
+		$el.data('seconds', null);
+		$el[display]('');
+	}
+
 
 	//////////////////TIMER PROTOTYPE//////////////////
 	var Timer = function(element, userOptions) {
@@ -217,25 +248,15 @@
 	 */
 	Timer.prototype = {
 		start: function() {
-			if(!isTimerRunning) {
-				startTime = getUnixSeconds();
-				render();
-				startTimerInterval();
-			}
+			startTimer();
 		},
 
 		pause: function() {
-			console.log('pause');
-			if(isTimerRunning) {
-				stopTimerInterval();
-			}
+			pauseTimer();
 		},
 
 		resume: function() {
-			if(!isTimerRunning) {
-				startTime = getUnixSeconds() - totalSeconds;
-				startTimerInterval();
-			}
+			resumeTimer();
 		},
 
 		remove: function() {
