@@ -11,6 +11,6 @@
   "unused": true,
   "boss": true,
   "eqnull": true,
-  "node": true,
-  "es5": true
+  "browser": true,
+  "devel": true
 }

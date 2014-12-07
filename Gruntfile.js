@@ -16,10 +16,21 @@ module.exports = function (grunt) {
 				config: '.jscsrc'
 			}
 		},
+		jshint: {
+			all: {
+				src: ['src/timer.jquery.js'],
+				options: {
+					jshintrc: '.jshintrc'
+				},
+				globals: {
+					exports: true
+				}
+			}
+		},
 		watch: {
 			scripts: {
 				files: ['src/timer.jquery.js'],
-				tasks: ['jscs'],
+				tasks: ['jscs', 'jshint', 'uglify'],
 				options: {
 					nospawn: true
 				}
@@ -28,6 +39,7 @@ module.exports = function (grunt) {
 	});
 
 	grunt.loadNpmTasks('grunt-contrib-uglify');
+	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks("grunt-jscs");
 	grunt.loadNpmTasks('grunt-contrib-watch');
 

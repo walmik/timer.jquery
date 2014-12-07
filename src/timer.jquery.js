@@ -1,3 +1,4 @@
+/*global jQuery:false */
 /*
  * =======================
  * jQuery Timer Plugin
@@ -71,14 +72,13 @@
 	}
 
 	function makeEditable() {
-		console.log('makeEditable');
 		$el.on('focus', function() {
 			pauseTimer();
 		});
 
 		$el.on('blur', function() {
 			// eg. 12 sec 3:34 min 12:30 min
-			var val = $el[display]();
+			var val = $el[display](), valArr;
 
 			if (val.indexOf('sec') > 0) {
 				// sec
@@ -86,11 +86,11 @@
 			} else if (val.indexOf('min') > 0) {
 				// min
 				val = val.replace(/\smin/g, '');
-				var valArr = val.split(':');
+				valArr = val.split(':');
 				totalSeconds = Number(valArr[0] * 60) + Number(valArr[1]);
 			} else if (val.match(/\d{1,2}:\d{2}:\d{2}/)) {
 				// hrs
-				var valArr = val.split(':');
+				valArr = val.split(':');
 				totalSeconds = Number(valArr[0] * 3600) + Number(valArr[1] * 60) + Number(valArr[2]);
 			}
 
@@ -138,7 +138,7 @@
 			hours: hours,
 			minutes: minutes,
 			seconds: seconds
-		}
+		};
 	}
 
 	/**
@@ -214,7 +214,6 @@
 	}
 
 	function resumeTimer() {
-		console.log('resumeTimer', totalSeconds);
 		if (!isTimerRunning) {
 			startTime = getUnixSeconds() - totalSeconds;
 			startTimerInterval();
