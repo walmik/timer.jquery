@@ -2,36 +2,30 @@
  * =======================
  * jQuery Timer Plugin
  * =======================
- * 
- * Depends on:		jquery
- * 
- * ------------
- * Description:
- * ------------
  * Start/Stop/Resume a time in any HTML element
  */
 
-(function($){
-	//////////////////////PRIVATE//////////////////////
+(function($) {
+	// PRIVATE
 	var intr,
 		totalSeconds = 0,
 		isTimerRunning = false,
 		startTime,
 		duration = null,
 		options = {
-			seconds: 0,									//default seconds value to start timer from
-			editable: false,							//this will let users make changes to the time
-			restart: false,								//this will enable stop or continue after a timer callback
-			duration: null,								//duration to run callback after
-			//callback to run after elapsed duration
-			callback: function() { 
+			seconds: 0,									// default seconds value to start timer from
+			editable: false,							// this will let users make changes to the time
+			restart: false,								// this will enable stop or continue after a timer callback
+			duration: null,								// duration to run callback after
+			// callback to run after elapsed duration
+			callback: function() {
 				alert('Time up!');
 				stopTimerInterval();
-			},	
-			repeat: false								//this will repeat callback every n times duration is elapsed
+			},
+			repeat: false								// this will repeat callback every n times duration is elapsed
 		},
 		$el,
-		display = 'html';	//to be used as $el.html in case of div and $el.val in case of input type text
+		display = 'html';	// to be used as $el.html in case of div and $el.val in case of input type text
 
 	/**
 	 * Common function to start or resume a timer interval
@@ -51,18 +45,18 @@
 	}
 
 	/**
-	 * Increment total seconds by subtracting startTime from the current unix timestamp in seconds 
+	 * Increment total seconds by subtracting startTime from the current unix timestamp in seconds
 	 * and call render to display pretty time
 	 */
 	function incrementSeconds() {
 		totalSeconds = getUnixSeconds() - startTime;
 		render();
 
-		//check if totalSeconds is equal to duration if any
-		if(duration && totalSeconds === duration) {
+		// Check if totalSeconds is equal to duration if any
+		if (duration && totalSeconds === duration) {
 			options.callback();
-			if(options.repeat) {
-				//reset duration
+			if (options.repeat) {
+				// Reset duration
 				duration += options.duration;
 			}
 		}
@@ -76,7 +70,6 @@
 		$el.data('seconds', totalSeconds);
 	}
 
-
 	function makeEditable() {
 		console.log('makeEditable');
 		$el.on('focus', function() {
@@ -84,20 +77,19 @@
 		});
 
 		$el.on('blur', function() {
-			//happy path
-			//eg 12 sec 3:34 min 12:30 min
+			// eg. 12 sec 3:34 min 12:30 min
 			var val = $el[display]();
 
-			if(val.indexOf('sec') > 0) {	
-				//sec
+			if (val.indexOf('sec') > 0) {
+				// sec
 				totalSeconds = Number(val.replace(/\ssec/g, ''));
-			} else if(val.indexOf('min') > 0) {
-				//min
+			} else if (val.indexOf('min') > 0) {
+				// min
 				val = val.replace(/\smin/g, '');
 				var valArr = val.split(':');
 				totalSeconds = Number(valArr[0] * 60) + Number(valArr[1]);
-			} else if(val.match(/\d{1,2}:\d{2}:\d{2}/)) {
-				//hrs
+			} else if (val.match(/\d{1,2}:\d{2}:\d{2}/)) {
+				// hrs
 				var valArr = val.split(':');
 				totalSeconds = Number(valArr[0] * 3600) + Number(valArr[1] * 60) + Number(valArr[2]);
 			}
@@ -122,22 +114,23 @@
 	function sec2TimeObj(sec) {
 		var hours = 0, minutes = Math.floor(sec / 60), seconds;
 
-		//hours
-		if(sec >= 3600) hours = Math.floor(sec / 3600);
+		// Hours
+		if (sec >= 3600) {
+			hours = Math.floor(sec / 3600);
+		}
 
-		//minutes
-		if(sec >= 3600) {
+		// Minutes
+		if (sec >= 3600) {
 			minutes = Math.floor(sec % 3600 / 60);
 		}
-		//prepend 0 to minutes under 10
-		if(minutes < 10 && hours > 0) {
+		// Prepend 0 to minutes under 10
+		if (minutes < 10 && hours > 0) {
 			minutes = '0' + minutes;
 		}
-		
-		//seconds
+		// Seconds
 		seconds = sec % 60;
-		//prepend 0 to seconds under 10
-		if(seconds < 10 && (minutes > 0 || hours > 0)) {
+		// Prepend 0 to seconds under 10
+		if (seconds < 10 && (minutes > 0 || hours > 0)) {
 			seconds = '0' + seconds;
 		}
 
@@ -157,17 +150,15 @@
 		var time = '',
 			timeObj = sec2TimeObj(sec);
 
-		//time
-		if(timeObj.hours) {
+		if (timeObj.hours) {
 			time = timeObj.hours + ':' + timeObj.minutes + ':' + timeObj.seconds;
 		} else {
-			if(timeObj.minutes ) {
+			if (timeObj.minutes) {
 				time = timeObj.minutes + ':' + timeObj.seconds + ' min';
 			} else {
 				time = timeObj.seconds + ' sec';
 			}
 		}
-	
 		return time;
 	}
 
@@ -178,40 +169,38 @@
 	 * @return {Number}      [Number of seconds]
 	 */
 	function timeToSeconds(time) {
-		//In case it s just a number, then use that as number of seconds
-		if(!isNaN(Number(time))) {
+		// In case the passed arg is a number, then use that as number of seconds
+		if (!isNaN(Number(time))) {
 			return time;
 		}
 
-		var hMatch = time.match(/\d{1,2}h/), 
-			mMatch = time.match(/\d{1,2}m/), 
-			sMatch = time.match(/\d{1,2}s/), 
+		var hMatch = time.match(/\d{1,2}h/),
+			mMatch = time.match(/\d{1,2}m/),
+			sMatch = time.match(/\d{1,2}s/),
 			seconds = 0;
 
-		//convert to lowercase in case of string
 		time = time.toLowerCase();
 
-		//@todo: throw an error in case of faulty time value like 5m61s or 61m
+		// @todo: throw an error in case of faulty time value like 5m61s or 61m
 
-		if(hMatch) {
+		if (hMatch) {
 			seconds += Number(hMatch[0].replace('h', '')) * 3600;
 		}
 
-		if(mMatch) {
+		if (mMatch) {
 			seconds += Number(mMatch[0].replace('m', '')) * 60;
 		}
 
-		if(sMatch) {
+		if (sMatch) {
 			seconds += Number(sMatch[0].replace('s', ''));
 		}
 
 		return seconds;
 	}
 
-	//////////////////TIMER INTERFACE//////////////////
-	
+	// TIMER INTERFACE
 	function startTimer() {
-		if(!isTimerRunning) {
+		if (!isTimerRunning) {
 			startTime = getUnixSeconds();
 			render();
 			startTimerInterval();
@@ -219,14 +208,14 @@
 	}
 
 	function pauseTimer() {
-		if(isTimerRunning) {
+		if (isTimerRunning) {
 			stopTimerInterval();
 		}
 	}
 
 	function resumeTimer() {
 		console.log('resumeTimer', totalSeconds);
-		if(!isTimerRunning) {
+		if (!isTimerRunning) {
 			startTime = getUnixSeconds() - totalSeconds;
 			startTimerInterval();
 		}
@@ -239,29 +228,27 @@
 		$el[display]('');
 	}
 
-
-	//////////////////TIMER PROTOTYPE//////////////////
+	// TIMER PROTOTYPE
 	var Timer = function(element, userOptions) {
 		var elementType;
 
 		options = $.extend(options, userOptions);
 		$el = $(element);
 
-		//setup
+		// Setup total seconds from options.seconds (if any)
 		totalSeconds = options.seconds;
 		$el.data('seconds', totalSeconds);
-		
-		//check if this is a input/textarea element or not
+		// Check if this is a input/textarea element or not
 		elementType = $el.prop('tagName').toLowerCase();
-		if(elementType === 'input' || elementType === 'textarea') {
+		if (elementType === 'input' || elementType === 'textarea') {
 			display = 'val';
 		}
 
-		if(options.duration) {
+		if (options.duration) {
 			duration = options.duration = timeToSeconds(options.duration);
 		}
 
-		if(options.editable) {
+		if (options.editable) {
 			makeEditable();
 		}
 
@@ -288,7 +275,7 @@
 		}
 	};
 
-	///////////////INITIALIZE THE PLUGIN///////////////
+	// INITIALIZE THE PLUGIN
 	var pluginName = 'timer';
 	$.fn[pluginName] = function(options) {
 		options = options || 'start';
@@ -331,8 +318,8 @@
 			/**
 			 * Provision for passing an object for notification feature
 			 */
-			if( typeof options === 'object' ) {
-				instance['start'].call(instance, options);
+			if (typeof options === 'object') {
+				instance.start.call(instance, options);
 			}
 		});
 	};

@@ -1,5 +1,6 @@
 {
   "curly": true,
+  "smarttabs": true,
   "eqeqeq": true,
   "immed": true,
   "latedef": true,
