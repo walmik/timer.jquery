@@ -4,109 +4,264 @@
 	<title>jQuery timer plugin | Start/Stop/Resume timer on any HTML element</title>
 	<meta charset='utf-8'>
 	<link href='bootstrap.min.css' rel='stylesheet'>
+	<link href='http://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet' type='text/css'>
 	<style>
+		.top-bar {
+			background: #000;
+			padding: 10px 0;
+		}
+
+		.dark {
+			padding-bottom: 30px;
+			margin-bottom: 30px;
+			border-bottom: 1px solid #ccc;
+		}
+
+		.container {
+			width: 960px;
+		}
+		
+		.timer {
+			background: #f2f3f4;
+			
+			font-weight: bold;
+			font-size: 16px;
+			text-shadow: -1px 0 1px #fff;
+		}
+
+		.table>tbody>tr>td {
+			border-top: none;
+		}
+
+		pre {
+			background-color: #e0e0e0;
+			border: none;
+		}
+
+		pre, .btn, .form-control {
+			border-radius: 0;
+			-webkit-border-radius: 0;
+			-moz-border-radius: 0;
+		}
+
+		h1{
+			font-family: 'Comfortaa', cursive;
+			margin-bottom: 20px;
+		}
 		em { color: #999; font-size: 12px; }
+
+		/*!
+ * "Fork me on GitHub" CSS ribbon v0.1.1 | MIT License
+ * https://github.com/simonwhitaker/github-fork-ribbon-css
+*/
+
+/* Left will inherit from right (so we don't need to duplicate code) */
+.github-fork-ribbon {
+  /* The right and left classes determine the side we attach our banner to */
+  position: absolute;
+
+  /* Add a bit of padding to give some substance outside the "stitching" */
+  padding: 2px 0;
+
+  /* Set the base colour */
+  background-color: #a00;
+
+  /* Set a gradient: transparent black at the top to almost-transparent black at the bottom */
+  background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.15)));
+  background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15));
+  background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15));
+  background-image: -ms-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15));
+  background-image: -o-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15));
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15));
+
+  /* Add a drop shadow */
+  -webkit-box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.5);
+
+  /* Set the font */
+  font: 700 13px "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  z-index: 9999;
+  pointer-events: auto;
+}
+
+.github-fork-ribbon a,
+.github-fork-ribbon a:hover {
+  /* Set the text properties */
+  color: #fff;
+  text-decoration: none;
+  text-shadow: 0 -1px rgba(0, 0, 0, 0.5);
+  text-align: center;
+
+  /* Set the geometry. If you fiddle with these you'll also need
+     to tweak the top and right values in .github-fork-ribbon. */
+  width: 200px;
+  line-height: 20px;
+
+  /* Set the layout properties */
+  display: inline-block;
+  padding: 2px 0;
+
+  /* Add "stitching" effect */
+  border-width: 1px 0;
+  border-style: dotted;
+  border-color: #fff;
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+.github-fork-ribbon-wrapper {
+  width: 150px;
+  height: 150px;
+  position: absolute;
+  overflow: hidden;
+  top: 0;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.github-fork-ribbon-wrapper.fixed {
+  position: fixed;
+}
+
+.github-fork-ribbon-wrapper.right {
+  right: 0;
+}
+
+
+
+.github-fork-ribbon-wrapper.right .github-fork-ribbon {
+  top: 42px;
+  right: -43px;
+
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+
 	</style>
 </head>
-<body>`
-	<div class="container">
-		<h1>jQuery Timer</h1>
-		<p>Start/Stop/Resume/Remove a timer inside any HTML element. <br>
-			Get notified at a set time or at regular intervals.</p>
-		<br /><br />
-		<h4>Demo</h4>
-		<div class='row'>
-			<div class='col-md-2'>
-				<input type='text' name='timer' class='form-control timer' placeholder='0 sec' />
+<body>
+	<div class="full-width dark">
+		<div class="container">
+			<h1>jQuery Timer</h1>
+			<ul class="list-unstyled">
+				<li>Lightweight jQuery plugin to Start, Pause, Resume and Remove a timer inside any HTML element.</li>
+				<li>Get notified at a set time or at regular intervals.</li>
+				<li>Click and edit time while timer is running!</li>
+			</ul>
+			<br>
+			<h4>Try it out</h4>
+			<div class='row'>
+				<div class='col-md-3'>
+					<input type='text' name='timer' class='form-control timer' placeholder='0 sec' />
+				</div>
+				<div class='col-md-4'>
+					<button class='btn btn-success start-timer-btn'>Start</button>
+					<button class='btn btn-success resume-timer-btn hidden'>Resume</button>
+					<button class='btn pause-timer-btn hidden'>Pause</button>
+					<button class='btn btn-danger remove-timer-btn hidden'>Remove Timer</button>
+				</div>
+				<div class='col-md-5'>
+					
+				</div>
 			</div>
-			<div class='col-md-4'>
-				<button class='btn btn-success start-timer-btn'>Start</button>
-				<button class='btn btn-success resume-timer-btn hidden'>Resume</button>
-				<button class='btn pause-timer-btn hidden'>Pause</button>
-				<button class='btn btn-danger remove-timer-btn hidden'>Remove Timer</button>
-			</div>
-			<div class='col-md-6'>
-				
-			</div>
+			<br>
+			<p>
+				<strong><a href="https://raw.githubusercontent.com/walmik/timer.jquery/master/src/timer.jquery.js">Download</a></strong>
+			</p>
 		</div>
-		<br />
-		<h4>Usage</h4>
-		<table class='table'>
-			<tr>
-				<td>Start:</td>
-				<td>
-					<pre>$('#divId').timer(); <em>//Same as $('#divId').timer('start')</em></pre>
-				</td>
-			</tr>
-			<tr>
-				<td>Start at a particular time:</td>
-				<td>
+	</div>
+	<div class="full-width">
+		<div class="container">
+			<h4>How to</h4>
+			<table class='table'>
+				<tr>
+					<td>Start:</td>
+					<td>
+						<pre>$('#divId').timer(); <em>//Same as $('#divId').timer('start')</em></pre>
+					</td>
+				</tr>
+				<tr>
+					<td>Start at a particular time:</td>
+					<td>
 <pre>$('#divId').timer({
 	seconds: 100 <em>//Specify start time in seconds</em>
 });</pre>
-				</td>
-			</tr>
-			<tr>
-				<td>Pause:</td>
-				<td>
-					<pre>$('#divId').timer('pause');</pre>
-				</td>
-			</tr>
-			<tr>
-				<td>Resume:</td>
-				<td>
-					<pre>$('#divId').timer('resume');</pre>
-				</td>
-			</tr>
-			<tr>
-				<td>Remove Timer:</td>
-				<td>
-					<pre>$('#divId').timer('remove');</pre>
-				</td>
-			</tr>
-			<tr>
-				<td>Get number of seconds:</td>
-				<td>
-					<pre>$('#divId').data('seconds');</pre>
-				</td>
-			</tr>
-			<tr>
-				<td>Get notified:</td>
-				<td>
+					</td>
+				</tr>
+				<tr>
+					<td>Pause:</td>
+					<td>
+<pre>$('#divId').timer('pause');</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>Resume:</td>
+					<td>
+<pre>$('#divId').timer('resume');</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>Remove Timer:</td>
+					<td>
+<pre>$('#divId').timer('remove');</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>Get number of seconds:</td>
+					<td>
+<pre>$('#divId').data('seconds');</pre>
+					</td>
+				</tr>
+				<tr>
+					<td>Get notified:</td>
+					<td>
 <pre>
 <em>//start a timer & execute a function in 5 minutes & 30 seconds</em>
 $('#divId').timer({
-	<strong>duration:</strong> '5m30s',
-	<strong>callback:</strong> function() {
-		alert('Time up!');
-	}
+    <strong>duration:</strong> '5m30s',
+    <strong>callback:</strong> function() {
+      alert('Time up!');
+    }
 });
 </pre>
-				</td>
-			</tr>
-						<tr>
-				<td>Get notified:</td>
-				<td>
+					</td>
+				</tr>
+							<tr>
+					<td>Get notified:</td>
+					<td>
 <pre>
 <em>//start a timer & execute a function <strong>every</strong> 2 minutes</em>
 $('#divId').timer({
-	<strong>duration:</strong> '2m',
-	<strong>callback:</strong> function() {
-		alert('Why, Hello there');
-	},
-	<strong>repeat:</strong> true <em>//repeatedly calls the callback you specify</em>
+    <strong>duration:</strong> '2m',
+    <strong>callback:</strong> function() {
+        alert('Why, Hello there');
+    },
+    <strong>repeat:</strong> true <em>//repeatedly calls the callback you specify</em>
 });
 </pre>
-				</td>
-			</tr>
-		</table>
-		
-		<br />
-		
-		<a class="btn btn-inverse" href="https://github.com/walmik/timer.jquery/downloads">Download</a> 
-		<a class="btn btn-primary" href="https://github.com/walmik/timer.jquery">Fork me on Github</a>
+					</td>
+				</tr>
+			</table>
+			
+			<br />
+			
+			<p>
+				<strong><a href="https://github.com/walmik/timer.jquery/archive/master.zip">Download jQuery Timer plugin as a project</a></strong>
+			</p>
 
-		
+			
+		</div>
+	</div>
+
+	<div class="github-fork-ribbon-wrapper right fixed">
+		<div class="github-fork-ribbon">
+			<a href="https://github.com/walmik/timer.jquery">Fork me on GitHub</a>
+		</div>
 	</div>
 
 	<script src="libs/jquery/jquery-1.11.0.min.js" type="text/javascript"></script>
