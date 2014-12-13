@@ -1,10 +1,13 @@
 # jQuery Timer plugin
 
-Start/Stop/Resume/Remove a timer inside any HTML element.
+- Lightweight, well tested, jQuery *pretty* timer plugin
+- Start, Pause, Resume and Remove a timer inside any HTML element.
+- Get notified after specific time or at regular intervals.
+- Click and edit time while timer is running!
 
-[Demo & Instructions][demo] | [Download][min]
+[Demo & Instructions][demo] | [Download][min] | [![Build Status](https://api.travis-ci.org/walmik/timer.jquery.png)](http://travis-ci.org/walmik/timer.jquery)
 
-[demo]: http://walmik.info/demos/timer.jquery/
+[demo]: http://jquerytimer.com/
 [min]: https://github.com/walmik/timer.jquery/archive/master.zip
 
 ### How to use
