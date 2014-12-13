@@ -1,6 +1,7 @@
 module.exports = function (grunt) {
 	grunt.initConfig({    
 		pkg: grunt.file.readJSON('package.json'),
+
 		uglify: {
 			options: {
 				banner: '/*! <%= pkg.name %> <%= pkg.version %> <%=grunt.template.today("yyyy-mm-dd")%>*/'
@@ -10,12 +11,15 @@ module.exports = function (grunt) {
 				dest: 'dist/timer.jquery.min.js'
 			},
 		},
+
+		// Implement coding guidelines
 		jscs: {
 			src: ['src/timer.jquery.js'],
 			options: {
 				config: '.jscsrc'
 			}
 		},
+
 		jshint: {
 			all: {
 				src: ['src/timer.jquery.js'],
@@ -27,6 +31,18 @@ module.exports = function (grunt) {
 				}
 			}
 		},
+
+		// Start a connect server for qunit tests
+		connect: {
+			server: {
+				options: {
+					port: 8000,
+					base: '.'
+				}
+			}
+		},
+
+		// Run qunit tests with PhantomJS
 		qunit: {
 			all: {
 				options: {
@@ -36,6 +52,7 @@ module.exports = function (grunt) {
 				}
 			}
 		},
+
 		watch: {
 			scripts: {
 				files: ['src/timer.jquery.js'],
@@ -50,10 +67,11 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks("grunt-jscs");
+	grunt.loadNpmTasks('grunt-contrib-connect');
 	grunt.loadNpmTasks('grunt-contrib-qunit');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 
 	//register default task
 	grunt.registerTask('default', 'watch');
-	grunt.registerTask('test', 'qunit');
+	grunt.registerTask('test', ['connect', 'qunit']);
 }
