@@ -68,7 +68,7 @@ $('#div-id').timer({
 
 ```
 
-Start a timer and execute a function repeatedly at a certain duration. You can use this to sync current state with the backend by initiating a ajax request at regular intervals.
+Start a timer and execute a function repeatedly at a certain duration. 
 
 ```javascript
 //start a timer & execute a function every 2 minutes
@@ -78,6 +78,20 @@ $('#div-id').timer({
 		alert('Why, Hello there');	//you could have a ajax call here instead
 	},
 	repeat: true //repeatedly calls the callback you specify
+});
+```
+
+Start a timer and execute a function repeatedly at a certain duration and then reset the timer.
+
+```javascript
+//start a timer & execute a function every 2 minutes
+$('#div-id').timer({
+	duration: '2m',
+	callback: function() {
+		alert('Why, Hello there');	//you could have a ajax call here instead
+	},
+	repeat: true, //repeatedly calls the callback you specify
+	reset: true	  //optionally reset the timer (default value is false)
 });
 ```
 
