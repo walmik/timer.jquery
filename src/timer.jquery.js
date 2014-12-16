@@ -23,7 +23,8 @@
 				alert('Time up!');
 				stopTimerInterval();
 			},
-			repeat: false								// this will repeat callback every n times duration is elapsed
+			repeat: false,								// this will repeat callback every n times duration is elapsed
+			reset: false								// optionally reset the timer back to 0 seconds in case of repeat && callback
 		},
 		$el,
 		display = 'html';	// to be used as $el.html in case of div and $el.val in case of input type text
@@ -57,8 +58,12 @@
 		if (duration && totalSeconds === duration) {
 			options.callback();
 			if (options.repeat) {
-				// Reset duration
-				duration += options.duration;
+				// Reset total seconds elapsed if requested
+				if (options.reset) {
+					startTime = getUnixSeconds();
+				} else {
+					duration += options.duration;
+				}
 			}
 		}
 	}
