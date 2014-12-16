@@ -235,6 +235,20 @@ $('#divId').timer({
 });
 </pre>
 				</div>
+				<div class='col-md-3 action'>Repeat callback & reset timer:</div>
+				<div class='col-md-9'>
+<pre>
+<em>//start a timer & execute a function every 30 seconds and then reset the timer at the end of 30 seconds.</em>
+$('#divId').timer({
+    <strong>duration:</strong> '30s',
+    <strong>callback:</strong> function() {
+        console.log('Timer will reset!');
+    },
+    <strong>repeat:</strong> true, <em>//repeatedly call the callback</em>
+    <strong>reset:</strong> true <em>//optionally reset the timer to 0</em>
+});
+</pre>
+				</div>
 			</div><!-- /row -->
 			
 			<br>
