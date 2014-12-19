@@ -1,5 +1,7 @@
 (function($) {
 
+	/*Timer converts seconds to pretty time*/
+
 	//30
 	test('timer converts 30 to 30 sec', function() {
 		$('#timer').timer({
