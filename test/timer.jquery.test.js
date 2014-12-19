@@ -30,26 +30,40 @@
 
 
 	/*Timer converts pretty time to seconds*/
+	var scenarios = [
+		{ 'in': '30 sec', out: 30, display: '32 sec' },
+		{ 'in': '1:40 min', out: 100, display: '1:42 min' },
+		{ 'in': '16:40 min', out: 1000, display: '16:42 min' },
+		{ 'in': '23:52 min', out: 1432, display: '23:54 min' },
+		{ 'in': '59:59 min', out: 3599, display: '1:00:01' },
+		{ 'in': '1:00:00', out: 3600, display: '1:00:02' },
+		{ 'in': '1:23:20', out: 5000, display: '1:23:22' },
+		{ 'in': '2:46:40', out: 10000, display: '2:46:42' },
+		{ 'in': '13:53:20', out: 50000, display: '13:53:22' },
+		{ 'in': '15:05:21', out: 54321, display: '15:05:23' },
+		{ 'in': '23:20:00', out: 84000, display: '23:20:02' },
+	];
 
-	//30
-	test('timer converts 30 sec to 30', function() {
-		$('#timer').timer({
-			editable: true
+	scenarios.forEach(function(obj) {
+		test('timer converts ' + obj['in'] + ' to ' + obj.out, function() {
+			$('#timer').timer({
+				editable: true
+			});
+
+			$('#timer').focus();
+			$('#timer').val(obj['in']);
+			$('#timer').blur();
+
+			stop();
+
+			setTimeout(function() {
+				equal($('#timer').val(), obj.display, 'Timer should display ' + obj.display);
+				start();
+
+				$('#timer').val('').timer('remove');
+			}, 2100);
+
 		});
-
-		$('#timer').focus();
-		$('#timer').val('30 sec');
-		$('#timer').blur();
-
-		stop();
-
-		setTimeout(function() {
-			equal($('#timer').val(), '32 sec', 'Timer should display 32 sec');
-			start();
-
-			$('#timer').val('').timer('remove');
-		}, 2100);
-
 	});
 
 })(jQuery)
