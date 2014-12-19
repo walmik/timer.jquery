@@ -114,4 +114,27 @@
 	});
 
 
+	/*Timer converts pretty time to seconds*/
+
+	//30
+	test('timer converts 30 sec to 30', function() {
+		$('#timer').timer({
+			editable: true
+		});
+
+		$('#timer').focus();
+		$('#timer').val('30 sec');
+		$('#timer').blur();
+
+		stop();
+
+		setTimeout(function() {
+			equal($('#timer').val(), '32 sec', 'Timer should display 32 sec');
+			start();
+
+			$('#timer').val('').timer('remove');
+		}, 2100);
+
+	});
+
 })(jQuery)
