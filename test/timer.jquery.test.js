@@ -1,6 +1,29 @@
 (function($) {
 
-	/*Timer converts seconds to pretty time*/
+	// Timer executes callback after the specified duration has elapsed
+	test('timer executes callback after the specified duration', function() {
+		var callbackExecuted = false;
+
+		$('#timer').timer({
+			duration: '3s',
+			callback: function() {
+				callbackExecuted = true;
+			}
+		});
+
+		// Pause test momentarily
+		stop();
+
+		// Check value of callbackExecuted in 3 seconds (+ minor offset to run assertion comfortably)
+		setTimeout(function() {
+			equal(callbackExecuted, true, 'Timer executes callback after the specified duration has elapsed.');
+			$('#timer').val('').timer('remove');
+
+			start();
+		}, 3100);
+	}); 
+
+	// Timer converts seconds to pretty time
 	var scenarios = [
 		{ 'in': 30, out: '30 sec'},
 		{ 'in': 100, out: '1:40 min'},
@@ -29,7 +52,7 @@
 	
 
 
-	/*Timer converts pretty time to seconds*/
+	// Timer converts pretty time to seconds
 	var scenarios = [
 		{ 'in': '30 sec', out: 30, display: '32 sec' },
 		{ 'in': '1:40 min', out: 100, display: '1:42 min' },
@@ -61,7 +84,7 @@
 				start();
 
 				$('#timer').val('').timer('remove');
-			}, 2100);
+			}, 2150);
 
 		});
 	});
