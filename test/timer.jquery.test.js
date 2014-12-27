@@ -1,8 +1,12 @@
 (function($) {
 
+	var callbackExecuted = false, 
+		scenarios = [],
+		count = 0;	// To print 'Done! on completion of tests
+
+
 	// Timer executes callback after the specified duration has elapsed
 	test('timer executes callback after the specified duration', function() {
-		var callbackExecuted = false;
 
 		$('#timer').timer({
 			duration: '3s',
@@ -24,7 +28,7 @@
 	}); 
 
 	// Timer converts seconds to pretty time
-	var scenarios = [
+	scenarios = [
 		{ 'in': 30, out: '30 sec'},
 		{ 'in': 100, out: '1:40 min'},
 		{ 'in': 1000, out: '16:40 min'},
@@ -53,7 +57,7 @@
 
 
 	// Timer converts pretty time to seconds
-	var scenarios = [
+	scenarios = [
 		{ 'in': '30 sec', out: 30, display: '32 sec' },
 		{ 'in': '1:40 min', out: 100, display: '1:42 min' },
 		{ 'in': '16:40 min', out: 1000, display: '16:42 min' },
@@ -84,6 +88,13 @@
 				start();
 
 				$('#timer').val('').timer('remove');
+
+				count++;
+
+				// Remove 'tests running' message if all scenarios are done
+				if(scenarios.length === count) {
+					$('#msg').html('Done!').removeClass('highlight');
+				}
 			}, 2150);
 
 		});
