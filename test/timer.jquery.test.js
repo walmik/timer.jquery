@@ -6,7 +6,6 @@
 
 	// Timer executes callback after the specified duration has elapsed
 	test('timer executes callback after the specified duration', function() {
-
 		$('#timer').timer({
 			duration: '3s',
 			callback: function() {
@@ -24,6 +23,62 @@
 
 			start();
 		}, 3100);
+	});
+
+	// Syntax for timer duration 10s translates to correct values in time
+	test('timer executes callback after the specified duration', function() {
+		callbackExecuted = false;
+
+		$('#timer').timer({
+			editable: true,
+			duration: '10s',
+			callback: function() {
+				callbackExecuted = true;
+			}
+		});
+
+		// Push time to a second before end of specified duration
+		$('#timer').focus();
+		$('#timer').val('9 sec');
+		$('#timer').blur();
+		// Pause test momentarily
+		stop();
+
+		// Check value of callbackExecuted in 3 seconds (+ minor offset to run assertion comfortably)
+		setTimeout(function() {
+			equal(callbackExecuted, true, 'Timer translates duration of 10s correctly.');
+			$('#timer').val('').timer('remove');
+
+			start();
+		}, 2100);
+	});
+
+	// Syntax for timer duration 10s translates to correct values in time
+	test('timer executes callback after the specified duration', function() {
+		callbackExecuted = false;
+
+		$('#timer').timer({
+			editable: true,
+			duration: '5m30s',
+			callback: function() {
+				callbackExecuted = true;
+			}
+		});
+
+		// Push time to a second before end of specified duration
+		$('#timer').focus();
+		$('#timer').val('5:29 min');
+		$('#timer').blur();
+		// Pause test momentarily
+		stop();
+
+		// Check value of callbackExecuted in 3 seconds (+ minor offset to run assertion comfortably)
+		setTimeout(function() {
+			equal(callbackExecuted, true, 'Timer translates duration of 5m30s correctly.');
+			$('#timer').val('').timer('remove');
+
+			start();
+		}, 2100);
 	});
 
 	// Timer converts seconds to pretty time
