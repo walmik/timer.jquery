@@ -14,7 +14,7 @@ module.exports = function (grunt) {
 
 		// Implement coding guidelines
 		jscs: {
-			src: ['src/timer.jquery.js'],
+			src: ['src/timer.jquery.js', 'test/timer.jquery.test.js'],
 			options: {
 				config: '.jscsrc'
 			}
@@ -55,7 +55,7 @@ module.exports = function (grunt) {
 
 		watch: {
 			scripts: {
-				files: ['src/timer.jquery.js'],
+				files: ['src/timer.jquery.js', 'test/timer.jquery.test.js'],
 				tasks: ['jscs', 'jshint', 'uglify'],
 				options: {
 					nospawn: true
