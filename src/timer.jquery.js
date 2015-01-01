@@ -23,8 +23,7 @@
 				alert('Time up!');
 				stopTimerInterval();
 			},
-			repeat: false,								// this will repeat callback every n times duration is elapsed
-			reset: false								// optionally reset the timer back to 0 seconds in case of repeat && callback
+			repeat: false								// this will repeat callback every n times duration is elapsed
 		},
 		$el,
 		display = 'html';	// to be used as $el.html in case of div and $el.val in case of input type text
@@ -56,15 +55,12 @@
 
 		// Check if totalSeconds is equal to duration if any
 		if (duration && totalSeconds === duration) {
+			// Run the default callback
 			options.callback();
+
+			// If repeat is requested, bump the duration by options.duration
 			if (options.repeat) {
-				// Reset total seconds elapsed if requested
-				if (options.reset) {
-					startTime = getUnixSeconds();
-					totalSeconds = 0;
-				} else {
-					duration += options.duration;
-				}
+				duration += options.duration;
 			}
 		}
 	}
@@ -225,6 +221,13 @@
 		}
 	}
 
+	function resetTimer() {
+		startTime = getUnixSeconds();
+		totalSeconds = 0;
+		$el.data('seconds', totalSeconds);
+		duration = options.duration;
+	}
+
 	function removeTimer() {
 		stopTimerInterval();
 		$el.data('plugin_' + pluginName, null);
@@ -279,6 +282,10 @@
 			resumeTimer();
 		},
 
+		reset: function() {
+			resetTimer();
+		},
+
 		remove: function() {
 			removeTimer();
 		}
@@ -325,10 +332,10 @@
 			}
 
 			/**
-			 * Provision for passing an object for notification feature
+			 * Allow passing custom options object
 			 */
 			if (typeof options === 'object') {
-				instance.start.call(instance, options);
+				instance.start.call(instance);
 			}
 		});
 	};

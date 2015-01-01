@@ -243,9 +243,9 @@ $('#divId').timer({
     <strong>duration:</strong> '30s',
     <strong>callback:</strong> function() {
         console.log('Timer will reset!');
+        $('#divId').timer('reset');
     },
-    <strong>repeat:</strong> true, <em>//repeatedly call the callback</em>
-    <strong>reset:</strong> true <em>//optionally reset the timer to 0</em>
+    <strong>repeat:</strong> true <em>//repeatedly call the callback</em>
 });
 </pre>
 				</div>
@@ -276,9 +276,8 @@ $('#divId').timer({
 			$('.start-timer-btn').on('click', function() {
 				hasTimer = true;
 				$('.timer').timer({
-					seconds: 1000
+					editable: true
 				});
-				$('.timer').timer('pause');
 				$(this).addClass('hidden');
 				$('.pause-timer-btn, .remove-timer-btn').removeClass('hidden');
 			});
