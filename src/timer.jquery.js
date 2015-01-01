@@ -61,6 +61,7 @@
 				// Reset total seconds elapsed if requested
 				if (options.reset) {
 					startTime = getUnixSeconds();
+					totalSeconds = 0;
 				} else {
 					duration += options.duration;
 				}
