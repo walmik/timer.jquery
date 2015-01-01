@@ -187,7 +187,7 @@
 				if (scenarios.length === count) {
 					$('#msg').html('Done!').removeClass('highlight');
 				}
-			}, 2250);
+			}, 2150);
 
 		});
 	});
