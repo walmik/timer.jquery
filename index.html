@@ -275,7 +275,10 @@ $('#divId').timer({
 			// Init timer start
 			$('.start-timer-btn').on('click', function() {
 				hasTimer = true;
-				$('.timer').timer({editable: true});
+				$('.timer').timer({
+					seconds: 1000
+				});
+				$('.timer').timer('pause');
 				$(this).addClass('hidden');
 				$('.pause-timer-btn, .remove-timer-btn').removeClass('hidden');
 			});
