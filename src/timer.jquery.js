@@ -206,7 +206,6 @@
 	// TIMER INTERFACE
 	function startTimer() {
 		if (!isTimerRunning) {
-			startTime = getUnixSeconds();
 			render();
 			startTimerInterval();
 		}
@@ -241,7 +240,12 @@
 
 		// Setup total seconds from options.seconds (if any)
 		totalSeconds = options.seconds;
+
+		// Setup start time if seconds were provided
+		startTime = getUnixSeconds() - totalSeconds;
+
 		$el.data('seconds', totalSeconds);
+
 		// Check if this is a input/textarea element or not
 		elementType = $el.prop('tagName').toLowerCase();
 		if (elementType === 'input' || elementType === 'textarea') {

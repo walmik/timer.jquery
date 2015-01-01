@@ -4,8 +4,33 @@
 		scenarios = [],
 		count = 0;	// To print 'Done! on completion of tests
 
+	// Timer resets to 0 seconds if reset was set to true
+	test('timer resets to 0 seconds if reset was set to true', function() {
+		$('#timer').timer({
+			duration: '3s',
+			callback: function() {
+				callbackExecuted = true;
+			},
+			repeat: true,
+			reset: true
+		});
+
+		// Pause test momentarily
+		stop();
+
+		// Check value of callbackExecuted in 3 seconds (+ minor offset to run assertion comfortably)
+		setTimeout(function() {
+			equal($('#timer').data('seconds'), 0, 'Timer resets to 0 seconds if reset was set to true.');
+			$('#timer').val('').timer('remove');
+
+			start();
+		}, 3100);
+	});
+
 	// Timer executes callback after the specified duration has elapsed
 	test('timer executes callback after the specified duration', function() {
+		callbackExecuted = false;
+
 		$('#timer').timer({
 			duration: '3s',
 			callback: function() {
@@ -22,7 +47,25 @@
 			$('#timer').val('').timer('remove');
 
 			start();
-		}, 3100);
+		}, 3200);
+	});
+
+	// Timer starts from a given number of seconds
+	test('timer starts from a given number of seconds', function() {
+		$('#timer').timer({
+			seconds: 1000
+		});
+
+		// Pause test momentarily
+		stop();
+
+		// Check value of callbackExecuted in 3 seconds (+ minor offset to run assertion comfortably)
+		setTimeout(function() {
+			equal($('#timer').val(), '16:42 min', 'Timer starts from a given number of seconds.');
+			$('#timer').val('').timer('remove');
+
+			start();
+		}, 2100);
 	});
 
 	// Timer parses duration syntax correctly
@@ -51,29 +94,6 @@
 
 			start();
 		}, 2500);
-	});
-
-	// Timer resets to 0 seconds if reset was set to true
-	test('timer resets to 0 seconds if reset was set to true', function() {
-		$('#timer').timer({
-			duration: '3s',
-			callback: function() {
-				callbackExecuted = true;
-			},
-			repeat: true,
-			reset: true
-		});
-
-		// Pause test momentarily
-		stop();
-
-		// Check value of callbackExecuted in 3 seconds (+ minor offset to run assertion comfortably)
-		setTimeout(function() {
-			equal($('#timer').data('seconds'), 0, 'Timer resets to 0 seconds if reset was set to true.');
-			$('#timer').val('').timer('remove');
-
-			start();
-		}, 3200);
 	});
 
 	// Syntax for timer duration 10s translates to correct values in time
