@@ -4,15 +4,13 @@
 		scenarios = [],
 		count = 0;	// To print 'Done! on completion of tests
 
-	// Timer resets to 0 seconds if reset was set to true
-	test('timer resets to 0 seconds if reset was set to true', function() {
+	// Timer resets to 0 seconds if reset was called
+	test('timer resets to 0 seconds if reset was called', function() {
 		$('#timer').timer({
 			duration: '3s',
 			callback: function() {
-				callbackExecuted = true;
-			},
-			repeat: true,
-			reset: true
+				$('#timer').timer('reset');
+			}
 		});
 
 		// Pause test momentarily
@@ -20,7 +18,7 @@
 
 		// Check value of callbackExecuted in 3 seconds (+ minor offset to run assertion comfortably)
 		setTimeout(function() {
-			equal($('#timer').data('seconds'), 0, 'Timer resets to 0 seconds if reset was set to true.');
+			equal($('#timer').data('seconds'), 0, 'Timer resets to 0 seconds if reset was called.');
 			$('#timer').val('').timer('remove');
 
 			start();
@@ -189,7 +187,7 @@
 				if (scenarios.length === count) {
 					$('#msg').html('Done!').removeClass('highlight');
 				}
-			}, 2200);
+			}, 2250);
 
 		});
 	});

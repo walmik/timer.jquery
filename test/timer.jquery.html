@@ -9,13 +9,15 @@
 	<!-- Load local QUnit (grunt requires v1.0.0 or newer). -->
 	<link rel="stylesheet" href="../libs/qunit/qunit.css" media="screen">
 	<style type="text/css">
+		body { font-family: sans-serif; }
 		#timer { padding: 10px; font-size: 18px; border: none; }
-		#msg { font-family: sans-serif; }
 		.highlight { color: #FF4C4C; }
 	</style>
 </head>
 <body>
 	<h1 id="qunit-header">jQuery Timer Test Suite</h1>
+	<p>Timers will work inconsistently in the browser while running tests. Please click 'Rerun' next to failed tests if any. Or better still, clone this repository and run tests from the terminal to get an accurate representation of test results
+		.</p>
 	<strong class="highlight" id='msg'>Running tests...</strong>
 	<input type="text" id="timer" /> 
 	<h2 id="qunit-banner"></h2>

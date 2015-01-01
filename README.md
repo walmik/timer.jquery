@@ -88,10 +88,9 @@ Start a timer and execute a function repeatedly at a certain duration and then r
 $('#div-id').timer({
 	duration: '2m',
 	callback: function() {
-		alert('Why, Hello there');	//you could have a ajax call here instead
+		$('#div-id').timer('reset');
 	},
-	repeat: true, //repeatedly calls the callback you specify
-	reset: true	  //optionally reset the timer (default value is false)
+	repeat: true //repeatedly calls the callback you specify
 });
 ```
 
