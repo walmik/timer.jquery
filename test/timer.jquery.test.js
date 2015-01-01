@@ -25,8 +25,8 @@
 		}, 3100);
 	});
 
-	// Syntax for timer duration 10s translates to correct values in time
-	test('timer executes callback after the specified duration', function() {
+	// Timer parses duration syntax correctly
+	test('timer parses duration syntax correctly', function() {
 		callbackExecuted = false;
 
 		$('#timer').timer({
@@ -50,7 +50,30 @@
 			$('#timer').val('').timer('remove');
 
 			start();
-		}, 2100);
+		}, 2500);
+	});
+
+	// Timer resets to 0 seconds if reset was set to true
+	test('timer resets to 0 seconds if reset was set to true', function() {
+		$('#timer').timer({
+			duration: '3s',
+			callback: function() {
+				callbackExecuted = true;
+			},
+			repeat: true,
+			reset: true
+		});
+
+		// Pause test momentarily
+		stop();
+
+		// Check value of callbackExecuted in 3 seconds (+ minor offset to run assertion comfortably)
+		setTimeout(function() {
+			equal($('#timer').data('seconds'), 0, 'Timer resets to 0 seconds if reset was set to true.');
+			$('#timer').val('').timer('remove');
+
+			start();
+		}, 3200);
 	});
 
 	// Syntax for timer duration 10s translates to correct values in time
@@ -78,7 +101,7 @@
 			$('#timer').val('').timer('remove');
 
 			start();
-		}, 2100);
+		}, 2200);
 	});
 
 	// Timer converts seconds to pretty time
@@ -146,7 +169,7 @@
 				if (scenarios.length === count) {
 					$('#msg').html('Done!').removeClass('highlight');
 				}
-			}, 2150);
+			}, 2200);
 
 		});
 	});
