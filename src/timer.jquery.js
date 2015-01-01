@@ -224,6 +224,7 @@
 	function resetTimer() {
 		startTime = getUnixSeconds();
 		totalSeconds = 0;
+		$el.data('seconds', totalSeconds);
 		duration = options.duration;
 	}
 

@@ -22,7 +22,7 @@
 			$('#timer').val('').timer('remove');
 
 			start();
-		}, 3500);
+		}, 3200);
 	});
 
 	// Timer executes callback after the specified duration has elapsed
