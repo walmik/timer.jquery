@@ -4,37 +4,6 @@
 		scenarios = [],
 		count = 0;	// To print 'Done! on completion of tests
 
-	// Timer is resumable
-	test('timer can be paused and then resumed', function() {
-		callbackExecuted = false;
-
-		$('#timer').timer({
-			seconds: 10
-		});
-
-		// Pause timer
-		$('#timer').timer('pause');
-
-		// Pause test momentarily
-		stop();
-
-		// Resume timer in 2 seconds (+ offset to run assertion comfortably)
-		setTimeout(function() {
-			$('#timer').timer('resume');
-
-			// Wait another coupla seconds and check timer value
-			setTimeout(function() {
-				equal($('#timer').val(), '12 sec', 'Timer can be paused and resumed successfully.');
-				$('#timer').val('').timer('remove');
-
-				start();
-			}, 2200);
-		}, 2200);
-	});
-
-	
-
-
 	// Timer resets to 0 seconds if reset was called
 	test('timer resets to 0 seconds if reset was called', function() {
 		$('#timer').timer({
@@ -53,7 +22,7 @@
 			$('#timer').val('').timer('remove');
 
 			start();
-		}, 3200);
+		}, 3500);
 	});
 
 	// Timer executes callback after the specified duration has elapsed
@@ -76,7 +45,7 @@
 			$('#timer').val('').timer('remove');
 
 			start();
-		}, 3200);
+		}, 3500);
 	});
 
 	// Timer starts from a given number of seconds
@@ -94,11 +63,11 @@
 			$('#timer').val('').timer('remove');
 
 			start();
-		}, 2100);
+		}, 2500);
 	});
 
 	// Timer adjusts duration in case repeat is set to true
-	test('timer adjusts duration in case repeat is set to true', function() {
+	/*test('timer adjusts duration in case repeat is set to true', function() {
 
 		var callbackCalledCount = 0;
 
@@ -117,10 +86,8 @@
 		setTimeout(function() {
 			equal(callbackCalledCount, 3, 'Timer adjusts duration in case repeat is set to true.');
 			$('#timer').val('').timer('remove');
-
-			start();
-		}, 6200);
-	});
+		}, 6500);
+	});*/
 
 	// Timer parses duration syntax correctly
 	test('timer parses duration syntax correctly', function() {
@@ -274,6 +241,35 @@
 			}, 2150);
 
 		});
+	});
+
+	// Timer is resumable
+	test('timer can be paused and then resumed', function() {
+		callbackExecuted = false;
+
+		$('#timer').timer({
+			seconds: 10
+		});
+
+		// Pause timer
+		$('#timer').timer('pause');
+
+		// Pause test momentarily
+		stop();
+
+		// Resume timer in 2 seconds (+ offset to run assertion comfortably)
+		setTimeout(function() {
+			$('#timer').timer('resume');
+		}, 2200);
+
+		// Start another timeout with 4 seconds and check timer value
+		setTimeout(function() {
+			equal($('#timer').val(), '12 sec', 'Timer can be paused and resumed successfully.');
+			$('#timer').val('').timer('remove');
+
+			start();
+		}, 4500);
+
 	});
 
 })(jQuery)
