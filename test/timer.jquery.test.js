@@ -10,6 +10,7 @@
 			duration: '3s',
 			callback: function() {
 				$('#timer').timer('reset');
+				$('#timer').timer('pause');
 			}
 		});
 
@@ -22,7 +23,7 @@
 			$('#timer').val('').timer('remove');
 
 			start();
-		}, 3200);
+		}, 3500);
 	});
 
 	// Timer executes callback after the specified duration has elapsed
@@ -45,7 +46,7 @@
 			$('#timer').val('').timer('remove');
 
 			start();
-		}, 3200);
+		}, 3500);
 	});
 
 	// Timer starts from a given number of seconds
@@ -63,8 +64,31 @@
 			$('#timer').val('').timer('remove');
 
 			start();
-		}, 2100);
+		}, 2200);
 	});
+
+	// Timer adjusts duration in case repeat is set to true
+	/*test('timer adjusts duration in case repeat is set to true', function() {
+
+		var callbackCalledCount = 0;
+
+		$('#timer').timer({
+			duration: '2s',
+			callback: function() {
+				callbackCalledCount++;
+			},
+			repeat: true
+		});
+
+		// Pause test momentarily
+		stop();
+
+		// Check value of callbackCalledCount in 6 seconds (+ minor offset to run assertion comfortably)
+		setTimeout(function() {
+			equal(callbackCalledCount, 3, 'Timer adjusts duration in case repeat is set to true.');
+			$('#timer').val('').timer('remove');
+		}, 6500);
+	});*/
 
 	// Timer parses duration syntax correctly
 	test('timer parses duration syntax correctly', function() {
@@ -88,6 +112,34 @@
 		// Check value of callbackExecuted in 3 seconds (+ minor offset to run assertion comfortably)
 		setTimeout(function() {
 			equal(callbackExecuted, true, 'Timer translates duration of 10s correctly.');
+			$('#timer').val('').timer('remove');
+
+			start();
+		}, 2500);
+	});
+
+	// Timer converts duration syntax with hours correctly
+	test('timer parses duration syntax with hours, minutes and seconds correctly', function() {
+		callbackExecuted = false;
+
+		$('#timer').timer({
+			editable: true,
+			duration: '5h30m10s',
+			callback: function() {
+				callbackExecuted = true;
+			}
+		});
+
+		// Push time to a second before end of specified duration
+		$('#timer').focus();
+		$('#timer').val('5:30:08');
+		$('#timer').blur();
+		// Pause test momentarily
+		stop();
+
+		// Check value of callbackExecuted in 2 seconds (+ offset to run assertion comfortably)
+		setTimeout(function() {
+			equal(callbackExecuted, true, 'Timer translates duration of 5h30m10s correctly.');
 			$('#timer').val('').timer('remove');
 
 			start();
@@ -190,6 +242,35 @@
 			}, 2150);
 
 		});
+	});
+
+	// Timer is resumable
+	test('timer can be paused and then resumed', function() {
+		callbackExecuted = false;
+
+		$('#timer').timer({
+			seconds: 10
+		});
+
+		// Pause timer
+		$('#timer').timer('pause');
+
+		// Pause test momentarily
+		stop();
+
+		// Resume timer in 2 seconds (+ offset to run assertion comfortably)
+		setTimeout(function() {
+			$('#timer').timer('resume');
+		}, 2200);
+
+		// Start another timeout with 4 seconds and check timer value
+		setTimeout(function() {
+			equal($('#timer').val(), '12 sec', 'Timer can be paused and resumed successfully.');
+			$('#timer').val('').timer('remove');
+
+			start();
+		}, 4500);
+
 	});
 
 })(jQuery)
