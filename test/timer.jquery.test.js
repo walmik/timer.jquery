@@ -32,7 +32,7 @@
 		}, 2200);
 	});
 
-	// Timer bumps duration in case repeat is set to true
+	
 
 
 	// Timer resets to 0 seconds if reset was called
@@ -95,6 +95,31 @@
 
 			start();
 		}, 2100);
+	});
+
+	// Timer adjusts duration in case repeat is set to true
+	test('timer adjusts duration in case repeat is set to true', function() {
+
+		var callbackCalledCount = 0;
+
+		$('#timer').timer({
+			duration: '2s',
+			callback: function() {
+				callbackCalledCount++;
+			},
+			repeat: true
+		});
+
+		// Pause test momentarily
+		stop();
+
+		// Check value of callbackCalledCount in 6 seconds (+ minor offset to run assertion comfortably)
+		setTimeout(function() {
+			equal(callbackCalledCount, 3, 'Timer adjusts duration in case repeat is set to true.');
+			$('#timer').val('').timer('remove');
+
+			start();
+		}, 6200);
 	});
 
 	// Timer parses duration syntax correctly
