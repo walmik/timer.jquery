@@ -4,6 +4,9 @@
 		scenarios = [],
 		count = 0;	// To print 'Done! on completion of tests
 
+	// Timer bumps duration in case repeat is set to true
+
+
 	// Timer resets to 0 seconds if reset was called
 	test('timer resets to 0 seconds if reset was called', function() {
 		$('#timer').timer({
@@ -88,6 +91,34 @@
 		// Check value of callbackExecuted in 3 seconds (+ minor offset to run assertion comfortably)
 		setTimeout(function() {
 			equal(callbackExecuted, true, 'Timer translates duration of 10s correctly.');
+			$('#timer').val('').timer('remove');
+
+			start();
+		}, 2500);
+	});
+
+	// Timer converts duration syntax with hours correctly
+	test('timer parses duration syntax with hours, minutes and seconds correctly', function() {
+		callbackExecuted = false;
+
+		$('#timer').timer({
+			editable: true,
+			duration: '5h30m10s',
+			callback: function() {
+				callbackExecuted = true;
+			}
+		});
+
+		// Push time to a second before end of specified duration
+		$('#timer').focus();
+		$('#timer').val('5:30:08');
+		$('#timer').blur();
+		// Pause test momentarily
+		stop();
+
+		// Check value of callbackExecuted in 2 seconds (+ offset to run assertion comfortably)
+		setTimeout(function() {
+			equal(callbackExecuted, true, 'Timer translates duration of 5h30m10s correctly.');
 			$('#timer').val('').timer('remove');
 
 			start();
