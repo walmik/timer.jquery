@@ -10,6 +10,7 @@
 			duration: '3s',
 			callback: function() {
 				$('#timer').timer('reset');
+				$('#timer').timer('pause');
 			}
 		});
 
@@ -63,7 +64,7 @@
 			$('#timer').val('').timer('remove');
 
 			start();
-		}, 2500);
+		}, 2200);
 	});
 
 	// Timer adjusts duration in case repeat is set to true
