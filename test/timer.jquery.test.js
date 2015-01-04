@@ -4,6 +4,34 @@
 		scenarios = [],
 		count = 0;	// To print 'Done! on completion of tests
 
+	// Timer is resumable
+	test('timer can be paused and then resumed', function() {
+		callbackExecuted = false;
+
+		$('#timer').timer({
+			seconds: 10
+		});
+
+		// Pause timer
+		$('#timer').timer('pause');
+
+		// Pause test momentarily
+		stop();
+
+		// Resume timer in 2 seconds (+ offset to run assertion comfortably)
+		setTimeout(function() {
+			$('#timer').timer('resume');
+
+			// Wait another coupla seconds and check timer value
+			setTimeout(function() {
+				equal($('#timer').val(), '12 sec', 'Timer can be paused and resumed successfully.');
+				$('#timer').val('').timer('remove');
+
+				start();
+			}, 2200);
+		}, 2200);
+	});
+
 	// Timer bumps duration in case repeat is set to true
 
 
