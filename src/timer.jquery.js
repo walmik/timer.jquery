@@ -257,7 +257,11 @@
 		}
 
 		if (options.duration) {
-			duration = options.duration = timeToSeconds(options.duration);
+			// Store options.duration in seconds
+			options.duration = timeToSeconds(options.duration);
+
+			// Add options.seconds to duration if any (default: 0)
+			duration = options.duration + options.seconds;
 		}
 
 		if (options.editable) {
