@@ -142,7 +142,7 @@
 			equal(callbackExecuted, true, 'Timer translates duration of 5h30m10s correctly.');
 			$('#timer').val('').timer('remove');
 
-			start();
+			start(); 
 		}, 2500);
 	});
 

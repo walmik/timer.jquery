@@ -257,12 +257,9 @@
 		}
 
 		if (options.duration) {
-			// Store options.duration in seconds
-			options.duration = timeToSeconds(options.duration);
-
-			// Add options.seconds to duration if any (default: 0)
-			duration = options.duration + options.seconds;
+			duration = options.duration = timeToSeconds(options.duration);
 		}
+
 
 		if (options.editable) {
 			makeEditable();
