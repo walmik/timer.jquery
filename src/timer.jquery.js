@@ -70,12 +70,9 @@
 	 * Render pretty time
 	 */
 	function render() {
-		if (options.countdown && duration > 0)
-		{
+		if (options.countdown && duration > 0) {
 			$el[display](secondsToTime(duration - totalSeconds));
-		}
-		else
-		{
+		} else {
 			$el[display](secondsToTime(totalSeconds));
 		}
 		$el.data('seconds', totalSeconds);
