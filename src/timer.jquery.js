@@ -63,6 +63,11 @@
 			if (options.repeat) {
 				duration += options.duration;
 			}
+
+			// If this is a countdown, then end it as duration has completed
+			if (options.countdown) {
+				options.countdown = false;
+			}
 		}
 	}
 
