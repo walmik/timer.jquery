@@ -70,12 +70,14 @@
 	 * Render pretty time
 	 */
 	function render() {
+		var sec = totalSeconds;
+
 		if (options.countdown && duration > 0) {
-			$el[display](secondsToTime(duration - totalSeconds));
-		} else {
-			$el[display](secondsToTime(totalSeconds));
+			sec = duration - totalSeconds;
 		}
-		$el.data('seconds', totalSeconds);
+
+		$el[display](secondsToTime(sec));
+		$el.data('seconds', sec);
 	}
 
 	function makeEditable() {
@@ -264,7 +266,6 @@
 		if (options.duration) {
 			duration = options.duration = timeToSeconds(options.duration);
 		}
-
 
 		if (options.editable) {
 			makeEditable();
