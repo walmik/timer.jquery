@@ -4,9 +4,9 @@
 		scenarios = [],
 		count = 0;	// To print 'Done! on completion of tests
 
-	test('timer supports countdown', function() {
+	/*test('timer supports countdown', function() {
 		$('#timer').timer({
-			duration: 3,
+			duration: '3s',
 			countdown: true,
 			callback: function() {
 				$('#timer').timer('pause');
@@ -23,7 +23,7 @@
 
 			start();
 		}, 3500);
-	});
+	});*/
 
 	// Timer resets to 0 seconds if reset was called
 	test('timer resets to 0 seconds if reset was called', function() {
