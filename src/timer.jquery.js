@@ -23,7 +23,8 @@
 				alert('Time up!');
 				stopTimerInterval();
 			},
-			repeat: false								// this will repeat callback every n times duration is elapsed
+			repeat: false,								// this will repeat callback every n times duration is elapsed
+			countdown: false							// if true, this will render the timer as a countdown if duration > 0
 		},
 		$el,
 		display = 'html';	// to be used as $el.html in case of div and $el.val in case of input type text
@@ -69,7 +70,11 @@
 	 * Render pretty time
 	 */
 	function render() {
-		$el[display](secondsToTime(totalSeconds));
+		if (options.countdown && duration > 0) {
+			$el[display](secondsToTime(duration - totalSeconds));
+		} else {
+			$el[display](secondsToTime(totalSeconds));
+		}
 		$el.data('seconds', totalSeconds);
 	}
 
