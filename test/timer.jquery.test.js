@@ -4,6 +4,27 @@
 		scenarios = [],
 		count = 0;	// To print 'Done! on completion of tests
 
+	test('timer supports countdown', function() {
+		$('#timer').timer({
+			duration: 3,
+			countdown: true,
+			callback: function() {
+				$('#timer').timer('pause');
+			}
+		});
+
+		// Pause test momentarily
+		stop();
+
+		// Check value of callbackExecuted in 3 seconds (+ minor offset to run assertion comfortably)
+		setTimeout(function() {
+			equal($('#timer').data('seconds'), 0, 'Timer counts down to 0 seconds if countdown was enabled.');
+			$('#timer').val('').timer('remove');
+
+			start();
+		}, 3500);
+	});
+
 	// Timer resets to 0 seconds if reset was called
 	test('timer resets to 0 seconds if reset was called', function() {
 		$('#timer').timer({
@@ -142,7 +163,7 @@
 			equal(callbackExecuted, true, 'Timer translates duration of 5h30m10s correctly.');
 			$('#timer').val('').timer('remove');
 
-			start(); 
+			start();
 		}, 2500);
 	});
 
