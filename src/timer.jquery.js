@@ -165,8 +165,6 @@
 		var time = '',
 			timeObj = sec2TimeObj(sec);
 
-		console.log(timeObj.seconds);
-
 		if (options.format) {
 			var formatDef = [
 				{identifier: '%h', value: timeObj.hours, pad: false},
