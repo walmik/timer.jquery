@@ -63,7 +63,7 @@ When you initialize a timer with the `duration` and `callback` parameters, the t
 By default the timer displays the biggest whole unit. Examples: 
 * `seconds: 50` will show as `50 sec`
 * `seconds: 63` will show as `1:03 min`
-* `seconds: 3663` will show as `1:01:01`
+* `seconds: 3663` will show as `1:01:03`
 
 If you want to customize the format in which the timer displays time, use the `format` option. Available formats the timer understands are:
 
