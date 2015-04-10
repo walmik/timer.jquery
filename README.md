@@ -66,14 +66,15 @@ By default the timer displays the biggest whole unit. Examples:
 * `seconds: 3663` will show as `1:01:01`
 
 If you want to customize the format in which the timer displays time, use the `format` option. Available formats the timer understands are:
-Format | Description | Example
-:------: | ----------- | -------
-`%h` | Non-zero padded *Hours* | `%h hours` gives `3 hours`
-`%m` | Non-zero padded *Minutes* unless number of minutes is greater than 60 | `%h:%m minutes` gives `0:6 minutes` or `1:06 minutes`
-`%s` | Non-zero padded *Seconds* unless number of seconds is greater than 60 | `%h:%m:%s` gives `0:0:6` or `0:1:06` or `1:01:06`
-`%H` | Zero padded *Hours* | `%H hours` gives `03 hours`
-`%M` | Zero padded *Minutes* | `%H:%M minutes` gives `00:06 minutes`
-`%S` | Zero padded *Seconds* | `%H:%M:%S` gives `00:00:06`
+
+| Format | Description | Example |
+|:------:|-------------|---------|
+| `%h` | Non-zero padded *Hours* | `%h hours` gives `3 hours` |
+| `%m` | Non-zero padded *Minutes* unless number of minutes is greater than 60 | `%h:%m minutes` gives `0:6 minutes` or `1:06 minutes` |
+| `%s` | Non-zero padded *Seconds* unless number of seconds is greater than 60 | `%h:%m:%s` gives `0:0:6` or `0:1:06` or `1:01:06` |
+| `%H` | Zero padded *Hours* | `%H hours` gives `03 hours` |
+| `%M` | Zero padded *Minutes* | `%H:%M minutes` gives `00:06 minutes` |
+| `%S` | Zero padded *Seconds* | `%H:%M:%S` gives `00:00:06` |
 
 ### Methods available on an initialized timer:
 
