@@ -24,7 +24,8 @@
 				stopTimerInterval();
 			},
 			repeat: false,								// this will repeat callback every n times duration is elapsed
-			countdown: false							// if true, this will render the timer as a countdown if duration > 0
+			countdown: false,							// if true, this will render the timer as a countdown if duration > 0
+			format: null								// this sets the format in which the time will be printed
 		},
 		$el,
 		display = 'html';	// to be used as $el.html in case of div and $el.val in case of input type text
@@ -164,13 +165,32 @@
 		var time = '',
 			timeObj = sec2TimeObj(sec);
 
-		if (timeObj.hours) {
-			time = timeObj.hours + ':' + timeObj.minutes + ':' + timeObj.seconds;
+		if (options.format) {
+			var formatDef = [
+				{identifier: '%h', value: timeObj.hours, pad: false},
+				{identifier: '%m', value: timeObj.minutes, pad: false},
+				{identifier: '%s', value: timeObj.seconds, pad: false},
+				{identifier: '%H', value: parseInt(timeObj.hours), pad: true},
+				{identifier: '%M', value: parseInt(timeObj.minutes), pad: true},
+				{identifier: '%S', value: parseInt(timeObj.seconds), pad: true}
+			];
+			time = options.format;
+
+			formatDef.forEach(function(format) {
+				time = time.replace(
+					new RegExp(format.identifier.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1'), 'g'),
+					(format.pad) ? ((format.value < 10) ? '0' + format.value : format.value) : format.value
+				);
+			});
 		} else {
-			if (timeObj.minutes) {
-				time = timeObj.minutes + ':' + timeObj.seconds + ' min';
+			if (timeObj.hours) {
+				time = timeObj.hours + ':' + timeObj.minutes + ':' + timeObj.seconds;
 			} else {
-				time = timeObj.seconds + ' sec';
+				if (timeObj.minutes) {
+					time = timeObj.minutes + ':' + timeObj.seconds + ' min';
+				} else {
+					time = timeObj.seconds + ' sec';
+				}
 			}
 		}
 		return time;
