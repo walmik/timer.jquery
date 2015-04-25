@@ -300,6 +300,11 @@
 
 		if (options.duration) {
 			duration = options.duration = timeToSeconds(options.duration);
+			// If duration is less than the totalSeconds,
+			// then the callback if any will not be called
+			if (totalSeconds >= duration) {
+				duration = totalSeconds + duration;
+			}
 		}
 
 		if (options.editable) {
