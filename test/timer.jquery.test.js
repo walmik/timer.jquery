@@ -294,4 +294,38 @@
 
 	});
 
+	// Timer has readable states - stopped, running & pause
+	test('timer has readable states', function() {
+		callbackExecuted = false;
+
+		$('#timer').timer({
+			seconds: 10
+		});
+
+		equal($('#timer').data('state'), 'running', 'Timer has state - running');
+
+		// Pause timer
+		$('#timer').timer('pause');
+
+		// Pause test momentarily
+		stop();
+
+		equal($('#timer').data('state'), 'paused', 'Timer has state - paused');
+
+		// Resume timer in 2 seconds (+ offset to run assertion comfortably)
+		setTimeout(function() {
+			$('#timer').timer('resume');
+		}, 2200);
+
+		// Start another timeout with 4 seconds and check timer value
+		setTimeout(function() {
+			equal($('#timer').val(), '12 sec', 'Timer can be paused and resumed successfully.');
+			equal($('#timer').data('state'), 'running', 'Timer has state - running');
+			$('#timer').val('').timer('remove');
+
+			start();
+		}, 4500);
+
+	});
+
 })(jQuery)

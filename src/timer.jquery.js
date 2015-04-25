@@ -28,7 +28,11 @@
 			format: null								// this sets the format in which the time will be printed
 		},
 		$el,
-		display = 'html';	// to be used as $el.html in case of div and $el.val in case of input type text
+		display = 'html',	// to be used as $el.html in case of div and $el.val in case of input type text
+		// Constants for various states of the timer
+		TIMER_STOPPED = 'stopped',
+		TIMER_RUNNING = 'running',
+		TIMER_PAUSED = 'paused';
 
 	/**
 	 * Common function to start or resume a timer interval
@@ -237,12 +241,14 @@
 		if (!isTimerRunning) {
 			render();
 			startTimerInterval();
+			$el.data('state', TIMER_RUNNING);
 		}
 	}
 
 	function pauseTimer() {
 		if (isTimerRunning) {
 			stopTimerInterval();
+			$el.data('state', TIMER_PAUSED);
 		}
 	}
 
@@ -250,6 +256,7 @@
 		if (!isTimerRunning) {
 			startTime = getUnixSeconds() - totalSeconds;
 			startTimerInterval();
+			$el.data('state', TIMER_RUNNING);
 		}
 	}
 
@@ -257,6 +264,7 @@
 		startTime = getUnixSeconds();
 		totalSeconds = 0;
 		$el.data('seconds', totalSeconds);
+		$el.data('state', TIMER_STOPPED);
 		duration = options.duration;
 	}
 
@@ -264,6 +272,7 @@
 		stopTimerInterval();
 		$el.data('plugin_' + pluginName, null);
 		$el.data('seconds', null);
+		$el.data('state', null);
 		$el[display]('');
 	}
 
@@ -281,6 +290,7 @@
 		startTime = getUnixSeconds() - totalSeconds;
 
 		$el.data('seconds', totalSeconds);
+		$el.data('state', TIMER_STOPPED);
 
 		// Check if this is a input/textarea element or not
 		elementType = $el.prop('tagName').toLowerCase();

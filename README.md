@@ -133,3 +133,11 @@ $('#div-id').timer({
 	repeat: true //repeatedly calls the callback you specify
 });
 ```
+
+### Timer state
+
+You can get the current state of timer by querying the `state` property on it's data object
+
+```javascript
+$('#div-id').data('state'); 	// running | paused | stopped
+```
