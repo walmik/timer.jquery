@@ -7,11 +7,15 @@
 	<meta name='description' content='jQuery timer plugin, Start an editable pretty timer inside any HTML element'>
 	<meta name='author' content='Walmik Deshpande'>
 	<meta charset='UTF-8'>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name='viewport' content='width=device-width, initial-scale=1'>
 	<link rel='canonical' href='http://jquerytimer.com' />
 	<link href='bootstrap.min.css' rel='stylesheet'>
-	<link href='http://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet' type='text/css'>
-	<style>	
+    <link href='http://fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet' type='text/css'>
+	<style>
+        a:hover {
+            color: #333;
+        }
+
 		pre {
 			background-color: #e0e0e0;
 			border: none;
@@ -25,8 +29,9 @@
 		}
 
 		h1{
-			font-family: 'Comfortaa', cursive;
-			margin-bottom: 20px;
+			font-family: 'Comfortaa', Helvetica, Arial,  sans-serif;
+            font-weight: 200;
+            margin-bottom: 20px;
 		}
 		em { color: #999; font-size: 12px; }
 
@@ -53,10 +58,18 @@
 			font-style: italic;
 		}
 
+        .highlight {
+            color: #a80000;
+        }
+
+        .highlight:hover {
+            text-decoration: none;
+        }
+
 		/*!
-		 * "Fork me on GitHub" CSS ribbon v0.1.1 | MIT License
-		 * https://github.com/simonwhitaker/github-fork-ribbon-css
-		*/
+         * "Fork me on GitHub" CSS ribbon v0.1.1 | MIT License
+         * https://github.com/simonwhitaker/github-fork-ribbon-css
+         */
 
 		/* Left will inherit from right (so we don't need to duplicate code) */
 		.github-fork-ribbon {
@@ -98,7 +111,7 @@
 			text-align: center;
 
 			/* Set the geometry. If you fiddle with these you'll also need
-			 to tweak the top and right values in.github-fork-ribbon. */
+            to tweak the top and right values in.github-fork-ribbon. */
 			width: 200px;
 			line-height: 20px;
 
@@ -131,8 +144,6 @@
 			right: 0;
 		}
 
-
-
 		.github-fork-ribbon-wrapper.right .github-fork-ribbon {
 			top: 42px;
 			right: -43px;
@@ -147,10 +158,10 @@
 	</style>
 </head>
 <body>
-	<div class="full-width dark">
-		<div class="container">
+	<div class='full-width dark'>
+		<div class='container'>
 			<h1>jQuery Timer</h1>
-			<ul class="list-unstyled">
+			<ul class='list-unstyled'>
 				<li>Lightweight <a href='test/timer.jquery.html'>well tested</a> jQuery pretty timer plugin</li>
 				<li>Start, Pause, Resume and Remove a timer inside any HTML element.</li>
 				<li>Get notified at a set time or at regular intervals.</li>
@@ -171,18 +182,18 @@
 			</div>
 			<br>
 			<p>
-				<strong><a href="https://raw.githubusercontent.com/walmik/timer.jquery/master/src/timer.jquery.js">Download plugin</a></strong> | 
-				<strong><a href="https://github.com/walmik/timer.jquery">&#9733; Star this project on Github</a></strong>
+				<strong><a href='https://raw.githubusercontent.com/walmik/timer.jquery/master/src/timer.jquery.js'>Download plugin</a></strong> |
+				<strong><a href='https://github.com/walmik/timer.jquery' class='highlight'>&#9733; Star this project on Github</a></strong>
 			</p>
 		</div>
 	</div>
-	<div class="full-width">
-		<div class="container">
+	<div class='full-width'>
+		<div class='container'>
 			<h4>How to</h4>
 			<div class='row'>
 				<div class='col-md-3 action'>Install:</div>
 				<div class='col-md-9'>
-<pre><a href="https://raw.githubusercontent.com/walmik/timer.jquery/master/src/timer.jquery.js">Download</a> the jQuery timer plugin and put it in a SCRIPT tag in your HTML page after jQuery itself. </pre>
+<pre><a href='https://raw.githubusercontent.com/walmik/timer.jquery/master/src/timer.jquery.js'>Download</a> the jQuery timer plugin and put it in a SCRIPT tag in your HTML page after jQuery itself. </pre>
 				</div>
 				<div class='col-md-3 action'>Start a timer:</div>
 				<div class='col-md-9'>
@@ -249,40 +260,60 @@ $('#divId').timer({
 });
 </pre>
 				</div>
+				<div class='col-md-3 action'>
+                    Format:
+                    By default the timer will display a pretty output (30 sec OR 1:06). You can change this format if you like.
+                </div>
+				<div class='col-md-9'>
+<pre><em>// Show a digital timer instead of pretty timer:</em>
+$('#divId').timer({
+    <strong>format:</strong> '%H:%M:%S'  <em>Display time as 00:00:00</em>
+});
+
+<em>// OR</em>
+$('#divId').timer({
+    <strong>format:</strong> '%h:%m:%s'  <em>Display time as 0:0:0</em>
+});
+
+<em>// OR</em>
+$('#divId').timer({
+    <strong>format:</strong> '%M minutes %s seconds'  <em>Display time as 3 minutes 45 seconds</em>
+});</pre>
+                </div>
 			</div><!-- /row -->
-			
+
 			<br>
-			
+
 			<p>
-				<strong><a href="https://raw.githubusercontent.com/walmik/timer.jquery/master/src/timer.jquery.js">Download jQuery timer plugin</a></strong>
+				<strong><a href=https://raw.githubusercontent.com/walmik/timer.jquery/master/src/timer.jquery.js'>Download jQuery timer plugin</a></strong>
 			</p>
 
-			
+
 		</div>
 	</div>
 
-	<div class="github-fork-ribbon-wrapper right fixed">
-		<div class="github-fork-ribbon">
-			<a href="https://github.com/walmik/timer.jquery">Fork me on GitHub</a>
+	<div class='github-fork-ribbon-wrapper right fixed'>
+		<div class='github-fork-ribbon'>
+			<a href='https://github.com/walmik/timer.jquery'>Fork me on GitHub</a>
 		</div>
 	</div>
 
-	<script src="libs/jquery/jquery-1.11.0.min.js" type="text/javascript"></script>
-	<script src="src/timer.jquery.js"></script>
+	<script src='libs/jquery/jquery-1.11.0.min.js' type='text/javascript'></script>
+	<script src='src/timer.jquery.js'></script>
 	<script>
-	   (function(){
+	    (function(){
 			var hasTimer = false;
 			// Init timer start
 			$('.start-timer-btn').on('click', function() {
 				hasTimer = true;
 				$('.timer').timer({
 					editable: true
-				});
+                });
 				$(this).addClass('hidden');
 				$('.pause-timer-btn, .remove-timer-btn').removeClass('hidden');
 			});
 
-			// Init timer resume	
+			// Init timer resume
 			$('.resume-timer-btn').on('click', function() {
 				$('.timer').timer('resume');
 				$(this).addClass('hidden');
