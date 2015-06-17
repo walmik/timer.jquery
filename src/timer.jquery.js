@@ -25,7 +25,8 @@
 			},
 			repeat: false,								// this will repeat callback every n times duration is elapsed
 			countdown: false,							// if true, this will render the timer as a countdown if duration > 0
-			format: null								// this sets the format in which the time will be printed
+			format: null,								// this sets the format in which the time will be printed
+			updateFrequency: 500						// How often should timer display update (default 500ms)
 		},
 		$el,
 		display = 'html',	// to be used as $el.html in case of div and $el.val in case of input type text
@@ -38,7 +39,7 @@
 	 * Common function to start or resume a timer interval
 	 */
 	function startTimerInterval() {
-		intr = setInterval(incrementSeconds, 500);
+		intr = setInterval(incrementSeconds, options.updateFrequency);
 		isTimerRunning = true;
 	}
 
