@@ -26,7 +26,7 @@
 			repeat: false,								// this will repeat callback every n times duration is elapsed
 			countdown: false,							// if true, this will render the timer as a countdown if duration > 0
 			format: null,								// this sets the format in which the time will be printed
-			updateFrequency: 500						// How often should timer display update (default 500ms)
+			updateFrequency: 1000						// How often should timer display update (default 500ms)
 		},
 		$el,
 		display = 'html',	// to be used as $el.html in case of div and $el.val in case of input type text
@@ -45,7 +45,6 @@
 
 	/**
 	 * Common function to stop timer interval
-	 * @return {[type]} [description]
 	 */
 	function stopTimerInterval() {
 		clearInterval(intr);
@@ -61,13 +60,13 @@
 		render();
 
 		// Check if totalSeconds is equal to duration if any
-		if (duration && totalSeconds === duration) {
+		if (duration && totalSeconds % duration === 0) {
 			// Run the default callback
 			options.callback();
 
-			// If repeat is requested, bump the duration by options.duration
-			if (options.repeat) {
-				duration += options.duration;
+			// If 'repeat' is not requested then disable the duration
+			if (!options.repeat) {
+				duration = options.duration = null;
 			}
 
 			// If this is a countdown, then end it as duration has completed
@@ -91,6 +90,15 @@
 		$el.data('seconds', sec);
 	}
 
+	/**
+	 * Method to make timer field editable
+	 * This method hard binds focus & blur events to pause & resume
+	 * and recognizes built-in pretty time (for eg 12 sec OR 3:34 min)
+	 * It won't recognize user created formats.
+	 * Users may not always want this hard bound. In such a case,
+	 * do not use the editable property. Instead bind custom functions
+	 * to blur and focus.
+	 */
 	function makeEditable() {
 		$el.on('focus', function() {
 			pauseTimer();
@@ -301,11 +309,6 @@
 
 		if (options.duration) {
 			duration = options.duration = timeToSeconds(options.duration);
-			// If duration is less than the totalSeconds,
-			// then the callback if any will not be called
-			if (totalSeconds >= duration) {
-				duration = totalSeconds + duration;
-			}
 		}
 
 		if (options.editable) {
@@ -345,31 +348,31 @@
 		options = options || 'start';
 
 		return this.each(function() {
-			/*
-			Allow the plugin to be initialized on an element only once
-			This way we can call the plugin's internal function
-			without having to reinitialize the plugin all over again.
-			*/
+			/**
+			 * Allow the plugin to be initialized on an element only once
+			 * This way we can call the plugin's internal function
+			 * without having to reinitialize the plugin all over again.
+			 */
 			if (!($.data(this, 'plugin_' + pluginName) instanceof Timer)) {
 
-				/*
-				Create a new data attribute on the element to hold the plugin name
-				This way we can know which plugin(s) is/are initialized on the element later
-				*/
+				/**
+				 * Create a new data attribute on the element to hold the plugin name
+				 * This way we can know which plugin(s) is/are initialized on the element later
+				 */
 				$.data(this, 'plugin_' + pluginName, new Timer(this, options));
 
 			}
 
-			/*
-			Use the instance of this plugin derived from the data attribute for this element
-			to conduct whatever action requested as a string parameter.
-			*/
+			/**
+			 * Use the instance of this plugin derived from the data attribute for this element
+			 * to conduct whatever action requested as a string parameter.
+			 */
 			var instance = $.data(this, 'plugin_' + pluginName);
 
-			/*
-			Provision for calling a function from this plugin
-			without initializing it all over again
-			*/
+			/**
+			 * Provision for calling a function from this plugin
+			 * without initializing it all over again
+			 */
 			if (typeof options === 'string') {
 				if (typeof instance[options] === 'function') {
 					/*

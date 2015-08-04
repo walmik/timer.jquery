@@ -142,7 +142,7 @@
 			$('#timer').val('').timer('remove');
 
 			start();
-		}, 2200);
+		}, 2500);
 	});
 
 	// Timer adjusts duration in case repeat is set to true
