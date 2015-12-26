@@ -1,4 +1,4 @@
-/*global jQuery:false */
+/*global define:false */
 /*
  * =======================
  * jQuery Timer Plugin
@@ -6,7 +6,13 @@
  * Start/Stop/Resume a time in any HTML element
  */
 
-(function($) {
+(function(root, factory) {
+	if (typeof define === 'function' && define.amd) {
+		define(['jquery'], factory);
+	} else {
+		factory(root.jQuery);
+	}
+}(this, function($) {
 	// PRIVATE
 	var intr,
 		totalSeconds = 0,
@@ -391,4 +397,4 @@
 		});
 	};
 
-})(jQuery);
+}));
