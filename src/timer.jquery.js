@@ -49,17 +49,17 @@
 	/**
 	 * Common function to start or resume a timer interval
 	 */
-	function startTimerInterval() {
-		intr = setInterval(incrementSeconds, options.updateFrequency);
-		isTimerRunning = true;
+	function startTimerInterval(element) {
+		$(element).data('intr', setInterval(incrementSeconds.bind(element), options.updateFrequency));
+		$(element).data('isTimerRunning', true);
 	}
 
 	/**
 	 * Common function to stop timer interval
 	 */
-	function stopTimerInterval() {
-		clearInterval(intr);
-		isTimerRunning = false;
+	function stopTimerInterval(element) {
+		clearInterval($(element).data('intr'));
+		$(element).data('isTimerRunning', false);
 	}
 
 	/**
@@ -67,17 +67,18 @@
 	 * and call render to display pretty time
 	 */
 	function incrementSeconds() {
-		totalSeconds = getUnixSeconds() - startTime;
-		render();
+		$(this).data('totalSeconds', getUnixSeconds() - $(this).data('startTime'));
+		render(this);
 
 		// Check if totalSeconds is equal to duration if any
-		if (duration && totalSeconds % duration === 0) {
+		if ($(this).data('duration') && $(this).data('totalSeconds') % $(this).data('duration') === 0) {
 			// Run the default callback
 			options.callback();
 
 			// If 'repeat' is not requested then disable the duration
 			if (!options.repeat) {
-				duration = options.duration = null;
+				$(this).data('duration', null);
+        options.duration = null;
 			}
 
 			// If this is a countdown, then end it as duration has completed
@@ -90,15 +91,15 @@
 	/**
 	 * Render pretty time
 	 */
-	function render() {
-		var sec = totalSeconds;
+	function render(element) {
+		var sec = $(element).data('totalSeconds');
 
-		if (options.countdown && duration > 0) {
-			sec = duration - totalSeconds;
+		if (options.countdown && $(element).data('duration') > 0) {
+			sec = $(element).data('duration') - $(element).data('totalSeconds');
 		}
 
-		$el[display](secondsToTime(sec));
-		$el.data('seconds', sec);
+		$(element)[display](secondsToTime(sec));
+		$(element).data('seconds', sec);
 	}
 
 	/**
@@ -110,30 +111,30 @@
 	 * do not use the editable property. Instead bind custom functions
 	 * to blur and focus.
 	 */
-	function makeEditable() {
-		$el.on('focus', function() {
-			pauseTimer();
+	function makeEditable(element) {
+		$(element).on('focus', function() {
+			pauseTimer(element);
 		});
 
-		$el.on('blur', function() {
+		$(element).on('blur', function() {
 			// eg. 12 sec 3:34 min 12:30 min
-			var val = $el[display](), valArr;
+			var val = $(element)[display](), valArr;
 
 			if (val.indexOf('sec') > 0) {
 				// sec
-				totalSeconds = Number(val.replace(/\ssec/g, ''));
+				$(element).data('totalSeconds', Number(val.replace(/\ssec/g, '')));
 			} else if (val.indexOf('min') > 0) {
 				// min
 				val = val.replace(/\smin/g, '');
 				valArr = val.split(':');
-				totalSeconds = Number(valArr[0] * 60) + Number(valArr[1]);
+				$(element).data('totalSeconds', Number(valArr[0] * 60) + Number(valArr[1]));
 			} else if (val.match(/\d{1,2}:\d{2}:\d{2}/)) {
 				// hrs
 				valArr = val.split(':');
-				totalSeconds = Number(valArr[0] * 3600) + Number(valArr[1] * 60) + Number(valArr[2]);
+				$(element).data('totalSeconds', Number(valArr[0] * 3600) + Number(valArr[1] * 60) + Number(valArr[2]));
 			}
 
-			resumeTimer();
+			resumeTimer(element);
 		});
 	}
 
@@ -257,78 +258,79 @@
 	}
 
 	// TIMER INTERFACE
-	function startTimer() {
-		if (!isTimerRunning) {
-			render();
-			startTimerInterval();
-			$el.data('state', TIMER_RUNNING);
-      options.startTimer($el);
+	function startTimer(element) {
+		if (!$(element).data('isTimerRunning')) {
+			render(element);
+			startTimerInterval(element);
+			$(element).data('state', TIMER_RUNNING);
+      options.startTimer($(element));
 		}
 	}
 
-	function pauseTimer() {
-		if (isTimerRunning) {
-			stopTimerInterval();
-			$el.data('state', TIMER_PAUSED);
-      options.pauseTimer($el);
+	function pauseTimer(element) {
+		if ($(element).data('isTimerRunning')) {
+			stopTimerInterval(element);
+			$(element).data('state', TIMER_PAUSED);
+      options.pauseTimer($(element));
 		}
 	}
 
-	function resumeTimer() {
-		if (!isTimerRunning) {
-			startTime = getUnixSeconds() - totalSeconds;
-			startTimerInterval();
-			$el.data('state', TIMER_RUNNING);
-      options.resumeTimer($el);
+	function resumeTimer(element) {
+		if (!$(element).data('isTimerRunning')) {
+			$(element).data('startTime', getUnixSeconds() - $(element).data('totalSeconds'));
+			startTimerInterval(element);
+			$(element).data('state', TIMER_RUNNING);
+      options.resumeTimer($(element));
 		}
 	}
 
-	function resetTimer() {
-    options.resetTimer($el);
-		startTime = getUnixSeconds();
-		totalSeconds = 0;
-		$el.data('seconds', totalSeconds);
-		$el.data('state', TIMER_STOPPED);
-		duration = options.duration;
+	function resetTimer(element) {
+    options.resetTimer($(element));
+		$(element).data('startTime', getUnixSeconds());
+		$(element).data('totalSeconds', 0);
+		$(element).data('seconds', $(element).data('totalSeconds'));
+		$(element).data('state', TIMER_STOPPED);
+		$(element).data('duration', options.duration);
 	}
 
-	function removeTimer() {
-		stopTimerInterval();
-    options.removeTimer($el);
-		$el.data('plugin_' + pluginName, null);
-		$el.data('seconds', null);
-		$el.data('state', null);
-		$el[display]('');
+	function removeTimer(element) {
+		stopTimerInterval(element);
+    options.removeTimer($(element));
+		$(element).data('plugin_' + pluginName, null);
+		$(element).data('seconds', null);
+		$(element).data('state', null);
+		$(element)[display]('');
 	}
 
 	// TIMER PROTOTYPE
 	var Timer = function(element, userOptions) {
 		var elementType;
 
-		options = $.extend(options, userOptions);
-		$el = $(element);
+		this.options = options = $.extend(options, userOptions);
+    this.element = element;
 
 		// Setup total seconds from options.seconds (if any)
-		totalSeconds = options.seconds;
+		$(element).data('totalSeconds', options.seconds);
 
 		// Setup start time if seconds were provided
-		startTime = getUnixSeconds() - totalSeconds;
+		$(element).data('startTime', getUnixSeconds() - $(element).data('totalSeconds'));
 
-		$el.data('seconds', totalSeconds);
-		$el.data('state', TIMER_STOPPED);
+		$(element).data('seconds', $(element).data('totalSeconds'));
+		$(element).data('state', TIMER_STOPPED);
 
 		// Check if this is a input/textarea element or not
-		elementType = $el.prop('tagName').toLowerCase();
+		elementType = $(element).prop('tagName').toLowerCase();
 		if (elementType === 'input' || elementType === 'textarea') {
 			display = 'val';
 		}
 
 		if (options.duration) {
-			duration = options.duration = timeToSeconds(options.duration);
+			$(element).data('duration', timeToSeconds(options.duration));
+      options.duration = timeToSeconds(options.duration);
 		}
 
 		if (options.editable) {
-			makeEditable();
+			makeEditable(element);
 		}
 
 	};
@@ -338,23 +340,23 @@
 	 */
 	Timer.prototype = {
 		start: function() {
-			startTimer();
+			startTimer(this.element);
 		},
 
 		pause: function() {
-			pauseTimer();
+			pauseTimer(this.element);
 		},
 
 		resume: function() {
-			resumeTimer();
+			resumeTimer(this.element);
 		},
 
 		reset: function() {
-			resetTimer();
+			resetTimer(this.element);
 		},
 
 		remove: function() {
-			removeTimer();
+			removeTimer(this.element);
 		}
 	};
 
@@ -406,7 +408,7 @@
   				instance.start.call(instance);
         }
         else {
-          render();
+          render(this);
         }
 			}
 		});
