@@ -29,6 +29,11 @@
 				alert('Time up!');
 				stopTimerInterval();
 			},
+      startTimer: function() {},
+      pauseTimer: function() {},
+      resumeTimer: function() {},
+      resetTimer: function() {},
+      removeTimer: function() {},
 			repeat: false,								// this will repeat callback every n times duration is elapsed
 			countdown: false,							// if true, this will render the timer as a countdown if duration > 0
 			format: null,								// this sets the format in which the time will be printed
@@ -257,6 +262,7 @@
 			render();
 			startTimerInterval();
 			$el.data('state', TIMER_RUNNING);
+      options.startTimer($el);
 		}
 	}
 
@@ -264,6 +270,7 @@
 		if (isTimerRunning) {
 			stopTimerInterval();
 			$el.data('state', TIMER_PAUSED);
+      options.pauseTimer($el);
 		}
 	}
 
@@ -272,10 +279,12 @@
 			startTime = getUnixSeconds() - totalSeconds;
 			startTimerInterval();
 			$el.data('state', TIMER_RUNNING);
+      options.resumeTimer($el);
 		}
 	}
 
 	function resetTimer() {
+    options.resetTimer($el);
 		startTime = getUnixSeconds();
 		totalSeconds = 0;
 		$el.data('seconds', totalSeconds);
@@ -285,6 +294,7 @@
 
 	function removeTimer() {
 		stopTimerInterval();
+    options.removeTimer($el);
 		$el.data('plugin_' + pluginName, null);
 		$el.data('seconds', null);
 		$el.data('state', null);
@@ -392,7 +402,12 @@
 			 * Allow passing custom options object
 			 */
 			if (typeof options === 'object') {
-				instance.start.call(instance);
+        if (options.state == TIMER_RUNNING) {
+  				instance.start.call(instance);
+        }
+        else {
+          render();
+        }
 			}
 		});
 	};
