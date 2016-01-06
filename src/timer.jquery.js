@@ -37,7 +37,8 @@
 			repeat: false,								// this will repeat callback every n times duration is elapsed
 			countdown: false,							// if true, this will render the timer as a countdown if duration > 0
 			format: null,								// this sets the format in which the time will be printed
-			updateFrequency: 1000						// How often should timer display update (default 500ms)
+			updateFrequency: 1000,						// How often should timer display update (default 500ms)
+			state: 'running'
 		},
 		$el,
 		display = 'html',	// to be used as $el.html in case of div and $el.val in case of input type text
@@ -416,7 +417,7 @@
 					instance.start.call(instance);
 				}
 				else {
-					render(this);
+					render(instance);
 				}
 			}
 		});
