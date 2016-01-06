@@ -338,7 +338,7 @@
 		}
 
 		if (this.options.editable) {
-			makeEditable(timer);
+			makeEditable(this);
 		}
 
 	};
