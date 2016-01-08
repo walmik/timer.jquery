@@ -29,10 +29,16 @@
 				alert('Time up!');
 				stopTimerInterval();
 			},
+			startTimer: function() {},
+			pauseTimer: function() {},
+			resumeTimer: function() {},
+			resetTimer: function() {},
+			removeTimer: function() {},
 			repeat: false,								// this will repeat callback every n times duration is elapsed
 			countdown: false,							// if true, this will render the timer as a countdown if duration > 0
 			format: null,								// this sets the format in which the time will be printed
-			updateFrequency: 1000						// How often should timer display update (default 500ms)
+			updateFrequency: 1000,						// How often should timer display update (default 500ms)
+			state: 'running'
 		},
 		$el,
 		display = 'html',	// to be used as $el.html in case of div and $el.val in case of input type text
@@ -44,17 +50,18 @@
 	/**
 	 * Common function to start or resume a timer interval
 	 */
-	function startTimerInterval() {
-		intr = setInterval(incrementSeconds, options.updateFrequency);
-		isTimerRunning = true;
+	function startTimerInterval(timer) {
+		var element = timer.element;
+		$(element).data('intr', setInterval(incrementSeconds.bind(timer), timer.options.updateFrequency));
+		$(element).data('isTimerRunning', true);
 	}
 
 	/**
 	 * Common function to stop timer interval
 	 */
-	function stopTimerInterval() {
-		clearInterval(intr);
-		isTimerRunning = false;
+	function stopTimerInterval(timer) {
+		clearInterval($(timer.element).data('intr'));
+		$(timer.element).data('isTimerRunning', false);
 	}
 
 	/**
@@ -62,22 +69,23 @@
 	 * and call render to display pretty time
 	 */
 	function incrementSeconds() {
-		totalSeconds = getUnixSeconds() - startTime;
-		render();
+		$(this.element).data('totalSeconds', getUnixSeconds() - $(this.element).data('startTime'));
+		render(this);
 
 		// Check if totalSeconds is equal to duration if any
-		if (duration && totalSeconds % duration === 0) {
+		if ($(this.element).data('duration') && $(this.element).data('totalSeconds') % $(this.element).data('duration') === 0) {
 			// Run the default callback
-			options.callback();
+			this.options.callback();
 
 			// If 'repeat' is not requested then disable the duration
-			if (!options.repeat) {
-				duration = options.duration = null;
+			if (!this.options.repeat) {
+				$(this.element).data('duration', null);
+				this.options.duration = null;
 			}
 
 			// If this is a countdown, then end it as duration has completed
-			if (options.countdown) {
-				options.countdown = false;
+			if (this.options.countdown) {
+				this.options.countdown = false;
 			}
 		}
 	}
@@ -85,15 +93,16 @@
 	/**
 	 * Render pretty time
 	 */
-	function render() {
-		var sec = totalSeconds;
+	function render(timer) {
+		var element = timer.element;
+		var sec = $(element).data('totalSeconds');
 
-		if (options.countdown && duration > 0) {
-			sec = duration - totalSeconds;
+		if (timer.options.countdown && $(element).data('duration') > 0) {
+			sec = $(element).data('duration') - $(element).data('totalSeconds');
 		}
 
-		$el[display](secondsToTime(sec));
-		$el.data('seconds', sec);
+		$(element)[display](secondsToTime(sec));
+		$(element).data('seconds', sec);
 	}
 
 	/**
@@ -105,30 +114,31 @@
 	 * do not use the editable property. Instead bind custom functions
 	 * to blur and focus.
 	 */
-	function makeEditable() {
-		$el.on('focus', function() {
-			pauseTimer();
+	function makeEditable(timer) {
+		var element = timer.element;
+		$(element).on('focus', function() {
+			pauseTimer(timer);
 		});
 
-		$el.on('blur', function() {
+		$(element).on('blur', function() {
 			// eg. 12 sec 3:34 min 12:30 min
-			var val = $el[display](), valArr;
+			var val = $(element)[display](), valArr;
 
 			if (val.indexOf('sec') > 0) {
 				// sec
-				totalSeconds = Number(val.replace(/\ssec/g, ''));
+				$(element).data('totalSeconds', Number(val.replace(/\ssec/g, '')));
 			} else if (val.indexOf('min') > 0) {
 				// min
 				val = val.replace(/\smin/g, '');
 				valArr = val.split(':');
-				totalSeconds = Number(valArr[0] * 60) + Number(valArr[1]);
+				$(element).data('totalSeconds', Number(valArr[0] * 60) + Number(valArr[1]));
 			} else if (val.match(/\d{1,2}:\d{2}:\d{2}/)) {
 				// hrs
 				valArr = val.split(':');
-				totalSeconds = Number(valArr[0] * 3600) + Number(valArr[1] * 60) + Number(valArr[2]);
+				$(element).data('totalSeconds', Number(valArr[0] * 3600) + Number(valArr[1] * 60) + Number(valArr[2]));
 			}
 
-			resumeTimer();
+			resumeTimer(timer);
 		});
 	}
 
@@ -252,73 +262,84 @@
 	}
 
 	// TIMER INTERFACE
-	function startTimer() {
-		if (!isTimerRunning) {
-			render();
-			startTimerInterval();
-			$el.data('state', TIMER_RUNNING);
+	function startTimer(timer) {
+		var element = timer.element;
+		if (!$(element).data('isTimerRunning')) {
+			render(timer);
+			startTimerInterval(timer);
+			$(element).data('state', TIMER_RUNNING);
+			timer.options.startTimer.bind(timer).call();
 		}
 	}
 
-	function pauseTimer() {
-		if (isTimerRunning) {
-			stopTimerInterval();
-			$el.data('state', TIMER_PAUSED);
+	function pauseTimer(timer) {
+		var element = timer.element;
+		if ($(element).data('isTimerRunning')) {
+			stopTimerInterval(timer);
+			$(element).data('state', TIMER_PAUSED);
+			timer.options.pauseTimer.bind(timer).call();
 		}
 	}
 
-	function resumeTimer() {
-		if (!isTimerRunning) {
-			startTime = getUnixSeconds() - totalSeconds;
-			startTimerInterval();
-			$el.data('state', TIMER_RUNNING);
+	function resumeTimer(timer) {
+		var element = timer.element;
+		if (!$(element).data('isTimerRunning')) {
+			$(element).data('startTime', getUnixSeconds() - $(element).data('totalSeconds'));
+			startTimerInterval(timer);
+			$(element).data('state', TIMER_RUNNING);
+			timer.options.resumeTimer.bind(timer).call();
 		}
 	}
 
-	function resetTimer() {
-		startTime = getUnixSeconds();
-		totalSeconds = 0;
-		$el.data('seconds', totalSeconds);
-		$el.data('state', TIMER_STOPPED);
-		duration = options.duration;
+	function resetTimer(timer) {
+		var element = timer.element;
+		timer.options.resetTimer().bind(timer).call();
+		$(element).data('startTime', getUnixSeconds());
+		$(element).data('totalSeconds', 0);
+		$(element).data('seconds', $(element).data('totalSeconds'));
+		$(element).data('state', TIMER_STOPPED);
+		$(element).data('duration', timer.options.duration);
 	}
 
-	function removeTimer() {
-		stopTimerInterval();
-		$el.data('plugin_' + pluginName, null);
-		$el.data('seconds', null);
-		$el.data('state', null);
-		$el[display]('');
+	function removeTimer(timer) {
+		var element = timer.element;
+		stopTimerInterval(timer);
+		timer.options.removeTimer.bind(timer).call();
+		$(element).data('plugin_' + pluginName, null);
+		$(element).data('seconds', null);
+		$(element).data('state', null);
+		$(element)[display]('');
 	}
 
 	// TIMER PROTOTYPE
 	var Timer = function(element, userOptions) {
 		var elementType;
 
-		options = $.extend(options, userOptions);
-		$el = $(element);
+		this.options = options = $.extend(options, userOptions);
+		this.element = element;
 
 		// Setup total seconds from options.seconds (if any)
-		totalSeconds = options.seconds;
+		$(element).data('totalSeconds', options.seconds);
 
 		// Setup start time if seconds were provided
-		startTime = getUnixSeconds() - totalSeconds;
+		$(element).data('startTime', getUnixSeconds() - $(element).data('totalSeconds'));
 
-		$el.data('seconds', totalSeconds);
-		$el.data('state', TIMER_STOPPED);
+		$(element).data('seconds', $(element).data('totalSeconds'));
+		$(element).data('state', TIMER_STOPPED);
 
 		// Check if this is a input/textarea element or not
-		elementType = $el.prop('tagName').toLowerCase();
+		elementType = $(element).prop('tagName').toLowerCase();
 		if (elementType === 'input' || elementType === 'textarea') {
 			display = 'val';
 		}
 
-		if (options.duration) {
-			duration = options.duration = timeToSeconds(options.duration);
+		if (this.options.duration) {
+			$(element).data('duration', timeToSeconds(this.options.duration));
+			this.options.duration = timeToSeconds(this.options.duration);
 		}
 
-		if (options.editable) {
-			makeEditable();
+		if (this.options.editable) {
+			makeEditable(this);
 		}
 
 	};
@@ -328,23 +349,23 @@
 	 */
 	Timer.prototype = {
 		start: function() {
-			startTimer();
+			startTimer(this);
 		},
 
 		pause: function() {
-			pauseTimer();
+			pauseTimer(this);
 		},
 
 		resume: function() {
-			resumeTimer();
+			resumeTimer(this);
 		},
 
 		reset: function() {
-			resetTimer();
+			resetTimer(this);
 		},
 
 		remove: function() {
-			removeTimer();
+			removeTimer(this);
 		}
 	};
 
@@ -392,7 +413,12 @@
 			 * Allow passing custom options object
 			 */
 			if (typeof options === 'object') {
-				instance.start.call(instance);
+				if (instance.options.state == TIMER_RUNNING) {
+					instance.start.call(instance);
+				}
+				else {
+					render(instance);
+				}
 			}
 		});
 	};
