@@ -79,6 +79,7 @@
 			if (this.options.countdown) {
 				stopTimerInterval(this);
 				this.options.countdown = false;
+				$(this.element).data('state', TIMER_STOPPED);
 			}
 
 			// Run the default callback
