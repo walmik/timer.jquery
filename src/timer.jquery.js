@@ -14,12 +14,7 @@
 	}
 }(this, function($) {
 	// PRIVATE
-	var intr,
-		totalSeconds = 0,
-		isTimerRunning = false,
-		startTime,
-		duration = null,
-		options = {
+	var options = {
 			seconds: 0,									// default seconds value to start timer from
 			editable: false,							// this will let users make changes to the time
 			restart: false,								// this will enable stop or continue after a timer callback
@@ -40,7 +35,6 @@
 			updateFrequency: 1000,						// How often should timer display update (default 500ms)
 			state: 'running'
 		},
-		$el,
 		display = 'html',	// to be used as $el.html in case of div and $el.val in case of input type text
 		// Constants for various states of the timer
 		TIMER_STOPPED = 'stopped',
@@ -73,7 +67,8 @@
 		render(this);
 
 		// Check if totalSeconds is equal to duration if any
-		if ($(this.element).data('duration') && $(this.element).data('totalSeconds') % $(this.element).data('duration') === 0) {
+		if ($(this.element).data('duration') &&
+			$(this.element).data('totalSeconds') % $(this.element).data('duration') === 0) {
 			// Run the default callback
 			this.options.callback();
 
@@ -94,8 +89,8 @@
 	 * Render pretty time
 	 */
 	function render(timer) {
-		var element = timer.element;
-		var sec = $(element).data('totalSeconds');
+		var element = timer.element,
+			sec = $(element).data('totalSeconds');
 
 		if (timer.options.countdown && ($(element).data('duration') > 0)) {
 			sec = $(element).data('duration') - $(element).data('totalSeconds');
@@ -413,10 +408,9 @@
 			 * Allow passing custom options object
 			 */
 			if (typeof options === 'object') {
-				if (instance.options.state == TIMER_RUNNING) {
+				if (instance.options.state === TIMER_RUNNING) {
 					instance.start.call(instance);
-				}
-				else {
+				} else {
 					render(instance);
 				}
 			}
