@@ -22,7 +22,6 @@
 			// callback to run after elapsed duration
 			callback: function() {
 				alert('Time up!');
-				stopTimerInterval();
 			},
 			startTimer: function() {},
 			pauseTimer: function() {},
@@ -69,8 +68,6 @@
 		// Check if totalSeconds is equal to duration if any
 		if ($(this.element).data('duration') &&
 			$(this.element).data('totalSeconds') % $(this.element).data('duration') === 0) {
-			// Run the default callback
-			this.options.callback();
 
 			// If 'repeat' is not requested then disable the duration
 			if (!this.options.repeat) {
@@ -80,8 +77,12 @@
 
 			// If this is a countdown, then end it as duration has completed
 			if (this.options.countdown) {
+				stopTimerInterval(this);
 				this.options.countdown = false;
 			}
+
+			// Run the default callback
+			this.options.callback();
 		}
 	}
 
