@@ -97,11 +97,11 @@
 		var element = timer.element;
 		var sec = $(element).data('totalSeconds');
 
-		if (timer.options.countdown && $(element).data('duration') > 0) {
+		if (timer.options.countdown && ($(element).data('duration') > 0)) {
 			sec = $(element).data('duration') - $(element).data('totalSeconds');
 		}
 
-		$(element)[display](secondsToTime(sec));
+		$(element)[display](secondsToTime(sec, timer));
 		$(element).data('seconds', sec);
 	}
 
@@ -190,11 +190,11 @@
 	 * @param  {Number} sec [Second to display as pretty time]
 	 * @return {String}     [Pretty time]
 	 */
-	function secondsToTime(sec) {
+	function secondsToTime(sec, timer) {
 		var time = '',
 			timeObj = sec2TimeObj(sec);
 
-		if (options.format) {
+		if (timer.options.format) {
 			var formatDef = [
 				{identifier: '%h', value: timeObj.hours, pad: false},
 				{identifier: '%m', value: timeObj.minutes, pad: false},
@@ -203,7 +203,7 @@
 				{identifier: '%M', value: parseInt(timeObj.minutes), pad: true},
 				{identifier: '%S', value: parseInt(timeObj.seconds), pad: true}
 			];
-			time = options.format;
+			time = timer.options.format;
 
 			formatDef.forEach(function(format) {
 				time = time.replace(
@@ -315,7 +315,7 @@
 	var Timer = function(element, userOptions) {
 		var elementType;
 
-		this.options = options = $.extend(options, userOptions);
+		this.options = options = $.extend(this.options, options, userOptions);
 		this.element = element;
 
 		// Setup total seconds from options.seconds (if any)
@@ -372,7 +372,7 @@
 	// INITIALIZE THE PLUGIN
 	var pluginName = 'timer';
 	$.fn[pluginName] = function(options) {
-		options = options || 'start';
+		this.options = options || 'start';
 
 		return this.each(function() {
 			/**
