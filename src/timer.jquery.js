@@ -369,7 +369,7 @@
 	// INITIALIZE THE PLUGIN
 	var pluginName = 'timer';
 	$.fn[pluginName] = function(options) {
-		this.options = options || 'start';
+		options = options || 'start';
 
 		return this.each(function() {
 			/**
