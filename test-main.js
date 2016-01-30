@@ -16,9 +16,10 @@ require.config({
 	// Karma serves files under /base, which is the basePath from your config file
 	baseUrl: '/base',
 
-	path: {
-		'jquery': 'libs/jquery.js',
-		'timer': 'src/timer.jquery.js'
+	paths: {
+		// 'jquery': './libs/jquery',
+		'timer': './src/timer.jquery',
+		'fixtures': './test/fixtures'
 	},
 
 	// dynamically load all test files
