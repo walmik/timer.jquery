@@ -14,7 +14,7 @@ module.exports = function (grunt) {
 
 		// Implement coding guidelines
 		jscs: {
-			src: ['src/timer.jquery.js', 'test/timer.jquery.test.js'],
+			src: ['src/timer.jquery.js', 'test/timer.jquery.spec.js'],
 			options: {
 				config: '.jscsrc'
 			}
@@ -32,30 +32,21 @@ module.exports = function (grunt) {
 			}
 		},
 
-		// Start a connect server for qunit tests
-		connect: {
-			server: {
-				options: {
-					port: 8000,
-					base: '.'
-				}
-			}
-		},
-
-		// Run qunit tests with PhantomJS
-		qunit: {
-			all: {
-				options: {
-					urls: [
-						'http://localhost:8000/test/timer.jquery.html'
-					]
-				}
+		karma: {
+			unit: {
+				configFile: 'karma.conf.js'
+			},
+			continuous: {
+				configFile: 'karma.conf.js',
+				watch: false,
+				singleRun: true,
+				browsers: ['PhantomJS']
 			}
 		},
 
 		watch: {
 			scripts: {
-				files: ['src/timer.jquery.js', 'test/timer.jquery.test.js'],
+				files: ['src/timer.jquery.js', 'test/timer.jquery.spec.js'],
 				tasks: ['jscs', 'jshint', 'uglify'],
 				options: {
 					nospawn: true
@@ -67,11 +58,10 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks("grunt-jscs");
-	grunt.loadNpmTasks('grunt-contrib-connect');
-	grunt.loadNpmTasks('grunt-contrib-qunit');
+	grunt.loadNpmTasks("grunt-karma");
 	grunt.loadNpmTasks('grunt-contrib-watch');
 
 	//register default task
 	grunt.registerTask('default', 'watch');
-	grunt.registerTask('test', ['connect', 'qunit']);
+	grunt.registerTask('test', ['karma:continuous']);
 }
