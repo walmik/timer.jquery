@@ -242,7 +242,6 @@
 		time = time.toLowerCase();
 
 		// @todo: throw an error in case of faulty time value like 5m61s or 61m
-
 		if (hMatch) {
 			seconds += Number(hMatch[0].replace('h', '')) * 3600;
 		}
@@ -290,12 +289,12 @@
 
 	function resetTimer(timer) {
 		var element = timer.element;
-		timer.options.resetTimer().bind(timer).call();
-		$(element).data('startTime', getUnixSeconds());
+		$(element).data('startTime', 0);
 		$(element).data('totalSeconds', 0);
-		$(element).data('seconds', $(element).data('totalSeconds'));
+		$(element).data('seconds', 0);
 		$(element).data('state', TIMER_STOPPED);
 		$(element).data('duration', timer.options.duration);
+		timer.options.resetTimer.bind(timer).call();
 	}
 
 	function removeTimer(timer) {
