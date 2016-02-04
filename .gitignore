@@ -3,3 +3,4 @@
 .settings
 .idea
 node_modules
+coverage
