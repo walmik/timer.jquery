@@ -148,28 +148,28 @@
 	}
 
 	/**
-	 * Convert a number of seconds into an object of hours, minutes and seconds
+	 * Convert a number of seconds into an object of hours, minutes, totalMinutes, seconds and totalSeconds
 	 * @param  {Number} sec [Number of seconds]
 	 * @return {Object}     [An object with hours, minutes and seconds representation of the given seconds]
 	 */
-	function sec2TimeObj(sec) {
-		var hours = 0, minutes = Math.floor(sec / 60), seconds;
+	function sec2TimeObj(totalSec) {
+		var hours = 0, totalMin = Math.floor(totalSec / 60), minutes = totalMin, seconds;
 
 		// Hours
-		if (sec >= 3600) {
-			hours = Math.floor(sec / 3600);
+		if (totalSec >= 3600) {
+			hours = Math.floor(totalSec / 3600);
 		}
 
 		// Minutes
-		if (sec >= 3600) {
-			minutes = Math.floor(sec % 3600 / 60);
+		if (totalSec >= 3600) {
+			minutes = Math.floor(totalSec % 3600 / 60);
 		}
 		// Prepend 0 to minutes under 10
 		if (minutes < 10 && hours > 0) {
 			minutes = '0' + minutes;
 		}
 		// Seconds
-		seconds = sec % 60;
+		seconds = totalSec % 60;
 		// Prepend 0 to seconds under 10
 		if (seconds < 10 && (minutes > 0 || hours > 0)) {
 			seconds = '0' + seconds;
@@ -178,7 +178,9 @@
 		return {
 			hours: hours,
 			minutes: minutes,
-			seconds: seconds
+			totalMinutes: totalMin,
+			seconds: seconds,
+			totalSeconds: totalSec
 		};
 	}
 
@@ -196,9 +198,13 @@
 				{identifier: '%h', value: timeObj.hours, pad: false},
 				{identifier: '%m', value: timeObj.minutes, pad: false},
 				{identifier: '%s', value: timeObj.seconds, pad: false},
+				{identifier: '%g', value: timeObj.totalMinutes, pad: false},
+				{identifier: '%t', value: timeObj.totalSeconds, pad: false},
 				{identifier: '%H', value: parseInt(timeObj.hours), pad: true},
 				{identifier: '%M', value: parseInt(timeObj.minutes), pad: true},
-				{identifier: '%S', value: parseInt(timeObj.seconds), pad: true}
+				{identifier: '%S', value: parseInt(timeObj.seconds), pad: true},
+				{identifier: '%G', value: parseInt(timeObj.totalMinutes), pad: true},
+				{identifier: '%T', value: parseInt(timeObj.totalSeconds), pad: true}
 			];
 			time = timer.options.format;
 

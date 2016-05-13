@@ -138,7 +138,11 @@ If you want to customize the format in which the timer displays time, use the `f
 |:------:|-------------|---------|
 | `%h` | Non-zero padded *Hours* | `%h hours` gives `3 hours` |
 | `%m` | Non-zero padded *Minutes* unless number of minutes is greater than 60 | `%h:%m minutes` gives `0:6 minutes` or `1:06 minutes` |
+| `%g` | Non-zero padded *Total Minutes* Irrelative to hours | `%G minutes` gives `75 minutes` or `6 minutes` |
 | `%s` | Non-zero padded *Seconds* unless number of seconds is greater than 60 | `%h:%m:%s` gives `0:0:6` or `0:1:06` or `1:01:06` |
+| `%t` | Non-zero padded *Total Seconds* Irrelative to minutes and hours | `%t` gives `3660` or '9' |
 | `%H` | Zero padded *Hours* | `%H hours` gives `03 hours` |
 | `%M` | Zero padded *Minutes* | `%H:%M minutes` gives `00:06 minutes` |
+| `%G` | Zero padded *Total Minutes* Irrelative to hours | `%G minutes` gives `75 minutes` |
 | `%S` | Zero padded *Seconds* | `%H:%M:%S` gives `00:00:06` |
+| `%T` | Zero padded *Total Seconds* Irrelative to minutes and hours | `%T` gives `3660` |

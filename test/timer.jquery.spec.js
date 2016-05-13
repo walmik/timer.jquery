@@ -27,7 +27,7 @@ define(['jquery', 'fixtures', 'timer'], function($, Fixtures, timer) {
 				expect($('#timer-input').val()).toBe('2 sec');
 				$('#timer-input').timer('remove');
 				done();
-			}, 3000);
+			}, 2500);
 		});
 
 		it('should start the timer from the provided seconds', function() {
@@ -97,6 +97,20 @@ define(['jquery', 'fixtures', 'timer'], function($, Fixtures, timer) {
 					done();
 				}, 1000);
 			}, 1000);
+
+		});
+
+		it('should keep incrementing seconds after the minute milestone is reached', function(done) {
+			$('#timer-input').timer({
+				seconds: 3599,
+				format: '%g min(%t sec)'
+			});
+
+			setTimeout(function() {
+				expect($('#timer-input').val()).toBe('60 min(3601 sec)');
+				$('#timer-input').timer('remove');
+				done();
+			}, 2200)
 		});
 	});
 });
