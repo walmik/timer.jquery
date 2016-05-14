@@ -294,21 +294,18 @@
 	}
 
 	function resetTimer(timer) {
-		var element = timer.element;
-		$(element).data('startTime', 0);
-		$(element).data('totalSeconds', 0);
-		$(element).data('seconds', 0);
-		$(element).data('state', TIMER_STOPPED);
-		$(element).data('duration', timer.options.duration);
-		timer.options.resetTimer.bind(timer).call();
+		removeTimer(timer);
+		startTimer(timer);
 	}
 
 	function removeTimer(timer) {
 		var element = timer.element;
 		stopTimerInterval(timer);
 		timer.options.removeTimer.bind(timer).call();
+		$(element).data('isTimerRunning', null);
 		$(element).data('plugin_' + pluginName, null);
 		$(element).data('seconds', null);
+		$(element).data('totalSeconds', null);
 		$(element).data('state', null);
 		$(element)[display]('');
 	}

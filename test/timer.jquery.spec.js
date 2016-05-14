@@ -15,7 +15,7 @@ define(['jquery', 'fixtures', 'timer'], function($, Fixtures, timer) {
 			expect($('#timer-input').data('state')).toBe('running');
 
 			$('#timer-input').timer('reset');
-			expect($('#timer-input').data('state')).toBe('stopped');
+			expect($('#timer-input').data('state')).toBe('running');
 
 			$('#timer-input').timer('remove');
 			expect($('#timer-input').data('state')).toBe(null);
