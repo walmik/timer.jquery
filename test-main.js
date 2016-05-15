@@ -17,7 +17,6 @@ require.config({
 	baseUrl: '/base',
 
 	paths: {
-		// 'jquery': './libs/jquery',
 		'timer': './src/timer.jquery',
 		'fixtures': './test/fixtures'
 	},
