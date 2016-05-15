@@ -1,0 +1,19 @@
+{
+	"name": "timer.jquery",
+	"ignore": [
+		"libs",
+		"test",
+		".gitignore",
+		".jscsrc",
+		".jshintrc",
+		".travis.yml",
+		"Gruntfile.js",
+		"index.html",
+		"karma.conf.js",
+		"package.json",
+		"test-main.js"
+	],
+	"dependencies": {
+		"jquery": ">=1.9.0"
+	}
+}
