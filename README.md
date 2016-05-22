@@ -146,3 +146,13 @@ If you want to customize the format in which the timer displays time, use the `f
 | `%G` | Zero padded *Total Minutes* Irrelative to hours | `%G minutes` gives `75 minutes` |
 | `%S` | Zero padded *Seconds* | `%H:%M:%S` gives `00:00:06` |
 | `%T` | Zero padded *Total Seconds* Irrelative to minutes and hours | `%T` gives `3660` |
+
+#### Countdown
+
+You can use the jQuery timer plugin for countdown as well.
+```javascript
+$('#timerDiv').timer({
+    countdown: true,
+    duration: '3m40s'    // This will start the countdown from 3 mins 40 seconds
+});
+```
