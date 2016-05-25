@@ -153,6 +153,9 @@ You can use the jQuery timer plugin for countdown as well.
 ```javascript
 $('#timerDiv').timer({
     countdown: true,
-    duration: '3m40s'    // This will start the countdown from 3 mins 40 seconds
+    duration: '3m40s',    	// This will start the countdown from 3 mins 40 seconds
+    callback: function() {	// This will execute after the duration has elapsed
+    	console.log('Time up!');
+    }
 });
 ```
