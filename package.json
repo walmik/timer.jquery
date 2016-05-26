@@ -7,7 +7,9 @@
     "type": "git",
     "url": "git://github.com/walmik/timer.jquery.git"
   },
-  "scripts": {},
+  "scripts": {
+    "webpack": "./node_modules/.bin/webpack --watch"
+  },
   "engines": {
     "node": ">= 0.10.0"
   },
