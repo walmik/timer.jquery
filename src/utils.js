@@ -1,7 +1,7 @@
 const THIRTYSIXHUNDRED = 3600;
 const SIXTY = 60;
 const TEN = 10;
-const Helpers = {
+export default {
 	/**
 	 * @return {Number} Return seconds passed since Jan 1, 1970
 	 */
@@ -86,5 +86,3 @@ const Helpers = {
 		return seconds;
 	}
 };
-
-export default Helpers;

@@ -1,11 +1,12 @@
-import Helpers from './helpers';
+import utils from './utils';
 
 const TIMER_STOPPED = 'stopped';
-const TIMER_RUNNING = 'running';
-const TIMER_PAUSED = 'paused';
+// const TIMER_RUNNING = 'running';
+// const TIMER_PAUSED = 'paused';
 const getDefaultConfig = () => ({
 	seconds: 0,					// default seconds value to start timer from
 	editable: false,			// this will let users make changes to the time
+	startTime: utils.unixSeconds(),
 	restart: false,				// this will enable stop or continue after a timer callback
 	duration: null,				// duration to run callback after
 	// default callback to run after elapsed duration
@@ -21,22 +22,23 @@ const getDefaultConfig = () => ({
 });
 
 class Timer {
-	constructor(element, config) {	
-		this.config = Object.assign(getDefaultConfig(), config);
-		if (this.config.duration) {
-			this.config.duration = Helpers.timeFormatToSeconds(this.config.duration);
-			element.dataset.duration = this.config.duration;
+	constructor(element, config) {
+		// config can/should be a string OR an object
+		if (config.duration) {
+			config.duration = utils.timeFormatToSeconds(config.duration);
 		}
+		this.element = element;
+		this.config = Object.assign(getDefaultConfig(), config);
 
 		// Store all the data specific to the element on the element itself
 		element.dataset.seconds = this.config.seconds;
 		element.dataset.totalSeconds = this.config.seconds;
-		element.dataset.startTime = Helpers.unixSeconds() - this.config.seconds;
+		element.dataset.startTime = utils.unixSeconds() - this.config.seconds;
 		element.dataset.state = this.config.state;
 
 		this.element = element;
 
-		if (element.tagName === 'INPUT' || element.tagName  === 'TEXTAREA') {
+		if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
 			this.config.display = 'val';
 		}
 
