@@ -1,4 +1,7 @@
 {
     "extends": "google",
-    "installedESLint": true
+    "installedESLint": true,
+    "rules": {
+ 	   "indent": ["error", "tab"]
+ 	}
 }

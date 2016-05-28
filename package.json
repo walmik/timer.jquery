@@ -8,7 +8,9 @@
     "url": "git://github.com/walmik/timer.jquery.git"
   },
   "scripts": {
-    "test": "./node_modules/.bin/tape -r babel-register ./test/*.js",
+    "eslint": "./node_modules/.bin/eslint src/*.js",
+    "tape": "./node_modules/.bin/tape -r babel-register ./test/*.js",
+    "test": "npm run eslint && npm run tape",
     "webpack": "./node_modules/.bin/webpack --watch"
   },
   "engines": {

@@ -3,8 +3,7 @@ const SIXTY = 60;
 const TEN = 10;
 const Helpers = {
 	/**
-	 * Return seconds passed since Jan 1, 1970
-	 * @return {Number}
+	 * @return {Number} Return seconds passed since Jan 1, 1970
 	 */
 	unixSeconds: () => (Math.round(Date.now() / 1000)),
 
@@ -13,10 +12,10 @@ const Helpers = {
 	},
 
 	/**
-	 * Convert (a number) seconds to a time object with hours, minutes, total minutes and seconds.
+	 * Convert (a number) seconds to a Object with hours, minutes etc as properties
 	 * Used by secondsToPrettyTime for to format the time display
-	 * @param  {Number}
-	 * @return {Object}
+	 * @param  {Number} totalSeconds The total seconds that needs to be distributed into an Object
+	 * @return {Object} Object with hours, minutes, totalMinutes, seconds and totalSeconds
 	 */
 	secondsToTimeObj: (totalSeconds = 0) => {
 		let hours = 0;
@@ -48,14 +47,13 @@ const Helpers = {
 	},
 
 	/**
-	 * Convert a shorthand time format like `5m30s` to seconds 330
-	 * @param  {String}
-	 * @return {Number}
+	 * Convert a shorthand time format to seconds
+	 * @param  {String} timeFormat e.g. 5m30s
+	 * @return {Number} Returns 330
 	 */
-	timeFormatToSeconds: (timeFormat) => {
+	timeFormatToSeconds: timeFormat => {
 		if (!timeFormat) {
 			throw new Error('timeFormatToSeconds expects a string argument!');
-			return;
 		}
 
 		// Early return in case a number is passed
@@ -70,12 +68,11 @@ const Helpers = {
 
 		if (!hrs && !mins && !secs) {
 			throw new Error('Invalid string passed in timeFormatToSeconds!');
-			return;
 		}
 		let seconds = 0;
 
 		if (hrs) {
-			seconds += Number(hrs[0].replace('h', '') * THIRTYSIXHUNDRED)
+			seconds += Number(hrs[0].replace('h', '') * THIRTYSIXHUNDRED);
 		}
 
 		if (mins) {
@@ -88,7 +85,6 @@ const Helpers = {
 
 		return seconds;
 	}
-	
 };
 
 export default Helpers;
