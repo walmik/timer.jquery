@@ -6,18 +6,18 @@ test('test unixSeconds', (t) => {
 	t.end();
 });
 
-test('test timeFormatToSeconds', (t) => {
-	t.equal(utils.timeFormatToSeconds(330), 330);
-	t.equal(utils.timeFormatToSeconds('5m30s'), 330);
-	t.equal(utils.timeFormatToSeconds('30s'), 30);
-	t.equal(utils.timeFormatToSeconds('5m'), 300);
-	t.equal(utils.timeFormatToSeconds('5h'), 18000);
-	t.equal(utils.timeFormatToSeconds('5h30m10s'), 19810);
+test('test durationTimeToSeconds', (t) => {
+	t.equal(utils.durationTimeToSeconds(330), 330);
+	t.equal(utils.durationTimeToSeconds('5m30s'), 330);
+	t.equal(utils.durationTimeToSeconds('30s'), 30);
+	t.equal(utils.durationTimeToSeconds('5m'), 300);
+	t.equal(utils.durationTimeToSeconds('5h'), 18000);
+	t.equal(utils.durationTimeToSeconds('5h30m10s'), 19810);
 	t.throws(function() {
-		utils.timeFormatToSeconds();
+		utils.durationTimeToSeconds();
 	});
 	t.throws(function() {
-		utils.timeFormatToSeconds('invalid-format');
+		utils.durationTimeToSeconds('invalid-format');
 	});
 	t.end();
 });

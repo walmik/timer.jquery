@@ -21,11 +21,20 @@ const getDefaultConfig = () => ({
 	display: 'html'
 });
 
+/**
+ * Timer class to be instantiated on every element.
+ * All relative values will be stored at instance level.
+ */
 class Timer {
+	/**
+	 * Construct a Timer instance on the provided element with the given config.
+	 * @param  {Object} element HTML node as passed by jQuery
+	 * @param  {Object} config User extended options
+	 */
 	constructor(element, config) {
 		// config can/should be a string OR an object
 		if (config.duration) {
-			config.duration = utils.timeFormatToSeconds(config.duration);
+			config.duration = utils.durationTimeToSeconds(config.duration);
 		}
 		this.element = element;
 		this.config = Object.assign(getDefaultConfig(), config);

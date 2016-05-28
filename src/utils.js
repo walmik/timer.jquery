@@ -47,13 +47,13 @@ export default {
 	},
 
 	/**
-	 * Convert a shorthand time format to seconds
+	 * Convert duration time format to seconds
 	 * @param  {String} timeFormat e.g. 5m30s
 	 * @return {Number} Returns 330
 	 */
-	timeFormatToSeconds: timeFormat => {
+	durationTimeToSeconds: timeFormat => {
 		if (!timeFormat) {
-			throw new Error('timeFormatToSeconds expects a string argument!');
+			throw new Error('durationTimeToSeconds expects a string argument!');
 		}
 
 		// Early return in case a number is passed
@@ -67,7 +67,7 @@ export default {
 		let secs = timeFormat.match(/\d{1,2}s/);	// Match 10s in 5h30m10s
 
 		if (!hrs && !mins && !secs) {
-			throw new Error('Invalid string passed in timeFormatToSeconds!');
+			throw new Error('Invalid string passed in durationTimeToSeconds!');
 		}
 		let seconds = 0;
 
