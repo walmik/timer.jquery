@@ -7,8 +7,8 @@ export default {
 	 */
 	unixSeconds: () => (Math.round(Date.now() / 1000)),
 
-	secondsToPrettyTime: () => {
-
+	secondsToPrettyTime: seconds => {
+		return seconds;
 	},
 
 	/**
