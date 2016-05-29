@@ -181,7 +181,7 @@
 					this.startTime = _utils2.default.unixSeconds();
 					this.state = TIMER_RUNNING;
 					this.render();
-					this.intervalId = setInterval(this.intervalHandler, this.config.updateFrequency);
+					this.intervalId = setInterval(this.intervalHandler.bind(this), this.config.updateFrequency);
 				}
 			}
 		}, {
@@ -198,7 +198,7 @@
 				if (this.state === TIMER_PAUSED) {
 					this.state = TIMER_RUNNING;
 					this.startTime = _utils2.default.unixSeconds() - this.totalSeconds;
-					this.intervalId = setInterval(this.intervalHandler, this.config.updateFrequency);
+					this.intervalId = setInterval(this.intervalHandler.bind(this), this.config.updateFrequency);
 				}
 			}
 		}, {

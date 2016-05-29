@@ -305,17 +305,15 @@ $('#divId').timer({
 		</div>
 	</div>
 
-	<script src='libs/jquery.js'></script>
-	<script src='src/timer.jquery.js'></script>
+	<script src='https://code.jquery.com/jquery-1.12.4.min.js'></script>
+	<script src='dist/timer.jquery.js'></script>
 	<script>
 	    (function(){
 			var hasTimer = false;
 			// Init timer start
 			$('.start-timer-btn').on('click', function() {
 				hasTimer = true;
-				$('.timer').timer({
-					editable: true
-                });
+				$('.timer').timer();
 				$(this).addClass('hidden');
 				$('.pause-timer-btn, .remove-timer-btn').removeClass('hidden');
 			});
