@@ -126,5 +126,23 @@ export default {
 		}
 
 		return seconds;
+	},
+
+	parseEditedTime: editedTime => {
+		let arr;
+		let parsedTime;
+
+		if (editedTime.indexOf('sec') > 0) {
+			parsedTime = Number(editedTime.replace(/\ssec/g, ''));
+		} else if (editedTime.indexOf('min') > 0) {
+			editedTime = editedTime.replace(/\smin/g, '');
+			arr = editedTime.split(':');
+			parsedTime = Number(arr[0] * SIXTY) + Number(arr[1]);
+		} else if (editedTime.match(/\d{1,2}:\d{2}:\d{2}/)) {
+			arr = editedTime.split(':');
+			parsedTime = Number(arr[0] * THIRTYSIXHUNDRED) + Number(arr[1] * SIXTY) + Number(arr[2]);
+		}
+
+		return parsedTime;
 	}
 };

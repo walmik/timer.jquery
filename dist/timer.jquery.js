@@ -100,7 +100,7 @@
 		value: true
 	});
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /* global $:true */
 
 	var _utils = __webpack_require__(2);
 
@@ -151,10 +151,10 @@
 			this.state = TIMER_STOPPED;
 			this.intervalId = null;
 			// A HTML element will have the html() method in jQuery to inject content,
-			this.html = 'innerHTML';
+			this.html = 'html';
 			if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
 				// In case of input element or a textarea, jQuery provides the val() method to inject content
-				this.html = 'value';
+				this.html = 'val';
 			}
 
 			this.config = getDefaultConfig();
@@ -172,7 +172,7 @@
 			}
 
 			if (this.config.editable) {
-				// makeEditable(this);
+				this.makeEditable();
 			}
 		}
 
@@ -213,9 +213,9 @@
 			key: 'render',
 			value: function render() {
 				if (this.config.format) {
-					this.element[this.html] = _utils2.default.secondsToFormattedTime(this.totalSeconds, this.config.format);
+					$(this.element)[this.html](_utils2.default.secondsToFormattedTime(this.totalSeconds, this.config.format));
 				} else {
-					this.element[this.html] = _utils2.default.secondsToPrettyTime(this.totalSeconds);
+					$(this.element)[this.html](_utils2.default.secondsToPrettyTime(this.totalSeconds));
 				}
 			}
 		}, {
@@ -223,6 +223,20 @@
 			value: function intervalHandler() {
 				this.totalSeconds = _utils2.default.unixSeconds() - this.startTime;
 				this.render();
+			}
+		}, {
+			key: 'makeEditable',
+			value: function makeEditable() {
+				var _this = this;
+
+				$(this.element).on('focus', function () {
+					_this.pause();
+				});
+
+				$(this.element).on('blur', function () {
+					_this.totalSeconds = _utils2.default.parseEditedTime($(_this.element)[_this.html]());
+					_this.resume();
+				});
 			}
 		}]);
 
@@ -361,6 +375,24 @@
 			}
 
 			return seconds;
+		},
+
+		parseEditedTime: function parseEditedTime(editedTime) {
+			var arr = void 0;
+			var parsedTime = void 0;
+
+			if (editedTime.indexOf('sec') > 0) {
+				parsedTime = Number(editedTime.replace(/\ssec/g, ''));
+			} else if (editedTime.indexOf('min') > 0) {
+				editedTime = editedTime.replace(/\smin/g, '');
+				arr = editedTime.split(':');
+				parsedTime = Number(arr[0] * SIXTY) + Number(arr[1]);
+			} else if (editedTime.match(/\d{1,2}:\d{2}:\d{2}/)) {
+				arr = editedTime.split(':');
+				parsedTime = Number(arr[0] * THIRTYSIXHUNDRED) + Number(arr[1] * SIXTY) + Number(arr[2]);
+			}
+
+			return parsedTime;
 		}
 	};
 

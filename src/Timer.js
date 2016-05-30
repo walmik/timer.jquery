@@ -1,3 +1,5 @@
+/* global $:true */
+
 import utils from './utils';
 
 const PLUGIN_NAME = 'plugin_timer';
@@ -34,10 +36,10 @@ class Timer {
 		this.state = TIMER_STOPPED;
 		this.intervalId = null;
 		// A HTML element will have the html() method in jQuery to inject content,
-		this.html = 'innerHTML';
+		this.html = 'html';
 		if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
 			// In case of input element or a textarea, jQuery provides the val() method to inject content
-			this.html = 'value';
+			this.html = 'val';
 		}
 
 		this.config = getDefaultConfig();
@@ -55,7 +57,7 @@ class Timer {
 		}
 
 		if (this.config.editable) {
-			// makeEditable(this);
+			this.makeEditable();
 		}
 	}
 
@@ -90,15 +92,26 @@ class Timer {
 
 	render() {
 		if (this.config.format) {
-			this.element[this.html] = utils.secondsToFormattedTime(this.totalSeconds, this.config.format);
+			$(this.element)[this.html](utils.secondsToFormattedTime(this.totalSeconds, this.config.format));
 		} else {
-			this.element[this.html] = utils.secondsToPrettyTime(this.totalSeconds);
+			$(this.element)[this.html](utils.secondsToPrettyTime(this.totalSeconds));
 		}
 	}
 
 	intervalHandler() {
 		this.totalSeconds = utils.unixSeconds() - this.startTime;
 		this.render();
+	}
+
+	makeEditable() {
+		$(this.element).on('focus', () => {
+			this.pause();
+		});
+
+		$(this.element).on('blur', () => {
+			this.totalSeconds = utils.parseEditedTime($(this.element)[this.html]());
+			this.resume();
+		});
 	}
 }
 
