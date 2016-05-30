@@ -2,7 +2,7 @@
 
 import utils from './utils';
 
-const PLUGIN_NAME = 'plugin_timer';
+const PLUGIN_NAME = 'timer';
 const TIMER_STOPPED = 'stopped';
 const TIMER_RUNNING = 'running';
 const TIMER_PAUSED = 'paused';
@@ -87,7 +87,7 @@ class Timer {
 
 	remove() {
 		clearInterval(this.intervalId);
-		this.element.dataset[PLUGIN_NAME] = null;
+		$(this.element).data(PLUGIN_NAME, null);
 	}
 
 	render() {
@@ -96,6 +96,7 @@ class Timer {
 		} else {
 			$(this.element)[this.html](utils.secondsToPrettyTime(this.totalSeconds));
 		}
+		$(this.element).data('seconds', this.totalSeconds);
 	}
 
 	intervalHandler() {

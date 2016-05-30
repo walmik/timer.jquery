@@ -52,24 +52,26 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	var pluginName = 'timer'; /* global $:true */
+
 	(function () {
 		$.fn.timer = function (options) {
 			options = options || 'start';
 
 			return this.each(function () {
-				if (!($.data(this, 'timer') instanceof _Timer2.default)) {
+				if (!($.data(this, pluginName) instanceof _Timer2.default)) {
 					/**
 	     * Create a new data attribute on the element to hold the plugin name
 	     * This way we can know which plugin(s) is/are initialized on the element later
 	     */
-					$.data(this, 'timer', new _Timer2.default(this, options));
+					$.data(this, pluginName, new _Timer2.default(this, options));
 				}
 
 				/**
 	    * Use the instance of this plugin derived from the data attribute for this element
 	    * to conduct whatever action requested as a string parameter.
 	    */
-				var instance = $.data(this, 'timer');
+				var instance = $.data(this, pluginName);
 
 				/**
 	    * Provision for calling a function from this plugin
@@ -87,8 +89,7 @@
 				}
 			});
 		};
-	})(); /* global $:true */
-	/* eslint no-undef: "error" */
+	})();
 
 /***/ },
 /* 1 */
@@ -110,7 +111,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var PLUGIN_NAME = 'plugin_timer';
+	var PLUGIN_NAME = 'timer';
 	var TIMER_STOPPED = 'stopped';
 	var TIMER_RUNNING = 'running';
 	var TIMER_PAUSED = 'paused';
@@ -207,7 +208,7 @@
 			key: 'remove',
 			value: function remove() {
 				clearInterval(this.intervalId);
-				this.element.dataset[PLUGIN_NAME] = null;
+				$(this.element).data(PLUGIN_NAME, null);
 			}
 		}, {
 			key: 'render',
@@ -217,6 +218,7 @@
 				} else {
 					$(this.element)[this.html](_utils2.default.secondsToPrettyTime(this.totalSeconds));
 				}
+				$(this.element).data('seconds', this.totalSeconds);
 			}
 		}, {
 			key: 'intervalHandler',
