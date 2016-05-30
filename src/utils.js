@@ -1,3 +1,5 @@
+/* global $:true */
+
 const THIRTYSIXHUNDRED = 3600;
 const SIXTY = 60;
 const TEN = 10;
@@ -158,5 +160,28 @@ export default {
 		}
 
 		return parsedTime;
+	},
+
+	setState: (timerInstance, newState) => {
+		timerInstance.state = newState;
+		$(timerInstance.element).data('state', newState);
+	},
+
+	/**
+	 * Convenience method to wire up focus & blur events to pause and resume
+	 * Makes use of the `prettyTimeToSeconds` function to convert user edited time to seconds
+	 * @note: This function does not use the fat arrow notation as it needs to reference another
+	 * function from this utils object
+	 * @param  {Object} timerInstance Instance of the Timer Class
+	 */
+	makeEditable: function(timerInstance) {
+		$(timerInstance.element).on('focus', () => {
+			timerInstance.pause();
+		});
+
+		$(timerInstance.element).on('blur', () => {
+			timerInstance.totalSeconds = this.prettyTimeToSeconds($(timerInstance.element)[timerInstance.html]());
+			timerInstance.resume();
+		});
 	}
 };

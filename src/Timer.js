@@ -33,7 +33,6 @@ class Timer {
 	constructor(element, config) {
 		this.element = element;
 		this.totalSeconds = 0;
-		this.state = TIMER_STOPPED;
 		this.intervalId = null;
 		// A HTML element will have the html() method in jQuery to inject content,
 		this.html = 'html';
@@ -57,14 +56,14 @@ class Timer {
 		}
 
 		if (this.config.editable) {
-			this.makeEditable();
+			utils.makeEditable(this);
 		}
 	}
 
 	start() {
 		if (this.state !== TIMER_RUNNING) {
 			this.startTime = utils.unixSeconds() - this.totalSeconds;
-			this.state = TIMER_RUNNING;
+			utils.setState(this, TIMER_RUNNING);
 			this.render();
 			this.intervalId = setInterval(this.intervalHandler.bind(this), this.config.updateFrequency);
 		}
@@ -72,14 +71,14 @@ class Timer {
 
 	pause() {
 		if (this.state === TIMER_RUNNING) {
-			this.state = TIMER_PAUSED;
+			utils.setState(this, TIMER_PAUSED);
 			clearInterval(this.intervalId);
 		}
 	}
 
 	resume() {
 		if (this.state === TIMER_PAUSED) {
-			this.state = TIMER_RUNNING;
+			utils.setState(this, TIMER_RUNNING);
 			this.startTime = utils.unixSeconds() - this.totalSeconds;
 			this.intervalId = setInterval(this.intervalHandler.bind(this), this.config.updateFrequency);
 		}
@@ -96,23 +95,33 @@ class Timer {
 		} else {
 			$(this.element)[this.html](utils.secondsToPrettyTime(this.totalSeconds));
 		}
+		// Make total seconds available via timer element's data attribute
 		$(this.element).data('seconds', this.totalSeconds);
 	}
 
 	intervalHandler() {
 		this.totalSeconds = utils.unixSeconds() - this.startTime;
 		this.render();
-	}
+		if (!this.config.duration) {
+			return;
+		}
 
-	makeEditable() {
-		$(this.element).on('focus', () => {
-			this.pause();
-		});
+		// If the timer was called with a duration parameter,
+		// run the callback if duration is complete
+		// and remove the duration if `repeat` is not requested
+		if (this.totalSeconds % this.config.duration === 0) {
+			if (!this.config.repeat) {
+				this.config.duration = null;
+			}
+		}
 
-		$(this.element).on('blur', () => {
-			this.totalSeconds = utils.prettyTimeToSeconds($(this.element)[this.html]());
-			this.resume();
-		});
+		if (this.config.countdown) {
+			clearInterval(this.intervalId);
+			utils.setState(this, TIMER_STOPPED);
+		}
+
+		// Finally invoke callback
+		this.config.callback();
 	}
 }
 

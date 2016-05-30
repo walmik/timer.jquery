@@ -149,7 +149,6 @@
 
 			this.element = element;
 			this.totalSeconds = 0;
-			this.state = TIMER_STOPPED;
 			this.intervalId = null;
 			// A HTML element will have the html() method in jQuery to inject content,
 			this.html = 'html';
@@ -173,7 +172,7 @@
 			}
 
 			if (this.config.editable) {
-				this.makeEditable();
+				_utils2.default.makeEditable(this);
 			}
 		}
 
@@ -182,7 +181,7 @@
 			value: function start() {
 				if (this.state !== TIMER_RUNNING) {
 					this.startTime = _utils2.default.unixSeconds() - this.totalSeconds;
-					this.state = TIMER_RUNNING;
+					_utils2.default.setState(this, TIMER_RUNNING);
 					this.render();
 					this.intervalId = setInterval(this.intervalHandler.bind(this), this.config.updateFrequency);
 				}
@@ -191,7 +190,7 @@
 			key: 'pause',
 			value: function pause() {
 				if (this.state === TIMER_RUNNING) {
-					this.state = TIMER_PAUSED;
+					_utils2.default.setState(this, TIMER_PAUSED);
 					clearInterval(this.intervalId);
 				}
 			}
@@ -199,7 +198,7 @@
 			key: 'resume',
 			value: function resume() {
 				if (this.state === TIMER_PAUSED) {
-					this.state = TIMER_RUNNING;
+					_utils2.default.setState(this, TIMER_RUNNING);
 					this.startTime = _utils2.default.unixSeconds() - this.totalSeconds;
 					this.intervalId = setInterval(this.intervalHandler.bind(this), this.config.updateFrequency);
 				}
@@ -218,6 +217,7 @@
 				} else {
 					$(this.element)[this.html](_utils2.default.secondsToPrettyTime(this.totalSeconds));
 				}
+				// Make total seconds available via timer element's data attribute
 				$(this.element).data('seconds', this.totalSeconds);
 			}
 		}, {
@@ -225,20 +225,26 @@
 			value: function intervalHandler() {
 				this.totalSeconds = _utils2.default.unixSeconds() - this.startTime;
 				this.render();
-			}
-		}, {
-			key: 'makeEditable',
-			value: function makeEditable() {
-				var _this = this;
+				if (!this.config.duration) {
+					return;
+				}
 
-				$(this.element).on('focus', function () {
-					_this.pause();
-				});
+				// If the timer was called with a duration parameter,
+				// run the callback if duration is complete
+				// and remove the duration if `repeat` is not requested
+				if (this.totalSeconds % this.config.duration === 0) {
+					if (!this.config.repeat) {
+						this.config.duration = null;
+					}
+				}
 
-				$(this.element).on('blur', function () {
-					_this.totalSeconds = _utils2.default.prettyTimeToSeconds($(_this.element)[_this.html]());
-					_this.resume();
-				});
+				if (this.config.countdown) {
+					clearInterval(this.intervalId);
+					_utils2.default.setState(this, TIMER_STOPPED);
+				}
+
+				// Finally invoke callback
+				this.config.callback();
 			}
 		}]);
 
@@ -256,6 +262,8 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
+	/* global $:true */
+
 	var THIRTYSIXHUNDRED = 3600;
 	var SIXTY = 60;
 	var TEN = 10;
@@ -409,6 +417,31 @@
 			}
 
 			return parsedTime;
+		},
+
+		setState: function setState(timerInstance, newState) {
+			timerInstance.state = newState;
+			$(timerInstance.element).data('state', newState);
+		},
+
+		/**
+	  * Convenience method to wire up focus & blur events to pause and resume
+	  * Makes use of the `prettyTimeToSeconds` function to convert user edited time to seconds
+	  * @note: This function does not use the fat arrow notation as it needs to reference another
+	  * function from this utils object
+	  * @param  {Object} timerInstance Instance of the Timer Class
+	  */
+		makeEditable: function makeEditable(timerInstance) {
+			var _this = this;
+
+			$(timerInstance.element).on('focus', function () {
+				timerInstance.pause();
+			});
+
+			$(timerInstance.element).on('blur', function () {
+				timerInstance.totalSeconds = _this.prettyTimeToSeconds($(timerInstance.element)[timerInstance.html]());
+				timerInstance.resume();
+			});
 		}
 	};
 
