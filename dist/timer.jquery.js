@@ -234,7 +234,7 @@
 				});
 
 				$(this.element).on('blur', function () {
-					_this.totalSeconds = _utils2.default.parseEditedTime($(_this.element)[_this.html]());
+					_this.totalSeconds = _utils2.default.prettyTimeToSeconds($(_this.element)[_this.html]());
 					_this.resume();
 				});
 			}
@@ -272,22 +272,18 @@
 		var minutes = totalMinutes;
 		var seconds = void 0;
 
-		// Hours
 		if (totalSeconds >= THIRTYSIXHUNDRED) {
 			hours = Math.floor(totalSeconds / THIRTYSIXHUNDRED);
 		}
 
-		// Minutes
 		if (totalSeconds >= THIRTYSIXHUNDRED) {
 			minutes = Math.floor(totalSeconds % THIRTYSIXHUNDRED / SIXTY);
 		}
-		// Prepend 0 to minutes under TEN
 		if (minutes < TEN && hours > 0) {
 			minutes = '0' + minutes;
 		}
-		// Seconds
+
 		seconds = totalSeconds % SIXTY;
-		// Prepend 0 to seconds under TEN
 		if (seconds < TEN && (minutes > 0 || hours > 0)) {
 			seconds = '0' + seconds;
 		}
@@ -311,6 +307,12 @@
 			return Math.round(Date.now() / 1000);
 		},
 
+		/**
+	  * Convert seconds to pretty time.
+	  * For example 100 becomes 1:40 min, 34 becomes 34 sec and 10000 becomes 2:46:40
+	  * @param  {Number} seconds Seconds to be converted
+	  * @return {String}         Pretty time
+	  */
 		secondsToPrettyTime: function secondsToPrettyTime(seconds) {
 			var timeObj = secondsToTimeObj(seconds);
 			if (timeObj.hours) {
@@ -327,6 +329,12 @@
 			return prettyTime;
 		},
 
+		/**
+	  * Convert seconds to user defined format for time
+	  * @param  {Number} seconds       Seconds to be converted
+	  * @param  {String} formattedTime User defined format
+	  * @return {String}               Formatted time string
+	  */
 		secondsToFormattedTime: function secondsToFormattedTime(seconds, formattedTime) {
 			var timeObj = secondsToTimeObj(seconds);
 			var formatDef = [{ identifier: '%h', value: timeObj.hours }, { identifier: '%m', value: timeObj.minutes }, { identifier: '%s', value: timeObj.seconds }, { identifier: '%g', value: timeObj.totalMinutes }, { identifier: '%t', value: timeObj.totalSeconds }, { identifier: '%H', value: paddedValue(timeObj.hours) }, { identifier: '%M', value: paddedValue(timeObj.minutes) }, { identifier: '%S', value: paddedValue(timeObj.seconds) }, { identifier: '%G', value: paddedValue(timeObj.totalMinutes) }, { identifier: '%T', value: paddedValue(timeObj.totalSeconds) }];
@@ -377,7 +385,13 @@
 			return seconds;
 		},
 
-		parseEditedTime: function parseEditedTime(editedTime) {
+		/**
+	  * Parse pretty time and return it as seconds
+	  * Currently only the native pretty time is parseable
+	  * @param  {String} editedTime The time as edited by the user
+	  * @return {Number}            Parsed time
+	  */
+		prettyTimeToSeconds: function prettyTimeToSeconds(editedTime) {
 			var arr = void 0;
 			var parsedTime = void 0;
 

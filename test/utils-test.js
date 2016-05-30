@@ -23,8 +23,15 @@ test('test durationTimeToSeconds', (t) => {
 });
 
 test('test secondsToPrettyTime', (t) => {
-	t.deepEqual(utils.secondsToPrettyTime(100), '1:40 min');
-	t.deepEqual(utils.secondsToPrettyTime(1000), '16:40 min');
-	t.deepEqual(utils.secondsToPrettyTime(1234), '20:34 min');
+	t.equal(utils.secondsToPrettyTime(100), '1:40 min');
+	t.equal(utils.secondsToPrettyTime(1000), '16:40 min');
+	t.equal(utils.secondsToPrettyTime(1234), '20:34 min');
+	t.end();
+});
+
+test('test prettyTimeToSeconds', (t) => {
+	t.equal(utils.prettyTimeToSeconds('1:40 min'), 100);
+	t.equal(utils.prettyTimeToSeconds('16:40 min'), 1000);
+	t.equal(utils.prettyTimeToSeconds('20:34 min'), 1234);
 	t.end();
 });

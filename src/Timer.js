@@ -109,7 +109,7 @@ class Timer {
 		});
 
 		$(this.element).on('blur', () => {
-			this.totalSeconds = utils.parseEditedTime($(this.element)[this.html]());
+			this.totalSeconds = utils.prettyTimeToSeconds($(this.element)[this.html]());
 			this.resume();
 		});
 	}
