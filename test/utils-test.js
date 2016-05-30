@@ -1,11 +1,3 @@
-/*
-export default {
-	secondsToFormattedTime: secondsToFormattedTime,
-	setState: setState,
-	makeEditable: makeEditable,
-	intervalHandler: intervalHandler
-};
- */
 import test from 'tape';
 import utils from '../src/utils.js';
 
