@@ -50,7 +50,7 @@
 
 	var _Timer2 = _interopRequireDefault(_Timer);
 
-	var _constants = __webpack_require__(3);
+	var _constants = __webpack_require__(2);
 
 	var _constants2 = _interopRequireDefault(_constants);
 
@@ -108,11 +108,11 @@
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /* global $:true */
 
 
-	var _constants = __webpack_require__(3);
+	var _constants = __webpack_require__(2);
 
 	var _constants2 = _interopRequireDefault(_constants);
 
-	var _utils = __webpack_require__(2);
+	var _utils = __webpack_require__(3);
 
 	var _utils2 = _interopRequireDefault(_utils);
 
@@ -161,6 +161,12 @@
 
 			if (this.config.editable) {
 				_utils2.default.makeEditable(this);
+			}
+
+			// In case duration is set along with a callback along with repeat,
+			// then the update frequency needs to be at least 1000ms to prevent callback from being fired more than once
+			if (this.config.duration && this.config.repeat) {
+				this.config.updateFrequency = 1000;
 			}
 		}
 
@@ -217,6 +223,26 @@
 
 /***/ },
 /* 2 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	var Constants = {
+		PLUGIN_NAME: 'timer',
+		TIMER_RUNNING: 'running',
+		TIMER_PAUSED: 'paused',
+		THIRTYSIXHUNDRED: 3600,
+		SIXTY: 60,
+		TEN: 10
+	};
+
+	exports.default = Constants;
+
+/***/ },
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -225,7 +251,7 @@
 		value: true
 	});
 
-	var _constants = __webpack_require__(3);
+	var _constants = __webpack_require__(2);
 
 	var _constants2 = _interopRequireDefault(_constants);
 
@@ -313,7 +339,7 @@
 		if (timeObj.minutes) {
 			prettyTime = timeObj.minutes + ':' + _paddedValue(timeObj.seconds) + ' min';
 		} else {
-			prettyTime = _paddedValue(timeObj.seconds) + ' sec';
+			prettyTime = timeObj.seconds + ' sec';
 		}
 
 		return prettyTime;
@@ -439,20 +465,21 @@
 		// If the timer was called with a duration parameter,
 		// run the callback if duration is complete
 		// and remove the duration if `repeat` is not requested
-		if (timerInstance.totalSeconds % timerInstance.config.duration === 0) {
+		if (timerInstance.totalSeconds > 0 && timerInstance.totalSeconds % timerInstance.config.duration === 0) {
+			// Stop the timer in case it was a countdown timer
+			if (timerInstance.config.countdown) {
+				clearInterval(timerInstance.intervalId);
+				setState(timerInstance, _constants2.default.TIMER_STOPPED);
+			}
+
+			if (timerInstance.config.callback) {
+				timerInstance.config.callback();
+			}
+
 			if (!timerInstance.config.repeat) {
 				timerInstance.config.duration = null;
 			}
 		}
-
-		// Stop the timer in case it was a countdown timer
-		if (timerInstance.config.countdown) {
-			clearInterval(timerInstance.intervalId);
-			setState(timerInstance, _constants2.default.TIMER_STOPPED);
-		}
-
-		// Finally invoke callback
-		timerInstance.config.callback();
 	};
 
 	exports.default = {
@@ -466,26 +493,6 @@
 		makeEditable: makeEditable,
 		intervalHandler: intervalHandler
 	};
-
-/***/ },
-/* 3 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	var Constants = {
-		PLUGIN_NAME: 'timer',
-		TIMER_RUNNING: 'running',
-		TIMER_PAUSED: 'paused',
-		THIRTYSIXHUNDRED: 3600,
-		SIXTY: 60,
-		TEN: 10
-	};
-
-	exports.default = Constants;
 
 /***/ }
 /******/ ]);

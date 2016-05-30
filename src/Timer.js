@@ -40,6 +40,12 @@ class Timer {
 		if (this.config.editable) {
 			utils.makeEditable(this);
 		}
+
+		// In case duration is set along with a callback along with repeat,
+		// then the update frequency needs to be at least 1000ms to prevent callback from being fired more than once
+		if (this.config.duration && this.config.repeat) {
+			this.config.updateFrequency = 1000;
+		}
 	}
 
 	start() {

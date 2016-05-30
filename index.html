@@ -314,7 +314,9 @@ $('#divId').timer({
 			$('.start-timer-btn').on('click', function() {
 				hasTimer = true;
 				$('.timer').timer({
-					editable: true
+					editable: true,
+					duration: '5s',
+					repeat: true
 				});
 				$(this).addClass('hidden');
 				$('.pause-timer-btn, .remove-timer-btn').removeClass('hidden');

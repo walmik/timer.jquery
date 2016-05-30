@@ -74,7 +74,7 @@ const secondsToPrettyTime = seconds => {
 	if (timeObj.minutes) {
 		prettyTime = timeObj.minutes + ':' + _paddedValue(timeObj.seconds) + ' min';
 	} else {
-		prettyTime = _paddedValue(timeObj.seconds) + ' sec';
+		prettyTime = timeObj.seconds + ' sec';
 	}
 
 	return prettyTime;
@@ -211,20 +211,21 @@ const intervalHandler = timerInstance => {
 	// If the timer was called with a duration parameter,
 	// run the callback if duration is complete
 	// and remove the duration if `repeat` is not requested
-	if (timerInstance.totalSeconds % timerInstance.config.duration === 0) {
+	if (timerInstance.totalSeconds > 0 && timerInstance.totalSeconds % timerInstance.config.duration === 0) {
+		// Stop the timer in case it was a countdown timer
+		if (timerInstance.config.countdown) {
+			clearInterval(timerInstance.intervalId);
+			setState(timerInstance, Constants.TIMER_STOPPED);
+		}
+
+		if (timerInstance.config.callback) {
+			timerInstance.config.callback();
+		}
+
 		if (!timerInstance.config.repeat) {
 			timerInstance.config.duration = null;
 		}
 	}
-
-	// Stop the timer in case it was a countdown timer
-	if (timerInstance.config.countdown) {
-		clearInterval(timerInstance.intervalId);
-		setState(timerInstance, Constants.TIMER_STOPPED);
-	}
-
-	// Finally invoke callback
-	timerInstance.config.callback();
 };
 
 export default {
