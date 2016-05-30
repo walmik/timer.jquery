@@ -20,14 +20,8 @@ const _secondsToTimeObj = (totalSeconds = 0) => {
 	if (totalSeconds >= Constants.THIRTYSIXHUNDRED) {
 		minutes = Math.floor(totalSeconds % Constants.THIRTYSIXHUNDRED / Constants.SIXTY);
 	}
-	if (minutes < Constants.TEN && hours > 0) {
-		minutes = '0' + minutes;
-	}
 
 	seconds = totalSeconds % Constants.SIXTY;
-	if (seconds < Constants.TEN && (minutes > 0 || hours > 0)) {
-		seconds = '0' + seconds;
-	}
 
 	return {hours, minutes, totalMinutes, seconds, totalSeconds};
 };
@@ -49,7 +43,6 @@ const _paddedValue = num => {
 const getDefaultConfig = () => ({
 	seconds: 0,					// Default seconds value to start timer from
 	editable: false,			// Allow making changes to the time by clicking on it
-	restart: false,				// This will enable stop OR continue after the set duration & callback
 	duration: null,				// Duration to run callback after
 	callback: function() {		// Default callback to run after elapsed duration
 		console.log('Time up!');
@@ -74,14 +67,14 @@ const unixSeconds = () => (Math.round(Date.now() / 1000));
 const secondsToPrettyTime = seconds => {
 	let timeObj = _secondsToTimeObj(seconds);
 	if (timeObj.hours) {
-		return timeObj.hours + ':' + timeObj.minutes + ':' + timeObj.seconds;
+		return timeObj.hours + ':' + _paddedValue(timeObj.minutes) + ':' + _paddedValue(timeObj.seconds);
 	}
 
 	let prettyTime = '';
 	if (timeObj.minutes) {
-		prettyTime = timeObj.minutes + ':' + timeObj.seconds + ' min';
+		prettyTime = timeObj.minutes + ':' + _paddedValue(timeObj.seconds) + ' min';
 	} else {
-		prettyTime = timeObj.seconds + ' sec';
+		prettyTime = _paddedValue(timeObj.seconds) + ' sec';
 	}
 
 	return prettyTime;
@@ -181,7 +174,7 @@ const prettyTimeToSeconds = editedTime => {
 /**
  * Set the provided state of the timer in the data attr `state` of the timer HTML element
  * @param  {Object} timerInstance Instance of the timer object
- * @param  {[type]} newState      The state to be set to 
+ * @param  {[type]} newState      The state to be set on the HTML element
  */
 const setState = (timerInstance, newState) => {
 	timerInstance.state = newState;
