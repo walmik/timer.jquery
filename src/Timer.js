@@ -1,24 +1,6 @@
 /* global $:true */
-
+import Constants from './constants';
 import utils from './utils';
-
-const PLUGIN_NAME = 'timer';
-const TIMER_STOPPED = 'stopped';
-const TIMER_RUNNING = 'running';
-const TIMER_PAUSED = 'paused';
-const getDefaultConfig = () => ({
-	seconds: 0,					// Default seconds value to start timer from
-	editable: false,			// Allow making changes to the time by clicking on it
-	restart: false,				// This will enable stop OR continue after the set duration & callback
-	duration: null,				// Duration to run callback after
-	callback: function() {		// Default callback to run after elapsed duration
-		console.log('Time up!');
-	},
-	repeat: false,				// this will repeat callback every n times duration is elapsed
-	countdown: false,			// if true, this will render the timer as a countdown (must have duration)
-	format: null,				// this sets the format in which the time will be printed
-	updateFrequency: 500		// How often should timer display update
-});
 
 /**
  * Timer class to be instantiated on every element.
@@ -41,7 +23,7 @@ class Timer {
 			this.html = 'val';
 		}
 
-		this.config = getDefaultConfig();
+		this.config = utils.getDefaultConfig();
 
 		if (!config || typeof config === 'string') {
 			return;
@@ -61,32 +43,32 @@ class Timer {
 	}
 
 	start() {
-		if (this.state !== TIMER_RUNNING) {
+		if (this.state !== Constants.TIMER_RUNNING) {
 			this.startTime = utils.unixSeconds() - this.totalSeconds;
-			utils.setState(this, TIMER_RUNNING);
+			utils.setState(this, Constants.TIMER_RUNNING);
 			this.render();
-			this.intervalId = setInterval(this.intervalHandler.bind(this), this.config.updateFrequency);
+			this.intervalId = setInterval(utils.intervalHandler.bind(this), this.config.updateFrequency);
 		}
 	}
 
 	pause() {
-		if (this.state === TIMER_RUNNING) {
-			utils.setState(this, TIMER_PAUSED);
+		if (this.state === Constants.TIMER_RUNNING) {
+			utils.setState(this, Constants.TIMER_PAUSED);
 			clearInterval(this.intervalId);
 		}
 	}
 
 	resume() {
-		if (this.state === TIMER_PAUSED) {
-			utils.setState(this, TIMER_RUNNING);
+		if (this.state === Constants.TIMER_PAUSED) {
+			utils.setState(this, Constants.TIMER_RUNNING);
 			this.startTime = utils.unixSeconds() - this.totalSeconds;
-			this.intervalId = setInterval(this.intervalHandler.bind(this), this.config.updateFrequency);
+			this.intervalId = setInterval(utils.intervalHandler.bind(this), this.config.updateFrequency);
 		}
 	}
 
 	remove() {
 		clearInterval(this.intervalId);
-		$(this.element).data(PLUGIN_NAME, null);
+		$(this.element).data(Constants.PLUGIN_NAME, null);
 	}
 
 	render() {
@@ -97,31 +79,6 @@ class Timer {
 		}
 		// Make total seconds available via timer element's data attribute
 		$(this.element).data('seconds', this.totalSeconds);
-	}
-
-	intervalHandler() {
-		this.totalSeconds = utils.unixSeconds() - this.startTime;
-		this.render();
-		if (!this.config.duration) {
-			return;
-		}
-
-		// If the timer was called with a duration parameter,
-		// run the callback if duration is complete
-		// and remove the duration if `repeat` is not requested
-		if (this.totalSeconds % this.config.duration === 0) {
-			if (!this.config.repeat) {
-				this.config.duration = null;
-			}
-		}
-
-		if (this.config.countdown) {
-			clearInterval(this.intervalId);
-			utils.setState(this, TIMER_STOPPED);
-		}
-
-		// Finally invoke callback
-		this.config.callback();
 	}
 }
 

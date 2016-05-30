@@ -50,28 +50,32 @@
 
 	var _Timer2 = _interopRequireDefault(_Timer);
 
+	var _constants = __webpack_require__(3);
+
+	var _constants2 = _interopRequireDefault(_constants);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var pluginName = 'timer'; /* global $:true */
+	/* global $:true */
 
 	(function () {
 		$.fn.timer = function (options) {
 			options = options || 'start';
 
 			return this.each(function () {
-				if (!($.data(this, pluginName) instanceof _Timer2.default)) {
+				if (!($.data(this, _constants2.default.PLUGIN_NAME) instanceof _Timer2.default)) {
 					/**
 	     * Create a new data attribute on the element to hold the plugin name
 	     * This way we can know which plugin(s) is/are initialized on the element later
 	     */
-					$.data(this, pluginName, new _Timer2.default(this, options));
+					$.data(this, _constants2.default.PLUGIN_NAME, new _Timer2.default(this, options));
 				}
 
 				/**
 	    * Use the instance of this plugin derived from the data attribute for this element
 	    * to conduct whatever action requested as a string parameter.
 	    */
-				var instance = $.data(this, pluginName);
+				var instance = $.data(this, _constants2.default.PLUGIN_NAME);
 
 				/**
 	    * Provision for calling a function from this plugin
@@ -103,6 +107,11 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /* global $:true */
 
+
+	var _constants = __webpack_require__(3);
+
+	var _constants2 = _interopRequireDefault(_constants);
+
 	var _utils = __webpack_require__(2);
 
 	var _utils2 = _interopRequireDefault(_utils);
@@ -110,27 +119,6 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var PLUGIN_NAME = 'timer';
-	var TIMER_STOPPED = 'stopped';
-	var TIMER_RUNNING = 'running';
-	var TIMER_PAUSED = 'paused';
-	var getDefaultConfig = function getDefaultConfig() {
-		return {
-			seconds: 0, // Default seconds value to start timer from
-			editable: false, // Allow making changes to the time by clicking on it
-			restart: false, // This will enable stop OR continue after the set duration & callback
-			duration: null, // Duration to run callback after
-			callback: function callback() {
-				// Default callback to run after elapsed duration
-				console.log('Time up!');
-			},
-			repeat: false, // this will repeat callback every n times duration is elapsed
-			countdown: false, // if true, this will render the timer as a countdown (must have duration)
-			format: null, // this sets the format in which the time will be printed
-			updateFrequency: 500 // How often should timer display update
-		};
-	};
 
 	/**
 	 * Timer class to be instantiated on every element.
@@ -157,7 +145,7 @@
 				this.html = 'val';
 			}
 
-			this.config = getDefaultConfig();
+			this.config = _utils2.default.getDefaultConfig();
 
 			if (!config || typeof config === 'string') {
 				return;
@@ -179,35 +167,35 @@
 		_createClass(Timer, [{
 			key: 'start',
 			value: function start() {
-				if (this.state !== TIMER_RUNNING) {
+				if (this.state !== _constants2.default.TIMER_RUNNING) {
 					this.startTime = _utils2.default.unixSeconds() - this.totalSeconds;
-					_utils2.default.setState(this, TIMER_RUNNING);
+					_utils2.default.setState(this, _constants2.default.TIMER_RUNNING);
 					this.render();
-					this.intervalId = setInterval(this.intervalHandler.bind(this), this.config.updateFrequency);
+					this.intervalId = setInterval(_utils2.default.intervalHandler.bind(this), this.config.updateFrequency);
 				}
 			}
 		}, {
 			key: 'pause',
 			value: function pause() {
-				if (this.state === TIMER_RUNNING) {
-					_utils2.default.setState(this, TIMER_PAUSED);
+				if (this.state === _constants2.default.TIMER_RUNNING) {
+					_utils2.default.setState(this, _constants2.default.TIMER_PAUSED);
 					clearInterval(this.intervalId);
 				}
 			}
 		}, {
 			key: 'resume',
 			value: function resume() {
-				if (this.state === TIMER_PAUSED) {
-					_utils2.default.setState(this, TIMER_RUNNING);
+				if (this.state === _constants2.default.TIMER_PAUSED) {
+					_utils2.default.setState(this, _constants2.default.TIMER_RUNNING);
 					this.startTime = _utils2.default.unixSeconds() - this.totalSeconds;
-					this.intervalId = setInterval(this.intervalHandler.bind(this), this.config.updateFrequency);
+					this.intervalId = setInterval(_utils2.default.intervalHandler.bind(this), this.config.updateFrequency);
 				}
 			}
 		}, {
 			key: 'remove',
 			value: function remove() {
 				clearInterval(this.intervalId);
-				$(this.element).data(PLUGIN_NAME, null);
+				$(this.element).data(_constants2.default.PLUGIN_NAME, null);
 			}
 		}, {
 			key: 'render',
@@ -220,32 +208,6 @@
 				// Make total seconds available via timer element's data attribute
 				$(this.element).data('seconds', this.totalSeconds);
 			}
-		}, {
-			key: 'intervalHandler',
-			value: function intervalHandler() {
-				this.totalSeconds = _utils2.default.unixSeconds() - this.startTime;
-				this.render();
-				if (!this.config.duration) {
-					return;
-				}
-
-				// If the timer was called with a duration parameter,
-				// run the callback if duration is complete
-				// and remove the duration if `repeat` is not requested
-				if (this.totalSeconds % this.config.duration === 0) {
-					if (!this.config.repeat) {
-						this.config.duration = null;
-					}
-				}
-
-				if (this.config.countdown) {
-					clearInterval(this.intervalId);
-					_utils2.default.setState(this, TIMER_STOPPED);
-				}
-
-				// Finally invoke callback
-				this.config.callback();
-			}
 		}]);
 
 		return Timer;
@@ -255,18 +217,19 @@
 
 /***/ },
 /* 2 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	/* global $:true */
 
-	var THIRTYSIXHUNDRED = 3600;
-	var SIXTY = 60;
-	var TEN = 10;
+	var _constants = __webpack_require__(3);
+
+	var _constants2 = _interopRequireDefault(_constants);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	/**
 	 * Convert (a number) seconds to a Object with hours, minutes etc as properties
@@ -278,28 +241,29 @@
 		var totalSeconds = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
 
 		var hours = 0;
-		var totalMinutes = Math.floor(totalSeconds / SIXTY);
+		var totalMinutes = Math.floor(totalSeconds / _constants2.default.SIXTY);
 		var minutes = totalMinutes;
 		var seconds = void 0;
 
-		if (totalSeconds >= THIRTYSIXHUNDRED) {
-			hours = Math.floor(totalSeconds / THIRTYSIXHUNDRED);
+		if (totalSeconds >= _constants2.default.THIRTYSIXHUNDRED) {
+			hours = Math.floor(totalSeconds / _constants2.default.THIRTYSIXHUNDRED);
 		}
 
-		if (totalSeconds >= THIRTYSIXHUNDRED) {
-			minutes = Math.floor(totalSeconds % THIRTYSIXHUNDRED / SIXTY);
+		if (totalSeconds >= _constants2.default.THIRTYSIXHUNDRED) {
+			minutes = Math.floor(totalSeconds % _constants2.default.THIRTYSIXHUNDRED / _constants2.default.SIXTY);
 		}
-		if (minutes < TEN && hours > 0) {
+		if (minutes < _constants2.default.TEN && hours > 0) {
 			minutes = '0' + minutes;
 		}
 
-		seconds = totalSeconds % SIXTY;
-		if (seconds < TEN && (minutes > 0 || hours > 0)) {
+		seconds = totalSeconds % _constants2.default.SIXTY;
+		if (seconds < _constants2.default.TEN && (minutes > 0 || hours > 0)) {
 			seconds = '0' + seconds;
 		}
 
 		return { hours: hours, minutes: minutes, totalMinutes: totalMinutes, seconds: seconds, totalSeconds: totalSeconds };
-	};
+	}; /* global $:true */
+
 
 	var paddedValue = function paddedValue(val) {
 		val = parseInt(val, 10);
@@ -310,6 +274,23 @@
 	};
 
 	exports.default = {
+		getDefaultConfig: function getDefaultConfig() {
+			return {
+				seconds: 0, // Default seconds value to start timer from
+				editable: false, // Allow making changes to the time by clicking on it
+				restart: false, // This will enable stop OR continue after the set duration & callback
+				duration: null, // Duration to run callback after
+				callback: function callback() {
+					// Default callback to run after elapsed duration
+					console.log('Time up!');
+				},
+				repeat: false, // this will repeat callback every n times duration is elapsed
+				countdown: false, // if true, this will render the timer as a countdown (must have duration)
+				format: null, // this sets the format in which the time will be printed
+				updateFrequency: 500 // How often should timer display update
+			};
+		},
+
 		/**
 	  * @return {Number} Return seconds passed since Jan 1, 1970
 	  */
@@ -381,11 +362,11 @@
 			var seconds = 0;
 
 			if (hrs) {
-				seconds += Number(hrs[0].replace('h', '') * THIRTYSIXHUNDRED);
+				seconds += Number(hrs[0].replace('h', '') * _constants2.default.THIRTYSIXHUNDRED);
 			}
 
 			if (mins) {
-				seconds += Number(mins[0].replace('m', '')) * SIXTY;
+				seconds += Number(mins[0].replace('m', '')) * _constants2.default.SIXTY;
 			}
 
 			if (secs) {
@@ -403,20 +384,20 @@
 	  */
 		prettyTimeToSeconds: function prettyTimeToSeconds(editedTime) {
 			var arr = void 0;
-			var parsedTime = void 0;
+			var time = void 0;
 
 			if (editedTime.indexOf('sec') > 0) {
-				parsedTime = Number(editedTime.replace(/\ssec/g, ''));
+				time = Number(editedTime.replace(/\ssec/g, ''));
 			} else if (editedTime.indexOf('min') > 0) {
 				editedTime = editedTime.replace(/\smin/g, '');
 				arr = editedTime.split(':');
-				parsedTime = Number(arr[0] * SIXTY) + Number(arr[1]);
+				time = Number(arr[0] * _constants2.default.SIXTY) + Number(arr[1]);
 			} else if (editedTime.match(/\d{1,2}:\d{2}:\d{2}/)) {
 				arr = editedTime.split(':');
-				parsedTime = Number(arr[0] * THIRTYSIXHUNDRED) + Number(arr[1] * SIXTY) + Number(arr[2]);
+				time = Number(arr[0] * _constants2.default.THIRTYSIXHUNDRED) + Number(arr[1] * _constants2.default.SIXTY) + Number(arr[2]);
 			}
 
-			return parsedTime;
+			return time;
 		},
 
 		setState: function setState(timerInstance, newState) {
@@ -442,8 +423,53 @@
 				timerInstance.totalSeconds = _this.prettyTimeToSeconds($(timerInstance.element)[timerInstance.html]());
 				timerInstance.resume();
 			});
+		},
+
+		intervalHandler: function intervalHandler(timerInstance) {
+			timerInstance.totalSeconds = undefined.unixSeconds() - timerInstance.startTime;
+			timerInstance.render();
+			if (!timerInstance.config.duration) {
+				return;
+			}
+
+			// If the timer was called with a duration parameter,
+			// run the callback if duration is complete
+			// and remove the duration if `repeat` is not requested
+			if (timerInstance.totalSeconds % timerInstance.config.duration === 0) {
+				if (!timerInstance.config.repeat) {
+					timerInstance.config.duration = null;
+				}
+			}
+
+			if (timerInstance.config.countdown) {
+				clearInterval(timerInstance.intervalId);
+				undefined.setState(timerInstance, _constants2.default.TIMER_STOPPED);
+			}
+
+			// Finally invoke callback
+			timerInstance.config.callback();
 		}
 	};
+
+/***/ },
+/* 3 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	var Constants = {
+		PLUGIN_NAME: 'timer',
+		TIMER_RUNNING: 'running',
+		TIMER_PAUSED: 'paused',
+		THIRTYSIXHUNDRED: 3600,
+		SIXTY: 60,
+		TEN: 10
+	};
+
+	exports.default = Constants;
 
 /***/ }
 /******/ ]);

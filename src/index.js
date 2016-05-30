@@ -1,25 +1,25 @@
 /* global $:true */
 
 import Timer from './Timer';
-const pluginName = 'timer';
+import Constants from './constants';
 (function() {
 	$.fn.timer = function(options) {
 		options = options || 'start';
 
 		return this.each(function() {
-			if (!($.data(this, pluginName) instanceof Timer)) {
+			if (!($.data(this, Constants.PLUGIN_NAME) instanceof Timer)) {
 				/**
 				 * Create a new data attribute on the element to hold the plugin name
 				 * This way we can know which plugin(s) is/are initialized on the element later
 				 */
-				$.data(this, pluginName, new Timer(this, options));
+				$.data(this, Constants.PLUGIN_NAME, new Timer(this, options));
 			}
 
 			/**
 			 * Use the instance of this plugin derived from the data attribute for this element
 			 * to conduct whatever action requested as a string parameter.
 			 */
-			var instance = $.data(this, pluginName);
+			var instance = $.data(this, Constants.PLUGIN_NAME);
 
 			/**
 			 * Provision for calling a function from this plugin
