@@ -22,20 +22,9 @@ test('test durationTimeToSeconds', (t) => {
 	t.end();
 });
 
-/*test('test secondsToTimeObj', (t) => {
-	t.deepEqual(utils.secondsToTimeObj(100), {
-		hours: 0,
-		minutes: 1,
-		totalMinutes: 1,
-		seconds: 40,
-		totalSeconds: 100
-	});
-	t.deepEqual(utils.secondsToTimeObj(1000), {
-		hours: 0,
-		minutes: 16,
-		totalMinutes: 16,
-		seconds: 40,
-		totalSeconds: 1000
-	});
+test('test secondsToPrettyTime', (t) => {
+	t.deepEqual(utils.secondsToPrettyTime(100), '1:40 min');
+	t.deepEqual(utils.secondsToPrettyTime(1000), '16:40 min');
+	t.deepEqual(utils.secondsToPrettyTime(1234), '20:34 min');
 	t.end();
-});*/
+});

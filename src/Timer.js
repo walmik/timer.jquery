@@ -30,7 +30,6 @@ class Timer {
 	 */
 	constructor(element, config) {
 		this.element = element;
-		this.startTime = utils.unixSeconds();
 		this.totalSeconds = 0;
 		this.state = TIMER_STOPPED;
 		this.intervalId = null;
@@ -51,6 +50,9 @@ class Timer {
 			config.duration = utils.durationTimeToSeconds(config.duration);
 		}
 		this.config = Object.assign(this.config, config);
+		if (this.config.seconds) {
+			this.totalSeconds = this.config.seconds;
+		}
 
 		if (this.config.editable) {
 			// makeEditable(this);
@@ -59,7 +61,7 @@ class Timer {
 
 	start() {
 		if (this.state !== TIMER_RUNNING) {
-			this.startTime = utils.unixSeconds();
+			this.startTime = utils.unixSeconds() - this.totalSeconds;
 			this.state = TIMER_RUNNING;
 			this.render();
 			this.intervalId = setInterval(this.intervalHandler.bind(this), this.config.updateFrequency);

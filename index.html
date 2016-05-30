@@ -314,7 +314,7 @@ $('#divId').timer({
 			$('.start-timer-btn').on('click', function() {
 				hasTimer = true;
 				$('.timer').timer({
-					format: '%m:%S minutes'
+					seconds: 1234
 				});
 				$(this).addClass('hidden');
 				$('.pause-timer-btn, .remove-timer-btn').removeClass('hidden');

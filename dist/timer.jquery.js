@@ -147,7 +147,6 @@
 			_classCallCheck(this, Timer);
 
 			this.element = element;
-			this.startTime = _utils2.default.unixSeconds();
 			this.totalSeconds = 0;
 			this.state = TIMER_STOPPED;
 			this.intervalId = null;
@@ -168,6 +167,9 @@
 				config.duration = _utils2.default.durationTimeToSeconds(config.duration);
 			}
 			this.config = Object.assign(this.config, config);
+			if (this.config.seconds) {
+				this.totalSeconds = this.config.seconds;
+			}
 
 			if (this.config.editable) {
 				// makeEditable(this);
@@ -178,7 +180,7 @@
 			key: 'start',
 			value: function start() {
 				if (this.state !== TIMER_RUNNING) {
-					this.startTime = _utils2.default.unixSeconds();
+					this.startTime = _utils2.default.unixSeconds() - this.totalSeconds;
 					this.state = TIMER_RUNNING;
 					this.render();
 					this.intervalId = setInterval(this.intervalHandler.bind(this), this.config.updateFrequency);
