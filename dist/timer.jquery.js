@@ -210,7 +210,11 @@
 		}, {
 			key: 'render',
 			value: function render() {
-				this.element[this.html] = _utils2.default.secondsToPrettyTime(this.totalSeconds);
+				if (this.config.format) {
+					this.element[this.html] = _utils2.default.secondsToFormattedTime(this.totalSeconds, this.config.format);
+				} else {
+					this.element[this.html] = _utils2.default.secondsToPrettyTime(this.totalSeconds);
+				}
 			}
 		}, {
 			key: 'intervalHandler',
@@ -237,6 +241,52 @@
 	var THIRTYSIXHUNDRED = 3600;
 	var SIXTY = 60;
 	var TEN = 10;
+
+	/**
+	 * Convert (a number) seconds to a Object with hours, minutes etc as properties
+	 * Used by secondsToPrettyTime for to format the time display
+	 * @param  {Number} totalSeconds The total seconds that needs to be distributed into an Object
+	 * @return {Object} Object with hours, minutes, totalMinutes, seconds and totalSeconds
+	 */
+	var secondsToTimeObj = function secondsToTimeObj() {
+		var totalSeconds = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+
+		var hours = 0;
+		var totalMinutes = Math.floor(totalSeconds / SIXTY);
+		var minutes = totalMinutes;
+		var seconds = void 0;
+
+		// Hours
+		if (totalSeconds >= THIRTYSIXHUNDRED) {
+			hours = Math.floor(totalSeconds / THIRTYSIXHUNDRED);
+		}
+
+		// Minutes
+		if (totalSeconds >= THIRTYSIXHUNDRED) {
+			minutes = Math.floor(totalSeconds % THIRTYSIXHUNDRED / SIXTY);
+		}
+		// Prepend 0 to minutes under TEN
+		if (minutes < TEN && hours > 0) {
+			minutes = '0' + minutes;
+		}
+		// Seconds
+		seconds = totalSeconds % SIXTY;
+		// Prepend 0 to seconds under TEN
+		if (seconds < TEN && (minutes > 0 || hours > 0)) {
+			seconds = '0' + seconds;
+		}
+
+		return { hours: hours, minutes: minutes, totalMinutes: totalMinutes, seconds: seconds, totalSeconds: totalSeconds };
+	};
+
+	var paddedValue = function paddedValue(val) {
+		val = parseInt(val, 10);
+		if (val < 10) {
+			return '0' + val;
+		}
+		return val;
+	};
+
 	exports.default = {
 		/**
 	  * @return {Number} Return seconds passed since Jan 1, 1970
@@ -246,44 +296,29 @@
 		},
 
 		secondsToPrettyTime: function secondsToPrettyTime(seconds) {
-			return seconds;
+			var timeObj = secondsToTimeObj(seconds);
+			if (timeObj.hours) {
+				return timeObj.hours + ':' + timeObj.minutes + ':' + timeObj.seconds;
+			}
+
+			var prettyTime = '';
+			if (timeObj.minutes) {
+				prettyTime = timeObj.minutes + ':' + timeObj.seconds + ' min';
+			} else {
+				prettyTime = timeObj.seconds + ' sec';
+			}
+
+			return prettyTime;
 		},
 
-		/**
-	  * Convert (a number) seconds to a Object with hours, minutes etc as properties
-	  * Used by secondsToPrettyTime for to format the time display
-	  * @param  {Number} totalSeconds The total seconds that needs to be distributed into an Object
-	  * @return {Object} Object with hours, minutes, totalMinutes, seconds and totalSeconds
-	  */
-		secondsToTimeObj: function secondsToTimeObj() {
-			var totalSeconds = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+		secondsToFormattedTime: function secondsToFormattedTime(seconds, formattedTime) {
+			var timeObj = secondsToTimeObj(seconds);
+			var formatDef = [{ identifier: '%h', value: timeObj.hours }, { identifier: '%m', value: timeObj.minutes }, { identifier: '%s', value: timeObj.seconds }, { identifier: '%g', value: timeObj.totalMinutes }, { identifier: '%t', value: timeObj.totalSeconds }, { identifier: '%H', value: paddedValue(timeObj.hours) }, { identifier: '%M', value: paddedValue(timeObj.minutes) }, { identifier: '%S', value: paddedValue(timeObj.seconds) }, { identifier: '%G', value: paddedValue(timeObj.totalMinutes) }, { identifier: '%T', value: paddedValue(timeObj.totalSeconds) }];
+			formatDef.forEach(function (fmt) {
+				formattedTime = formattedTime.replace(fmt.identifier, fmt.value);
+			});
 
-			var hours = 0;
-			var totalMinutes = Math.floor(totalSeconds / SIXTY);
-			var minutes = totalMinutes;
-			var seconds = void 0;
-
-			// Hours
-			if (totalSeconds >= THIRTYSIXHUNDRED) {
-				hours = Math.floor(totalSeconds / THIRTYSIXHUNDRED);
-			}
-
-			// Minutes
-			if (totalSeconds >= THIRTYSIXHUNDRED) {
-				minutes = Math.floor(totalSeconds % THIRTYSIXHUNDRED / SIXTY);
-			}
-			// Prepend 0 to minutes under TEN
-			if (minutes < TEN && hours > 0) {
-				minutes = '0' + minutes;
-			}
-			// Seconds
-			seconds = totalSeconds % SIXTY;
-			// Prepend 0 to seconds under TEN
-			if (seconds < TEN && (minutes > 0 || hours > 0)) {
-				seconds = '0' + seconds;
-			}
-
-			return { hours: hours, minutes: minutes, totalMinutes: totalMinutes, seconds: seconds, totalSeconds: totalSeconds };
+			return formattedTime;
 		},
 
 		/**

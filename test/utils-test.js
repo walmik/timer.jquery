@@ -22,7 +22,7 @@ test('test durationTimeToSeconds', (t) => {
 	t.end();
 });
 
-test('test secondsToTimeObj', (t) => {
+/*test('test secondsToTimeObj', (t) => {
 	t.deepEqual(utils.secondsToTimeObj(100), {
 		hours: 0,
 		minutes: 1,
@@ -38,4 +38,4 @@ test('test secondsToTimeObj', (t) => {
 		totalSeconds: 1000
 	});
 	t.end();
-});
+});*/

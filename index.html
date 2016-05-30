@@ -313,7 +313,9 @@ $('#divId').timer({
 			// Init timer start
 			$('.start-timer-btn').on('click', function() {
 				hasTimer = true;
-				$('.timer').timer();
+				$('.timer').timer({
+					format: '%m:%S minutes'
+				});
 				$(this).addClass('hidden');
 				$('.pause-timer-btn, .remove-timer-btn').removeClass('hidden');
 			});

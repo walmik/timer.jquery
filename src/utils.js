@@ -1,6 +1,50 @@
 const THIRTYSIXHUNDRED = 3600;
 const SIXTY = 60;
 const TEN = 10;
+
+/**
+ * Convert (a number) seconds to a Object with hours, minutes etc as properties
+ * Used by secondsToPrettyTime for to format the time display
+ * @param  {Number} totalSeconds The total seconds that needs to be distributed into an Object
+ * @return {Object} Object with hours, minutes, totalMinutes, seconds and totalSeconds
+ */
+const secondsToTimeObj = (totalSeconds = 0) => {
+	let hours = 0;
+	let totalMinutes = Math.floor(totalSeconds / SIXTY);
+	let minutes = totalMinutes;
+	let seconds;
+
+	// Hours
+	if (totalSeconds >= THIRTYSIXHUNDRED) {
+		hours = Math.floor(totalSeconds / THIRTYSIXHUNDRED);
+	}
+
+	// Minutes
+	if (totalSeconds >= THIRTYSIXHUNDRED) {
+		minutes = Math.floor(totalSeconds % THIRTYSIXHUNDRED / SIXTY);
+	}
+	// Prepend 0 to minutes under TEN
+	if (minutes < TEN && hours > 0) {
+		minutes = '0' + minutes;
+	}
+	// Seconds
+	seconds = totalSeconds % SIXTY;
+	// Prepend 0 to seconds under TEN
+	if (seconds < TEN && (minutes > 0 || hours > 0)) {
+		seconds = '0' + seconds;
+	}
+
+	return {hours, minutes, totalMinutes, seconds, totalSeconds};
+};
+
+const paddedValue = val => {
+	val = parseInt(val, 10);
+	if (val < 10) {
+		return '0' + val;
+	}
+	return val;
+};
+
 export default {
 	/**
 	 * @return {Number} Return seconds passed since Jan 1, 1970
@@ -8,42 +52,40 @@ export default {
 	unixSeconds: () => (Math.round(Date.now() / 1000)),
 
 	secondsToPrettyTime: seconds => {
-		return seconds;
+		let timeObj = secondsToTimeObj(seconds);
+		if (timeObj.hours) {
+			return timeObj.hours + ':' + timeObj.minutes + ':' + timeObj.seconds;
+		}
+
+		let prettyTime = '';
+		if (timeObj.minutes) {
+			prettyTime = timeObj.minutes + ':' + timeObj.seconds + ' min';
+		} else {
+			prettyTime = timeObj.seconds + ' sec';
+		}
+
+		return prettyTime;
 	},
 
-	/**
-	 * Convert (a number) seconds to a Object with hours, minutes etc as properties
-	 * Used by secondsToPrettyTime for to format the time display
-	 * @param  {Number} totalSeconds The total seconds that needs to be distributed into an Object
-	 * @return {Object} Object with hours, minutes, totalMinutes, seconds and totalSeconds
-	 */
-	secondsToTimeObj: (totalSeconds = 0) => {
-		let hours = 0;
-		let totalMinutes = Math.floor(totalSeconds / SIXTY);
-		let minutes = totalMinutes;
-		let seconds;
+	secondsToFormattedTime: (seconds, formattedTime) => {
+		let timeObj = secondsToTimeObj(seconds);
+		const formatDef = [
+			{identifier: '%h', value: timeObj.hours},
+			{identifier: '%m', value: timeObj.minutes},
+			{identifier: '%s', value: timeObj.seconds},
+			{identifier: '%g', value: timeObj.totalMinutes},
+			{identifier: '%t', value: timeObj.totalSeconds},
+			{identifier: '%H', value: paddedValue(timeObj.hours)},
+			{identifier: '%M', value: paddedValue(timeObj.minutes)},
+			{identifier: '%S', value: paddedValue(timeObj.seconds)},
+			{identifier: '%G', value: paddedValue(timeObj.totalMinutes)},
+			{identifier: '%T', value: paddedValue(timeObj.totalSeconds)}
+		];
+		formatDef.forEach(function(fmt) {
+			formattedTime = formattedTime.replace(fmt.identifier, fmt.value);
+		});
 
-		// Hours
-		if (totalSeconds >= THIRTYSIXHUNDRED) {
-			hours = Math.floor(totalSeconds / THIRTYSIXHUNDRED);
-		}
-
-		// Minutes
-		if (totalSeconds >= THIRTYSIXHUNDRED) {
-			minutes = Math.floor(totalSeconds % THIRTYSIXHUNDRED / SIXTY);
-		}
-		// Prepend 0 to minutes under TEN
-		if (minutes < TEN && hours > 0) {
-			minutes = '0' + minutes;
-		}
-		// Seconds
-		seconds = totalSeconds % SIXTY;
-		// Prepend 0 to seconds under TEN
-		if (seconds < TEN && (minutes > 0 || hours > 0)) {
-			seconds = '0' + seconds;
-		}
-
-		return {hours, minutes, totalMinutes, seconds, totalSeconds};
+		return formattedTime;
 	},
 
 	/**

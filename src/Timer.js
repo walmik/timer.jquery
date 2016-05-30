@@ -87,7 +87,11 @@ class Timer {
 	}
 
 	render() {
-		this.element[this.html] = utils.secondsToPrettyTime(this.totalSeconds);
+		if (this.config.format) {
+			this.element[this.html] = utils.secondsToFormattedTime(this.totalSeconds, this.config.format);
+		} else {
+			this.element[this.html] = utils.secondsToPrettyTime(this.totalSeconds);
+		}
 	}
 
 	intervalHandler() {
