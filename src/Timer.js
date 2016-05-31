@@ -41,16 +41,31 @@ class Timer {
 			utils.makeEditable(this);
 		}
 
-		// In case duration is set along with a callback along with repeat,
+		this.startTime = utils.unixSeconds() - this.totalSeconds;
+
+		// In case duration is set along with a callback as well as repeat,
 		// then the update frequency needs to be at least 1000ms to prevent callback from being fired more than once
 		if (this.config.duration && this.config.repeat && this.config.updateFrequency < 1000) {
 			this.config.updateFrequency = 1000;
+		}
+
+		// If countdown is set, ensure duration is set as well
+		// Also set the total seconds to the duration so that the first render gets the correct value
+		if (this.config.countdown) {
+			if (!this.config.duration) {
+				throw new Error('Countdown option set without duration!');
+			}
+
+			if (this.config.editable) {
+				throw new Error('Cannot set editable on a countdown timer!');
+			}
+			this.config.startTime = utils.unixSeconds() - this.config.duration;
+			this.totalSeconds = this.config.duration;
 		}
 	}
 
 	start() {
 		if (this.state !== Constants.TIMER_RUNNING) {
-			this.startTime = utils.unixSeconds() - this.totalSeconds;
 			utils.setState(this, Constants.TIMER_RUNNING);
 			this.render();
 			this.intervalId = setInterval(utils.intervalHandler.bind(null, this), this.config.updateFrequency);

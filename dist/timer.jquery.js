@@ -163,10 +163,26 @@
 				_utils2.default.makeEditable(this);
 			}
 
-			// In case duration is set along with a callback along with repeat,
+			this.startTime = _utils2.default.unixSeconds() - this.totalSeconds;
+
+			// In case duration is set along with a callback as well as repeat,
 			// then the update frequency needs to be at least 1000ms to prevent callback from being fired more than once
-			if (this.config.duration && this.config.repeat) {
+			if (this.config.duration && this.config.repeat && this.config.updateFrequency < 1000) {
 				this.config.updateFrequency = 1000;
+			}
+
+			// If countdown is set, ensure duration is set as well
+			// Also set the total seconds to the duration so that the first render gets the correct value
+			if (this.config.countdown) {
+				if (!this.config.duration) {
+					throw new Error('Countdown option set without duration!');
+				}
+
+				if (this.config.editable) {
+					throw new Error('Cannot set editable on a countdown timer!');
+				}
+				this.config.startTime = _utils2.default.unixSeconds() - this.config.duration;
+				this.totalSeconds = this.config.duration;
 			}
 		}
 
@@ -174,7 +190,6 @@
 			key: 'start',
 			value: function start() {
 				if (this.state !== _constants2.default.TIMER_RUNNING) {
-					this.startTime = _utils2.default.unixSeconds() - this.totalSeconds;
 					_utils2.default.setState(this, _constants2.default.TIMER_RUNNING);
 					this.render();
 					this.intervalId = setInterval(_utils2.default.intervalHandler.bind(null, this), this.config.updateFrequency);
@@ -457,6 +472,21 @@
 	 */
 	var intervalHandler = function intervalHandler(timerInstance) {
 		timerInstance.totalSeconds = unixSeconds() - timerInstance.startTime;
+
+		if (timerInstance.config.countdown) {
+			timerInstance.totalSeconds = timerInstance.config.duration - timerInstance.totalSeconds;
+
+			if (timerInstance.totalSeconds === 0) {
+				clearInterval(timerInstance.intervalId);
+				setState(timerInstance, _constants2.default.TIMER_STOPPED);
+				timerInstance.config.callback();
+				$(timerInstance.element).data('seconds');
+			}
+
+			timerInstance.render();
+			return;
+		}
+
 		timerInstance.render();
 		if (!timerInstance.config.duration) {
 			return;
@@ -466,17 +496,13 @@
 		// run the callback if duration is complete
 		// and remove the duration if `repeat` is not requested
 		if (timerInstance.totalSeconds > 0 && timerInstance.totalSeconds % timerInstance.config.duration === 0) {
-			// Stop the timer in case it was a countdown timer
-			if (timerInstance.config.countdown) {
-				clearInterval(timerInstance.intervalId);
-				setState(timerInstance, _constants2.default.TIMER_STOPPED);
-			}
-
 			if (timerInstance.config.callback) {
 				timerInstance.config.callback();
 			}
 
 			if (!timerInstance.config.repeat) {
+				clearInterval(timerInstance.intervalId);
+				setState(timerInstance, _constants2.default.TIMER_STOPPED);
 				timerInstance.config.duration = null;
 			}
 		}

@@ -162,7 +162,7 @@
 		<div class='container'>
 			<h1>jQuery Timer</h1>
 			<ul class='list-unstyled'>
-				<li>Lightweight <a href='test/timer.jquery.html'>well tested</a> jQuery pretty timer plugin</li>
+				<li>Lightweight, well tested jQuery pretty timer plugin</li>
 				<li>Start, Pause, Resume and Remove a timer inside any HTML element.</li>
 				<li>Get notified at a set time or at regular intervals.</li>
 				<li>Click and edit time while timer is running!</li>
@@ -314,9 +314,7 @@ $('#divId').timer({
 			$('.start-timer-btn').on('click', function() {
 				hasTimer = true;
 				$('.timer').timer({
-					editable: true,
-					duration: '5s',
-					repeat: true
+					editable: true
 				});
 				$(this).addClass('hidden');
 				$('.pause-timer-btn, .remove-timer-btn').removeClass('hidden');

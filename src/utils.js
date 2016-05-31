@@ -203,6 +203,21 @@ const makeEditable = timerInstance => {
  */
 const intervalHandler = timerInstance => {
 	timerInstance.totalSeconds = unixSeconds() - timerInstance.startTime;
+
+	if (timerInstance.config.countdown) {
+		timerInstance.totalSeconds = timerInstance.config.duration - timerInstance.totalSeconds;
+
+		if (timerInstance.totalSeconds === 0) {
+			clearInterval(timerInstance.intervalId);
+			setState(timerInstance, Constants.TIMER_STOPPED);
+			timerInstance.config.callback();
+			$(timerInstance.element).data('seconds');
+		}
+
+		timerInstance.render();
+		return;
+	}
+
 	timerInstance.render();
 	if (!timerInstance.config.duration) {
 		return;
@@ -212,17 +227,13 @@ const intervalHandler = timerInstance => {
 	// run the callback if duration is complete
 	// and remove the duration if `repeat` is not requested
 	if (timerInstance.totalSeconds > 0 && timerInstance.totalSeconds % timerInstance.config.duration === 0) {
-		// Stop the timer in case it was a countdown timer
-		if (timerInstance.config.countdown) {
-			clearInterval(timerInstance.intervalId);
-			setState(timerInstance, Constants.TIMER_STOPPED);
-		}
-
 		if (timerInstance.config.callback) {
 			timerInstance.config.callback();
 		}
 
 		if (!timerInstance.config.repeat) {
+			clearInterval(timerInstance.intervalId);
+			setState(timerInstance, Constants.TIMER_STOPPED);
 			timerInstance.config.duration = null;
 		}
 	}
