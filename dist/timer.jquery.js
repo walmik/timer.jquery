@@ -136,6 +136,7 @@
 			_classCallCheck(this, Timer);
 
 			this.element = element;
+			this.originalConfig = Object.assign({}, config);
 			this.totalSeconds = 0;
 			this.intervalId = null;
 			// A HTML element will have the html() method in jQuery to inject content,
@@ -217,6 +218,14 @@
 			value: function remove() {
 				clearInterval(this.intervalId);
 				$(this.element).data(_constants2.default.PLUGIN_NAME, null);
+			}
+		}, {
+			key: 'reset',
+			value: function reset() {
+				var element = this.element;
+				var originalConfig = this.originalConfig;
+				this.remove();
+				$(element).timer(originalConfig);
 			}
 		}, {
 			key: 'render',

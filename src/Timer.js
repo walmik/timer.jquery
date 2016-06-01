@@ -14,6 +14,7 @@ class Timer {
 	 */
 	constructor(element, config) {
 		this.element = element;
+		this.originalConfig = Object.assign({}, config);
 		this.totalSeconds = 0;
 		this.intervalId = null;
 		// A HTML element will have the html() method in jQuery to inject content,
@@ -90,6 +91,13 @@ class Timer {
 	remove() {
 		clearInterval(this.intervalId);
 		$(this.element).data(Constants.PLUGIN_NAME, null);
+	}
+
+	reset() {
+		let element = this.element;
+		let originalConfig = this.originalConfig;
+		this.remove();
+		$(element).timer(originalConfig);
 	}
 
 	render() {
