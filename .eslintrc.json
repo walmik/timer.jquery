@@ -1,0 +1,8 @@
+{
+    "extends": "google",
+    "installedESLint": true,
+    "rules": {
+ 	   "indent": ["error", "tab"],
+ 	   "max-len": ["error", 120]
+ 	}
+}
