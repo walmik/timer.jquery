@@ -9,11 +9,16 @@
 [Demo & Instructions][demo] | [Download][min]
 
 [demo]: http://jquerytimer.com/
-[min]: https://github.com/walmik/timer.jquery/archive/master.zip
+[min]: https://raw.githubusercontent.com/walmik/timer.jquery/master/dist/timer.jquery.min.js
 
 ## Getting started
 
-In your web page:
+If you are using bower,
+```bash
+bower install timer.jquery
+```
+
+Alternatively you can [download][min] the jQuery timer plugin. Then, in your web page:
 
 ```html
 <script src="path/to/jquery.js" type="text/javascript"></script>
