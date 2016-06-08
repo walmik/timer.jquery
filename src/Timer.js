@@ -83,7 +83,11 @@ class Timer {
 	resume() {
 		if (this.state === Constants.TIMER_PAUSED) {
 			utils.setState(this, Constants.TIMER_RUNNING);
-			this.startTime = utils.unixSeconds() - this.totalSeconds;
+			if (this.config.countdown) {
+				this.startTime = utils.unixSeconds() - this.config.duration + this.totalSeconds;
+			} else {
+				this.startTime = utils.unixSeconds() - this.totalSeconds;
+			}
 			this.intervalId = setInterval(utils.intervalHandler.bind(null, this), this.config.updateFrequency);
 		}
 	}

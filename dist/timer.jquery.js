@@ -209,7 +209,11 @@
 			value: function resume() {
 				if (this.state === _constants2.default.TIMER_PAUSED) {
 					_utils2.default.setState(this, _constants2.default.TIMER_RUNNING);
-					this.startTime = _utils2.default.unixSeconds() - this.totalSeconds;
+					if (this.config.countdown) {
+						this.startTime = _utils2.default.unixSeconds() - this.config.duration + this.totalSeconds;
+					} else {
+						this.startTime = _utils2.default.unixSeconds() - this.totalSeconds;
+					}
 					this.intervalId = setInterval(_utils2.default.intervalHandler.bind(null, this), this.config.updateFrequency);
 				}
 			}
