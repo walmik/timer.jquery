@@ -262,6 +262,7 @@
 		PLUGIN_NAME: 'timer',
 		TIMER_RUNNING: 'running',
 		TIMER_PAUSED: 'paused',
+		DAYINSECONDS: 86400,
 		THIRTYSIXHUNDRED: 3600,
 		SIXTY: 60,
 		TEN: 10
@@ -287,30 +288,35 @@
 
 	/**
 	 * Private
-	 * Convert (a number) seconds to a Object with hours, minutes etc as properties
+	 * Convert (a number) seconds to a Object with days, hours, minutes etc as properties
 	 * Used by secondsToPrettyTime for to format the time display
 	 * @param  {Number} totalSeconds The total seconds that needs to be distributed into an Object
-	 * @return {Object} Object with hours, minutes, totalMinutes, seconds and totalSeconds
+	 * @return {Object} Object with days, hours, minutes, totalMinutes, seconds and totalSeconds
 	 */
 	var _secondsToTimeObj = function _secondsToTimeObj() {
 		var totalSeconds = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
 
+		var days = 0;
 		var hours = 0;
 		var totalMinutes = Math.floor(totalSeconds / _constants2.default.SIXTY);
 		var minutes = totalMinutes;
 		var seconds = void 0;
 
-		if (totalSeconds >= _constants2.default.THIRTYSIXHUNDRED) {
-			hours = Math.floor(totalSeconds / _constants2.default.THIRTYSIXHUNDRED);
+		if (totalSeconds >= _constants2.default.DAYINSECONDS) {
+			days = Math.floor(totalSeconds / _constants2.default.DAYINSECONDS);
 		}
 
 		if (totalSeconds >= _constants2.default.THIRTYSIXHUNDRED) {
+			hours = Math.floor(totalSeconds % _constants2.default.DAYINSECONDS / _constants2.default.THIRTYSIXHUNDRED);
+		}
+
+		if (totalSeconds >= _constants2.default.SIXTY) {
 			minutes = Math.floor(totalSeconds % _constants2.default.THIRTYSIXHUNDRED / _constants2.default.SIXTY);
 		}
 
 		seconds = totalSeconds % _constants2.default.SIXTY;
 
-		return { hours: hours, minutes: minutes, totalMinutes: totalMinutes, seconds: seconds, totalSeconds: totalSeconds };
+		return { days: days, hours: hours, minutes: minutes, totalMinutes: totalMinutes, seconds: seconds, totalSeconds: totalSeconds };
 	};
 
 	/**
@@ -359,6 +365,11 @@
 	 */
 	var secondsToPrettyTime = function secondsToPrettyTime(seconds) {
 		var timeObj = _secondsToTimeObj(seconds);
+
+		if (timeObj.days) {
+			return timeObj.days + ':' + _paddedValue(timeObj.hours) + ':' + _paddedValue(timeObj.minutes) + ':' + _paddedValue(timeObj.seconds);
+		}
+
 		if (timeObj.hours) {
 			return timeObj.hours + ':' + _paddedValue(timeObj.minutes) + ':' + _paddedValue(timeObj.seconds);
 		}
@@ -381,7 +392,7 @@
 	 */
 	var secondsToFormattedTime = function secondsToFormattedTime(seconds, formattedTime) {
 		var timeObj = _secondsToTimeObj(seconds);
-		var formatDef = [{ identifier: '%h', value: timeObj.hours }, { identifier: '%m', value: timeObj.minutes }, { identifier: '%s', value: timeObj.seconds }, { identifier: '%g', value: timeObj.totalMinutes }, { identifier: '%t', value: timeObj.totalSeconds }, { identifier: '%H', value: _paddedValue(timeObj.hours) }, { identifier: '%M', value: _paddedValue(timeObj.minutes) }, { identifier: '%S', value: _paddedValue(timeObj.seconds) }, { identifier: '%G', value: _paddedValue(timeObj.totalMinutes) }, { identifier: '%T', value: _paddedValue(timeObj.totalSeconds) }];
+		var formatDef = [{ identifier: '%d', value: timeObj.days }, { identifier: '%h', value: timeObj.hours }, { identifier: '%m', value: timeObj.minutes }, { identifier: '%s', value: timeObj.seconds }, { identifier: '%g', value: timeObj.totalMinutes }, { identifier: '%t', value: timeObj.totalSeconds }, { identifier: '%D', value: _paddedValue(timeObj.days) }, { identifier: '%H', value: _paddedValue(timeObj.hours) }, { identifier: '%M', value: _paddedValue(timeObj.minutes) }, { identifier: '%S', value: _paddedValue(timeObj.seconds) }, { identifier: '%G', value: _paddedValue(timeObj.totalMinutes) }, { identifier: '%T', value: _paddedValue(timeObj.totalSeconds) }];
 		formatDef.forEach(function (fmt) {
 			formattedTime = formattedTime.replace(fmt.identifier, fmt.value);
 		});
@@ -405,14 +416,19 @@
 		}
 
 		timeFormat = timeFormat.toLowerCase();
+		var days = timeFormat.match(/\d{1,2}d/); // Match 10d in 10d5h30m10s
 		var hrs = timeFormat.match(/\d{1,2}h/); // Match 5h in 5h30m10s
 		var mins = timeFormat.match(/\d{1,2}m/); // Match 30m in 5h30m10s
 		var secs = timeFormat.match(/\d{1,2}s/); // Match 10s in 5h30m10s
 
-		if (!hrs && !mins && !secs) {
+		if (!days && !hrs && !mins && !secs) {
 			throw new Error('Invalid string passed in durationTimeToSeconds!');
 		}
 		var seconds = 0;
+
+		if (days) {
+			seconds += Number(days[0].replace('d', '') * _constants2.default.DAYINSECONDS);
+		}
 
 		if (hrs) {
 			seconds += Number(hrs[0].replace('h', '') * _constants2.default.THIRTYSIXHUNDRED);
@@ -445,6 +461,9 @@
 			editedTime = editedTime.replace(/\smin/g, '');
 			arr = editedTime.split(':');
 			time = Number(arr[0] * _constants2.default.SIXTY) + Number(arr[1]);
+		} else if (editedTime.match(/\d{1,2}:\d{2}:\d{2}:\d{2}/)) {
+			arr = editedTime.split(':');
+			time = Number(arr[0] * _constants2.default.DAYINSECONDS) + Number(arr[1] * _constants2.default.THIRTYSIXHUNDRED) + Number(arr[2] * _constants2.default.SIXTY) + Number(arr[3]);
 		} else if (editedTime.match(/\d{1,2}:\d{2}:\d{2}/)) {
 			arr = editedTime.split(':');
 			time = Number(arr[0] * _constants2.default.THIRTYSIXHUNDRED) + Number(arr[1] * _constants2.default.SIXTY) + Number(arr[2]);
