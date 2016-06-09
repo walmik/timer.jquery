@@ -2,28 +2,33 @@
 import Constants from './constants';
 /**
  * Private
- * Convert (a number) seconds to a Object with hours, minutes etc as properties
+ * Convert (a number) seconds to a Object with days, hours, minutes etc as properties
  * Used by secondsToPrettyTime for to format the time display
  * @param  {Number} totalSeconds The total seconds that needs to be distributed into an Object
- * @return {Object} Object with hours, minutes, totalMinutes, seconds and totalSeconds
+ * @return {Object} Object with days, hours, minutes, totalMinutes, seconds and totalSeconds
  */
 const _secondsToTimeObj = (totalSeconds = 0) => {
+	let days = 0;
 	let hours = 0;
 	let totalMinutes = Math.floor(totalSeconds / Constants.SIXTY);
 	let minutes = totalMinutes;
 	let seconds;
 
-	if (totalSeconds >= Constants.THIRTYSIXHUNDRED) {
-		hours = Math.floor(totalSeconds / Constants.THIRTYSIXHUNDRED);
+	if (totalSeconds >= Constants.DAYINSECONDS) {
+		days = Math.floor(totalSeconds / Constants.DAYINSECONDS);
 	}
 
 	if (totalSeconds >= Constants.THIRTYSIXHUNDRED) {
+		hours = Math.floor(totalSeconds % Constants.DAYINSECONDS / Constants.THIRTYSIXHUNDRED);
+	}
+
+	if (totalSeconds >= Constants.SIXTY) {
 		minutes = Math.floor(totalSeconds % Constants.THIRTYSIXHUNDRED / Constants.SIXTY);
 	}
 
 	seconds = totalSeconds % Constants.SIXTY;
 
-	return {hours, minutes, totalMinutes, seconds, totalSeconds};
+	return {days, hours, minutes, totalMinutes, seconds, totalSeconds};
 };
 
 /**
@@ -66,6 +71,12 @@ const unixSeconds = () => (Math.round(Date.now() / 1000));
  */
 const secondsToPrettyTime = seconds => {
 	let timeObj = _secondsToTimeObj(seconds);
+
+	if (timeObj.days) {
+		return timeObj.days + ':' + _paddedValue(timeObj.hours) + ':' +
+			_paddedValue(timeObj.minutes) + ':' + _paddedValue(timeObj.seconds);
+	}
+
 	if (timeObj.hours) {
 		return timeObj.hours + ':' + _paddedValue(timeObj.minutes) + ':' + _paddedValue(timeObj.seconds);
 	}
@@ -89,11 +100,13 @@ const secondsToPrettyTime = seconds => {
 const secondsToFormattedTime = (seconds, formattedTime) => {
 	let timeObj = _secondsToTimeObj(seconds);
 	const formatDef = [
+		{identifier: '%d', value: timeObj.days},
 		{identifier: '%h', value: timeObj.hours},
 		{identifier: '%m', value: timeObj.minutes},
 		{identifier: '%s', value: timeObj.seconds},
 		{identifier: '%g', value: timeObj.totalMinutes},
 		{identifier: '%t', value: timeObj.totalSeconds},
+		{identifier: '%D', value: _paddedValue(timeObj.days)},
 		{identifier: '%H', value: _paddedValue(timeObj.hours)},
 		{identifier: '%M', value: _paddedValue(timeObj.minutes)},
 		{identifier: '%S', value: _paddedValue(timeObj.seconds)},
@@ -123,14 +136,19 @@ const durationTimeToSeconds = timeFormat => {
 	}
 
 	timeFormat = timeFormat.toLowerCase();
+	let days = timeFormat.match(/\d{1,2}d/);	// Match 10d in 10d5h30m10s
 	let hrs = timeFormat.match(/\d{1,2}h/);		// Match 5h in 5h30m10s
 	let mins = timeFormat.match(/\d{1,2}m/);	// Match 30m in 5h30m10s
 	let secs = timeFormat.match(/\d{1,2}s/);	// Match 10s in 5h30m10s
 
-	if (!hrs && !mins && !secs) {
+	if (!days && !hrs && !mins && !secs) {
 		throw new Error('Invalid string passed in durationTimeToSeconds!');
 	}
 	let seconds = 0;
+
+	if (days) {
+		seconds += Number(days[0].replace('d', '') * Constants.DAYINSECONDS);
+	}
 
 	if (hrs) {
 		seconds += Number(hrs[0].replace('h', '') * Constants.THIRTYSIXHUNDRED);
@@ -163,6 +181,10 @@ const prettyTimeToSeconds = editedTime => {
 		editedTime = editedTime.replace(/\smin/g, '');
 		arr = editedTime.split(':');
 		time = Number(arr[0] * Constants.SIXTY) + Number(arr[1]);
+	} else if (editedTime.match(/\d{1,2}:\d{2}:\d{2}:\d{2}/)) {
+		arr = editedTime.split(':');
+		time = Number(arr[0] * Constants.DAYINSECONDS) + Number(arr[1] * Constants.THIRTYSIXHUNDRED) +
+			Number(arr[2] * Constants.SIXTY) + Number(arr[3]);
 	} else if (editedTime.match(/\d{1,2}:\d{2}:\d{2}/)) {
 		arr = editedTime.split(':');
 		time = Number(arr[0] * Constants.THIRTYSIXHUNDRED) + Number(arr[1] * Constants.SIXTY) + Number(arr[2]);
