@@ -136,7 +136,7 @@
 			_classCallCheck(this, Timer);
 
 			this.element = element;
-			this.originalConfig = Object.assign({}, config);
+			this.originalConfig = $.extend({}, config);
 			this.totalSeconds = 0;
 			this.intervalId = null;
 			// A HTML element will have the html() method in jQuery to inject content,
