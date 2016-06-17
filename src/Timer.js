@@ -33,7 +33,7 @@ class Timer {
 		if (config.duration) {
 			config.duration = utils.durationTimeToSeconds(config.duration);
 		}
-		this.config = Object.assign(this.config, config);
+		this.config = $.extend(this.config, config);
 		if (this.config.seconds) {
 			this.totalSeconds = this.config.seconds;
 		}
