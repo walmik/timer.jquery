@@ -26,14 +26,14 @@ class Timer {
 
 		this.config = utils.getDefaultConfig();
 
-		if (!config || typeof config === 'string') {
-			return;
-		}
-
 		if (config.duration) {
 			config.duration = utils.durationTimeToSeconds(config.duration);
 		}
-		this.config = $.extend(this.config, config);
+
+		if (typeof config !== 'string') {
+			this.config = $.extend(this.config, config);
+		}
+
 		if (this.config.seconds) {
 			this.totalSeconds = this.config.seconds;
 		}
