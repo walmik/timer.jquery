@@ -12,7 +12,8 @@
     "tape": "./node_modules/.bin/tape -r babel-register ./test/*.js",
     "test": "npm run eslint && npm run tape",
     "webpack": "./node_modules/.bin/webpack --watch",
-    "grunt": "./node_modules/.bin/grunt"
+    "grunt": "./node_modules/.bin/grunt",
+    "karma": "./node_modules/.bin/karma"
   },
   "engines": {
     "node": ">= 0.10.0"
