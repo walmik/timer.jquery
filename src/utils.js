@@ -8,27 +8,21 @@ import Constants from './constants';
  * @return {Object} Object with days, hours, minutes, totalMinutes, seconds and totalSeconds
  */
 const _secondsToTimeObj = (totalSeconds = 0) => {
-	let days = 0;
-	let hours = 0;
-	let totalMinutes = Math.floor(totalSeconds / Constants.SIXTY);
-	let minutes = totalMinutes;
-	let seconds;
-
-	if (totalSeconds >= Constants.DAYINSECONDS) {
-		days = Math.floor(totalSeconds / Constants.DAYINSECONDS);
-	}
-
-	if (totalSeconds >= Constants.THIRTYSIXHUNDRED) {
-		hours = Math.floor(totalSeconds % Constants.DAYINSECONDS / Constants.THIRTYSIXHUNDRED);
-	}
-
-	if (totalSeconds >= Constants.SIXTY) {
-		minutes = Math.floor(totalSeconds % Constants.THIRTYSIXHUNDRED / Constants.SIXTY);
-	}
-
-	seconds = totalSeconds % Constants.SIXTY;
-
-	return {days, hours, minutes, totalMinutes, seconds, totalSeconds};
+	let totalMinutes = Math.floor(totalSeconds / 60);
+	return {
+		days: totalSeconds >= Constants.DAYINSECONDS ?
+			Math.floor(totalSeconds / Constants.DAYINSECONDS) :
+			0,
+		hours: totalSeconds >= 3600 ?
+			Math.floor(totalSeconds % Constants.DAYINSECONDS / 3600) :
+			0,
+		totalMinutes,
+		minutes: totalSeconds >= 60 ?
+			Math.floor(totalSeconds % 3600 / 60) :
+			totalMinutes,
+		seconds: totalSeconds % 60,
+		totalSeconds
+	};
 };
 
 /**
@@ -39,12 +33,13 @@ const _secondsToTimeObj = (totalSeconds = 0) => {
  */
 const _paddedValue = num => {
 	num = parseInt(num, 10);
-	if (num < 10) {
-		return '0' + num;
-	}
-	return num;
+	return (num < 10 && '0') + num;
 };
 
+/**
+ * Method to return the base settings that can be used in case of no or missing options
+ * @return {Object} Default config
+ */
 const getDefaultConfig = () => ({
 	seconds: 0,					// Default seconds value to start timer from
 	editable: false,			// Allow making changes to the time by clicking on it
@@ -61,7 +56,7 @@ const getDefaultConfig = () => ({
 /**
  * @return {Number} Return seconds passed since Jan 1, 1970
  */
-const unixSeconds = () => (Math.round(Date.now() / 1000));
+const unixSeconds = () => Math.round((Date.now ? Date.now() : new Date().getTime()) / 1000);
 
 /**
  * Convert seconds to pretty time.
@@ -113,9 +108,11 @@ const secondsToFormattedTime = (seconds, formattedTime) => {
 		{identifier: '%G', value: _paddedValue(timeObj.totalMinutes)},
 		{identifier: '%T', value: _paddedValue(timeObj.totalSeconds)}
 	];
-	formatDef.forEach(function(fmt) {
-		formattedTime = formattedTime.replace(fmt.identifier, fmt.value);
-	});
+
+	// Use `for` loop to support ie8 after transpilation
+	for (let i = 0; i < formatDef.length; i++) {
+		formattedTime = formattedTime.replace(formatDef[i].identifier, formatDef[i].value);
+	}
 
 	return formattedTime;
 };
@@ -126,42 +123,37 @@ const secondsToFormattedTime = (seconds, formattedTime) => {
  * @return {Number} Returns 330
  */
 const durationTimeToSeconds = timeFormat => {
-	if (!timeFormat) {
-		throw new Error('durationTimeToSeconds expects a string argument!');
-	}
-
-	// Early return in case a number is passed
 	if (!isNaN(Number(timeFormat))) {
+		// A number was passed
 		return timeFormat;
 	}
 
 	timeFormat = timeFormat.toLowerCase();
-	let days = timeFormat.match(/\d{1,2}d/);	// Match 10d in 10d5h30m10s
-	let hrs = timeFormat.match(/\d{1,2}h/);		// Match 5h in 5h30m10s
-	let mins = timeFormat.match(/\d{1,2}m/);	// Match 30m in 5h30m10s
-	let secs = timeFormat.match(/\d{1,2}s/);	// Match 10s in 5h30m10s
+	let days = timeFormat.match(/\d+d/);		// Match 10d in 10d5h30m10s
+	let hrs = timeFormat.match(/\d+h/);		// Match 5h in 5h30m10s
+	let mins = timeFormat.match(/\d+m/);	// Match 30m in 5h30m10s
+	let secs = timeFormat.match(/\d+s/);	// Match 10s in 5h30m10s
 
 	if (!days && !hrs && !mins && !secs) {
 		throw new Error('Invalid string passed in durationTimeToSeconds!');
 	}
-	let seconds = 0;
 
+	let seconds = 0;
 	if (days) {
-		seconds += Number(days[0].replace('d', '') * Constants.DAYINSECONDS);
+		seconds += Number(days[0].replace('d', '')) * Constants.DAYINSECONDS;
 	}
 
 	if (hrs) {
-		seconds += Number(hrs[0].replace('h', '') * Constants.THIRTYSIXHUNDRED);
+		seconds += Number(hrs[0].replace('h', '')) * 3600;
 	}
 
 	if (mins) {
-		seconds += Number(mins[0].replace('m', '')) * Constants.SIXTY;
+		seconds += Number(mins[0].replace('m', '')) * 60;
 	}
 
 	if (secs) {
 		seconds += Number(secs[0].replace('s', ''));
 	}
-
 	return seconds;
 };
 
@@ -180,14 +172,14 @@ const prettyTimeToSeconds = editedTime => {
 	} else if (editedTime.indexOf('min') > 0) {
 		editedTime = editedTime.replace(/\smin/g, '');
 		arr = editedTime.split(':');
-		time = Number(arr[0] * Constants.SIXTY) + Number(arr[1]);
+		time = Number(arr[0] * 60) + Number(arr[1]);
 	} else if (editedTime.match(/\d{1,2}:\d{2}:\d{2}:\d{2}/)) {
 		arr = editedTime.split(':');
-		time = Number(arr[0] * Constants.DAYINSECONDS) + Number(arr[1] * Constants.THIRTYSIXHUNDRED) +
-			Number(arr[2] * Constants.SIXTY) + Number(arr[3]);
+		time = Number(arr[0] * Constants.DAYINSECONDS) + Number(arr[1] * 3600) +
+			Number(arr[2] * 60) + Number(arr[3]);
 	} else if (editedTime.match(/\d{1,2}:\d{2}:\d{2}/)) {
 		arr = editedTime.split(':');
-		time = Number(arr[0] * Constants.THIRTYSIXHUNDRED) + Number(arr[1] * Constants.SIXTY) + Number(arr[2]);
+		time = Number(arr[0] * 3600) + Number(arr[1] * 60) + Number(arr[2]);
 	}
 
 	return time;

@@ -124,14 +124,12 @@
 	 * Timer class to be instantiated on every element.
 	 * All relative values will be stored at instance level.
 	 */
-
 	var Timer = function () {
 		/**
 	  * Construct a Timer instance on the provided element with the given config.
 	  * @param  {Object} element HTML node as passed by jQuery
 	  * @param  {Object|String} config User extended options or a string (start, pause, resume etc)
 	  */
-
 		function Timer(element, config) {
 			_classCallCheck(this, Timer);
 
@@ -262,10 +260,7 @@
 		PLUGIN_NAME: 'timer',
 		TIMER_RUNNING: 'running',
 		TIMER_PAUSED: 'paused',
-		DAYINSECONDS: 86400,
-		THIRTYSIXHUNDRED: 3600,
-		SIXTY: 60,
-		TEN: 10
+		DAYINSECONDS: 86400
 	};
 
 	exports.default = Constants;
@@ -294,29 +289,17 @@
 	 * @return {Object} Object with days, hours, minutes, totalMinutes, seconds and totalSeconds
 	 */
 	var _secondsToTimeObj = function _secondsToTimeObj() {
-		var totalSeconds = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+		var totalSeconds = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
 
-		var days = 0;
-		var hours = 0;
-		var totalMinutes = Math.floor(totalSeconds / _constants2.default.SIXTY);
-		var minutes = totalMinutes;
-		var seconds = void 0;
-
-		if (totalSeconds >= _constants2.default.DAYINSECONDS) {
-			days = Math.floor(totalSeconds / _constants2.default.DAYINSECONDS);
-		}
-
-		if (totalSeconds >= _constants2.default.THIRTYSIXHUNDRED) {
-			hours = Math.floor(totalSeconds % _constants2.default.DAYINSECONDS / _constants2.default.THIRTYSIXHUNDRED);
-		}
-
-		if (totalSeconds >= _constants2.default.SIXTY) {
-			minutes = Math.floor(totalSeconds % _constants2.default.THIRTYSIXHUNDRED / _constants2.default.SIXTY);
-		}
-
-		seconds = totalSeconds % _constants2.default.SIXTY;
-
-		return { days: days, hours: hours, minutes: minutes, totalMinutes: totalMinutes, seconds: seconds, totalSeconds: totalSeconds };
+		var totalMinutes = Math.floor(totalSeconds / 60);
+		return {
+			days: totalSeconds >= _constants2.default.DAYINSECONDS ? Math.floor(totalSeconds / _constants2.default.DAYINSECONDS) : 0,
+			hours: totalSeconds >= 3600 ? Math.floor(totalSeconds % _constants2.default.DAYINSECONDS / 3600) : 0,
+			totalMinutes: totalMinutes,
+			minutes: totalSeconds >= 60 ? Math.floor(totalSeconds % 3600 / 60) : totalMinutes,
+			seconds: totalSeconds % 60,
+			totalSeconds: totalSeconds
+		};
 	};
 
 	/**
@@ -328,12 +311,13 @@
 	/* global $:true */
 	var _paddedValue = function _paddedValue(num) {
 		num = parseInt(num, 10);
-		if (num < 10) {
-			return '0' + num;
-		}
-		return num;
+		return (num < 10 && '0') + num;
 	};
 
+	/**
+	 * Method to return the base settings that can be used in case of no or missing options
+	 * @return {Object} Default config
+	 */
 	var getDefaultConfig = function getDefaultConfig() {
 		return {
 			seconds: 0, // Default seconds value to start timer from
@@ -354,7 +338,7 @@
 	 * @return {Number} Return seconds passed since Jan 1, 1970
 	 */
 	var unixSeconds = function unixSeconds() {
-		return Math.round(Date.now() / 1000);
+		return Math.round((Date.now ? Date.now() : new Date().getTime()) / 1000);
 	};
 
 	/**
@@ -393,9 +377,11 @@
 	var secondsToFormattedTime = function secondsToFormattedTime(seconds, formattedTime) {
 		var timeObj = _secondsToTimeObj(seconds);
 		var formatDef = [{ identifier: '%d', value: timeObj.days }, { identifier: '%h', value: timeObj.hours }, { identifier: '%m', value: timeObj.minutes }, { identifier: '%s', value: timeObj.seconds }, { identifier: '%g', value: timeObj.totalMinutes }, { identifier: '%t', value: timeObj.totalSeconds }, { identifier: '%D', value: _paddedValue(timeObj.days) }, { identifier: '%H', value: _paddedValue(timeObj.hours) }, { identifier: '%M', value: _paddedValue(timeObj.minutes) }, { identifier: '%S', value: _paddedValue(timeObj.seconds) }, { identifier: '%G', value: _paddedValue(timeObj.totalMinutes) }, { identifier: '%T', value: _paddedValue(timeObj.totalSeconds) }];
-		formatDef.forEach(function (fmt) {
-			formattedTime = formattedTime.replace(fmt.identifier, fmt.value);
-		});
+
+		// Use `for` loop to support ie8 after transpilation
+		for (var i = 0; i < formatDef.length; i++) {
+			formattedTime = formattedTime.replace(formatDef[i].identifier, formatDef[i].value);
+		}
 
 		return formattedTime;
 	};
@@ -406,42 +392,37 @@
 	 * @return {Number} Returns 330
 	 */
 	var durationTimeToSeconds = function durationTimeToSeconds(timeFormat) {
-		if (!timeFormat) {
-			throw new Error('durationTimeToSeconds expects a string argument!');
-		}
-
-		// Early return in case a number is passed
 		if (!isNaN(Number(timeFormat))) {
+			// A number was passed
 			return timeFormat;
 		}
 
 		timeFormat = timeFormat.toLowerCase();
-		var days = timeFormat.match(/\d{1,2}d/); // Match 10d in 10d5h30m10s
-		var hrs = timeFormat.match(/\d{1,2}h/); // Match 5h in 5h30m10s
-		var mins = timeFormat.match(/\d{1,2}m/); // Match 30m in 5h30m10s
-		var secs = timeFormat.match(/\d{1,2}s/); // Match 10s in 5h30m10s
+		var days = timeFormat.match(/\d+d/); // Match 10d in 10d5h30m10s
+		var hrs = timeFormat.match(/\d+h/); // Match 5h in 5h30m10s
+		var mins = timeFormat.match(/\d+m/); // Match 30m in 5h30m10s
+		var secs = timeFormat.match(/\d+s/); // Match 10s in 5h30m10s
 
 		if (!days && !hrs && !mins && !secs) {
 			throw new Error('Invalid string passed in durationTimeToSeconds!');
 		}
-		var seconds = 0;
 
+		var seconds = 0;
 		if (days) {
-			seconds += Number(days[0].replace('d', '') * _constants2.default.DAYINSECONDS);
+			seconds += Number(days[0].replace('d', '')) * _constants2.default.DAYINSECONDS;
 		}
 
 		if (hrs) {
-			seconds += Number(hrs[0].replace('h', '') * _constants2.default.THIRTYSIXHUNDRED);
+			seconds += Number(hrs[0].replace('h', '')) * 3600;
 		}
 
 		if (mins) {
-			seconds += Number(mins[0].replace('m', '')) * _constants2.default.SIXTY;
+			seconds += Number(mins[0].replace('m', '')) * 60;
 		}
 
 		if (secs) {
 			seconds += Number(secs[0].replace('s', ''));
 		}
-
 		return seconds;
 	};
 
@@ -460,13 +441,13 @@
 		} else if (editedTime.indexOf('min') > 0) {
 			editedTime = editedTime.replace(/\smin/g, '');
 			arr = editedTime.split(':');
-			time = Number(arr[0] * _constants2.default.SIXTY) + Number(arr[1]);
+			time = Number(arr[0] * 60) + Number(arr[1]);
 		} else if (editedTime.match(/\d{1,2}:\d{2}:\d{2}:\d{2}/)) {
 			arr = editedTime.split(':');
-			time = Number(arr[0] * _constants2.default.DAYINSECONDS) + Number(arr[1] * _constants2.default.THIRTYSIXHUNDRED) + Number(arr[2] * _constants2.default.SIXTY) + Number(arr[3]);
+			time = Number(arr[0] * _constants2.default.DAYINSECONDS) + Number(arr[1] * 3600) + Number(arr[2] * 60) + Number(arr[3]);
 		} else if (editedTime.match(/\d{1,2}:\d{2}:\d{2}/)) {
 			arr = editedTime.split(':');
-			time = Number(arr[0] * _constants2.default.THIRTYSIXHUNDRED) + Number(arr[1] * _constants2.default.SIXTY) + Number(arr[2]);
+			time = Number(arr[0] * 3600) + Number(arr[1] * 60) + Number(arr[2]);
 		}
 
 		return time;

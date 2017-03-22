@@ -13,11 +13,10 @@
 
 ## Getting started
 
-Load the plugin in a script tag (right after loading jQuery) directly from CDNjs to get the current version of the timer plugin,
+Load the plugin in a script tag (right after loading jQuery) directly from CDNjs using this URL,
 
 ```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.0/jquery.min.js" type="text/javascript"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/timer.jquery/0.6.4/timer.jquery.min.js"></script>
+https://cdnjs.cloudflare.com/ajax/libs/timer.jquery/0.6.5/timer.jquery.min.js
 ```
 
 If you are using bower,
@@ -25,7 +24,7 @@ If you are using bower,
 bower install timer.jquery
 ```
 
-Alternatively you can [download][min] the jQuery timer plugin and host it relative to your HTML file. Then, in your web page:
+Alternatively you can [download][min] the jQuery timer plugin and host it relative to your HTML file. Once you have your preferred way to get jquery and the timer plugin, in your web page:
 
 ```html
 <script src="path/to/jquery.js"></script>
