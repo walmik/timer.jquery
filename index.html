@@ -35,11 +35,6 @@
 		}
 		em { color: #999; font-size: 12px; }
 
-		.top-bar {
-			background: #000;
-			padding: 10px 0;
-		}
-
 		.dark {
 			padding-bottom: 30px;
 			margin-bottom: 30px;
@@ -253,7 +248,6 @@ $('#divId').timer({
 $('#divId').timer({
     <strong>duration:</strong> '30s',
     <strong>callback:</strong> function() {
-        console.log('Timer will reset!');
         $('#divId').timer('reset');
     },
     <strong>repeat:</strong> true <em>//repeatedly call the callback</em>
@@ -281,12 +275,37 @@ $('#divId').timer({
 });</pre>
                 </div>
 
+
+				<div class='col-md-3 action'>
+					Change display format dynamically: If you'd like to change the format of the timer display, you can do so by defining a callback function that udpates the timer's format after a specific duration.
+				</div>
+				<div class='col-md-9'>
+<pre>$('#divId')..timer({
+	<strong>duration:</strong> '61s', //since 3599 is divisible by 59 or 61
+	<strong>seconds:</strong> 3590, //simulation purposes
+	<strong>format:</strong> '%M:%S',
+	<strong>callback:</strong> function() {
+
+		var total = timerWithCallDuration.data('seconds');
+
+		if(total === 3599) { //change to hour format (3600 - 1 to prevent display bug)
+			this.format = '%H:%M:%S';
+		}
+	}
+});</pre>
+				</div>
+
+
+
 				<div class='col-md-3 action'>Update frequency: By default the timer display updates every 500ms to show an accurate update of time. You can change this by specifying the update frequency in milliseconds.</div>
-				<div class='col-md-	9'>
+				<div class='col-md-9'>
 <pre>$('#divId').timer({
 	updateFrequency: 2000 	// Update the timer display every 2 seconds.
 });</pre>
 				</div>
+
+
+
 			</div><!-- /row -->
 
 			<br>
@@ -306,7 +325,7 @@ $('#divId').timer({
 	</div>
 
 	<script src='https://code.jquery.com/jquery-1.12.4.min.js'></script>
-	<script src='timer.jquery.min.js'></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/timer.jquery/0.6.5/timer.jquery.min.js'></script>
 	<script>
 	    (function(){
 			var hasTimer = false;
