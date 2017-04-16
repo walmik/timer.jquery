@@ -1,21 +1,46 @@
-module.exports = function (grunt) {
+module.exports = function(grunt) {
+	var commonTasks = ['jscs', 'jshint', 'concat', 'uglify'];
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 
-		uglify: {
+		jscs: {
+			src: ['Gruntfile.js', 'src/*.js', 'test/*.js']
+		},
+
+		jshint: {
+			all: ['Gruntfile.js', 'src/*.js', 'test/*.js']
+		},
+
+		concat: {
 			options: {
-				banner: '/*! <%= pkg.name %> <%= pkg.version %> <%=grunt.template.today("yyyy-mm-dd")%>*/'
+				banner: [
+					'/*! <%= pkg.name %> <%= pkg.version %> <%=grunt.template.today("yyyy-mm-dd")%>*/\n',
+					'(function() {\n'
+				].join(''),
+				footer: '} ());'
 			},
 			dist: {
-				src: ['dist/timer.jquery.js'],
+				src: [
+					'src/constants.js',
+					'src/utils.js',
+					'src/Timer.js',
+					'src/index.js'
+				],
+				dest: 'dist/timer.jquery.js'
+			}
+		},
+
+		uglify: {
+			dist: {
+				src: 'dist/timer.jquery.js',
 				dest: 'dist/timer.jquery.min.js'
-			},
+			}
 		},
 
 		watch: {
 			scripts: {
-				files: ['dist/timer.jquery.js'],
-				tasks: ['uglify'],
+				files: ['src/*.js'],
+				tasks: commonTasks,
 				options: {
 					nospawn: true
 				}
@@ -23,9 +48,11 @@ module.exports = function (grunt) {
 		}
 	});
 
+	grunt.loadNpmTasks('grunt-jscs');
+	grunt.loadNpmTasks('grunt-contrib-jshint');
+	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 
-	//register default task
-	grunt.registerTask('default', 'watch');
-}
+	grunt.registerTask('default', commonTasks);
+};

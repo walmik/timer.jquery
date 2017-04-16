@@ -1,5 +1,4 @@
-/* global $:true */
-import Constants from './constants';
+/* global Constants:true */
 /**
  * Private
  * Convert (a number) seconds to a Object with days, hours, minutes etc as properties
@@ -7,8 +6,10 @@ import Constants from './constants';
  * @param  {Number} totalSeconds The total seconds that needs to be distributed into an Object
  * @return {Object} Object with days, hours, minutes, totalMinutes, seconds and totalSeconds
  */
-const _secondsToTimeObj = (totalSeconds = 0) => {
-	let totalMinutes = Math.floor(totalSeconds / 60);
+function _secondsToTimeObj(totalSeconds) {
+	var totalMinutes;
+	totalSeconds = totalSeconds || 0;
+	totalMinutes = Math.floor(totalSeconds / 60);
 	return {
 		days: totalSeconds >= Constants.DAYINSECONDS ?
 			Math.floor(totalSeconds / Constants.DAYINSECONDS) :
@@ -16,14 +17,14 @@ const _secondsToTimeObj = (totalSeconds = 0) => {
 		hours: totalSeconds >= 3600 ?
 			Math.floor(totalSeconds % Constants.DAYINSECONDS / 3600) :
 			0,
-		totalMinutes,
+		totalMinutes: totalMinutes,
 		minutes: totalSeconds >= 60 ?
 			Math.floor(totalSeconds % 3600 / 60) :
 			totalMinutes,
 		seconds: totalSeconds % 60,
-		totalSeconds
+		totalSeconds: totalSeconds
 	};
-};
+}
 
 /**
  * Private
@@ -31,32 +32,36 @@ const _secondsToTimeObj = (totalSeconds = 0) => {
  * @param  {Number} num The number to be padded
  * @return {String|Number} Padded (if less than 10) number
  */
-const _paddedValue = num => {
+function _paddedValue(num) {
 	num = parseInt(num, 10);
 	return (num < 10 && '0') + num;
-};
+}
 
 /**
  * Method to return the base settings that can be used in case of no or missing options
  * @return {Object} Default config
  */
-const getDefaultConfig = () => ({
-	seconds: 0,					// Default seconds value to start timer from
-	editable: false,			// Allow making changes to the time by clicking on it
-	duration: null,				// Duration to run callback after
-	callback: function() {		// Default callback to run after elapsed duration
-		console.log('Time up!');
-	},
-	repeat: false,				// this will repeat callback every n times duration is elapsed
-	countdown: false,			// if true, this will render the timer as a countdown (must have duration)
-	format: null,				// this sets the format in which the time will be printed
-	updateFrequency: 500		// How often should timer display update
-});
+function getDefaultConfig() {
+	return {
+		seconds: 0,					// Default seconds value to start timer from
+		editable: false,			// Allow making changes to the time by clicking on it
+		duration: null,				// Duration to run callback after
+		callback: function() {		// Default callback to run after elapsed duration
+			console.log('Time up!');
+		},
+		repeat: false,				// This will repeat callback every n times duration is elapsed
+		countdown: false,			// If true, this will render the timer as a countdown (must have duration)
+		format: null,				// This sets the format in which the time will be printed
+		updateFrequency: 500		// How often should timer display update
+	};
+}
 
 /**
  * @return {Number} Return seconds passed since Jan 1, 1970
  */
-const unixSeconds = () => Math.round((Date.now ? Date.now() : new Date().getTime()) / 1000);
+function unixSeconds() {
+	return Math.round((Date.now ? Date.now() : new Date().getTime()) / 1000);
+}
 
 /**
  * Convert seconds to pretty time.
@@ -64,8 +69,8 @@ const unixSeconds = () => Math.round((Date.now ? Date.now() : new Date().getTime
  * @param  {Number} seconds Seconds to be converted
  * @return {String}         Pretty time
  */
-const secondsToPrettyTime = seconds => {
-	let timeObj = _secondsToTimeObj(seconds);
+function secondsToPrettyTime(seconds) {
+	var timeObj = _secondsToTimeObj(seconds);
 
 	if (timeObj.days) {
 		return timeObj.days + ':' + _paddedValue(timeObj.hours) + ':' +
@@ -73,10 +78,12 @@ const secondsToPrettyTime = seconds => {
 	}
 
 	if (timeObj.hours) {
-		return timeObj.hours + ':' + _paddedValue(timeObj.minutes) + ':' + _paddedValue(timeObj.seconds);
+		return timeObj.hours +
+			':' + _paddedValue(timeObj.minutes) +
+			':' + _paddedValue(timeObj.seconds);
 	}
 
-	let prettyTime = '';
+	var prettyTime = '';
 	if (timeObj.minutes) {
 		prettyTime = timeObj.minutes + ':' + _paddedValue(timeObj.seconds) + ' min';
 	} else {
@@ -84,7 +91,7 @@ const secondsToPrettyTime = seconds => {
 	}
 
 	return prettyTime;
-};
+}
 
 /**
  * Convert seconds to user defined format for time
@@ -92,9 +99,9 @@ const secondsToPrettyTime = seconds => {
  * @param  {String} formattedTime User defined format
  * @return {String}               Formatted time string
  */
-const secondsToFormattedTime = (seconds, formattedTime) => {
-	let timeObj = _secondsToTimeObj(seconds);
-	const formatDef = [
+function secondsToFormattedTime(seconds, formattedTime) {
+	var timeObj = _secondsToTimeObj(seconds);
+	var formatDef = [
 		{identifier: '%d', value: timeObj.days},
 		{identifier: '%h', value: timeObj.hours},
 		{identifier: '%m', value: timeObj.minutes},
@@ -110,35 +117,34 @@ const secondsToFormattedTime = (seconds, formattedTime) => {
 	];
 
 	// Use `for` loop to support ie8 after transpilation
-	for (let i = 0; i < formatDef.length; i++) {
+	for (var i = 0; i < formatDef.length; i++) {
 		formattedTime = formattedTime.replace(formatDef[i].identifier, formatDef[i].value);
 	}
 
 	return formattedTime;
-};
+}
 
 /**
  * Convert duration time format to seconds
  * @param  {String} timeFormat e.g. 5m30s
  * @return {Number} Returns 330
  */
-const durationTimeToSeconds = timeFormat => {
+function durationTimeToSeconds(timeFormat) {
 	if (!isNaN(Number(timeFormat))) {
-		// A number was passed
-		return timeFormat;
+		return timeFormat; // A number was passed
 	}
 
 	timeFormat = timeFormat.toLowerCase();
-	let days = timeFormat.match(/\d+d/);		// Match 10d in 10d5h30m10s
-	let hrs = timeFormat.match(/\d+h/);		// Match 5h in 5h30m10s
-	let mins = timeFormat.match(/\d+m/);	// Match 30m in 5h30m10s
-	let secs = timeFormat.match(/\d+s/);	// Match 10s in 5h30m10s
+	var days = timeFormat.match(/\d+d/);		// Match 10d in 10d5h30m10s
+	var hrs = timeFormat.match(/\d+h/);			// Match 5h in 5h30m10s
+	var mins = timeFormat.match(/\d+m/);		// Match 30m in 5h30m10s
+	var secs = timeFormat.match(/\d+s/);		// Match 10s in 5h30m10s
 
 	if (!days && !hrs && !mins && !secs) {
 		throw new Error('Invalid string passed in durationTimeToSeconds!');
 	}
 
-	let seconds = 0;
+	var seconds = 0;
 	if (days) {
 		seconds += Number(days[0].replace('d', '')) * Constants.DAYINSECONDS;
 	}
@@ -155,7 +161,7 @@ const durationTimeToSeconds = timeFormat => {
 		seconds += Number(secs[0].replace('s', ''));
 	}
 	return seconds;
-};
+}
 
 /**
  * Parse pretty time and return it as seconds
@@ -163,9 +169,8 @@ const durationTimeToSeconds = timeFormat => {
  * @param  {String} editedTime The time as edited by the user
  * @return {Number}            Parsed time
  */
-const prettyTimeToSeconds = editedTime => {
-	let arr;
-	let time;
+function prettyTimeToSeconds(editedTime) {
+	var arr, time;
 
 	if (editedTime.indexOf('sec') > 0) {
 		time = Number(editedTime.replace(/\ssec/g, ''));
@@ -183,39 +188,41 @@ const prettyTimeToSeconds = editedTime => {
 	}
 
 	return time;
-};
+}
 
 /**
  * Set the provided state of the timer in the data attr `state` of the timer HTML element
  * @param  {Object} timerInstance Instance of the timer object
  * @param  {[type]} newState      The state to be set on the HTML element
  */
-const setState = (timerInstance, newState) => {
+function setState(timerInstance, newState) {
 	timerInstance.state = newState;
 	$(timerInstance.element).data('state', newState);
-};
+}
 
 /**
  * Convenience method to wire up focus & blur events to pause and resume
  * Makes use of the local `prettyTimeToSeconds` function to convert user edited time to seconds
  * @param  {Object} timerInstance Instance of the Timer Class
  */
-const makeEditable = timerInstance => {
-	$(timerInstance.element).on('focus', () => {
+function makeEditable(timerInstance) {
+	$(timerInstance.element).on('focus', function() {
 		timerInstance.pause();
 	});
 
-	$(timerInstance.element).on('blur', () => {
-		timerInstance.totalSeconds = prettyTimeToSeconds($(timerInstance.element)[timerInstance.html]());
+	$(timerInstance.element).on('blur', function() {
+		timerInstance.totalSeconds = prettyTimeToSeconds(
+			$(timerInstance.element)[timerInstance.html]()
+		);
 		timerInstance.resume();
 	});
-};
+}
 
 /**
  * The function that will be called via setInterval based on the timer's update frequency
  * @param  {Object} timerInstance Instance of the timer object
  */
-const intervalHandler = timerInstance => {
+function intervalHandler(timerInstance) {
 	timerInstance.totalSeconds = unixSeconds() - timerInstance.startTime;
 
 	if (timerInstance.config.countdown) {
@@ -240,7 +247,8 @@ const intervalHandler = timerInstance => {
 	// If the timer was called with a duration parameter,
 	// run the callback if duration is complete
 	// and remove the duration if `repeat` is not requested
-	if (timerInstance.totalSeconds > 0 && timerInstance.totalSeconds % timerInstance.config.duration === 0) {
+	if (timerInstance.totalSeconds > 0 &&
+		timerInstance.totalSeconds % timerInstance.config.duration === 0) {
 		if (timerInstance.config.callback) {
 			timerInstance.config.callback();
 		}
@@ -251,9 +259,9 @@ const intervalHandler = timerInstance => {
 			timerInstance.config.duration = null;
 		}
 	}
-};
+}
 
-export default {
+var utils = {
 	getDefaultConfig: getDefaultConfig,
 	unixSeconds: unixSeconds,
 	secondsToPrettyTime: secondsToPrettyTime,

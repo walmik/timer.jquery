@@ -1,0 +1,9 @@
+{
+	"preset": "jquery",
+	"requireSpacesInsideParentheses": false,
+	"validateQuoteMarks": true,
+	"requireSpacesInsideBrackets": false,
+	"requireSpacesInsideObjectBrackets": false,
+	"maximumLineLength": 120,
+	"requirePaddingNewLinesBeforeLineComments": false
+}

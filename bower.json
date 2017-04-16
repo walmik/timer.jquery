@@ -1,15 +1,11 @@
 {
 	"name": "timer.jquery",
 	"ignore": [
-		".babelrc",
-		".eslintrc.json",
 		".gitignore",
 		".travis.yml",
 		"Gruntfile.js",
-		"index.html",
 		"package.json",
-		"test",
-		"webpack.config.js"
+		"test"
 	],
 	"dependencies": {
 		"jquery": ">=1.9.0"

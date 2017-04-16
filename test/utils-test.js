@@ -1,13 +1,19 @@
-import test from 'tape';
-import utils from '../src/utils.js';
+var test = require('tape');
+var fs = require('fs');
 
-test('test unixSeconds', (t) => {
+// Load utils and constants in the global scope of this file to run tests on:
+/* jshint ignore:start */
+eval(fs.readFileSync(__dirname + '/../src/constants.js') + '');
+eval(fs.readFileSync(__dirname + '/../src/utils.js') + '');
+/* jshint ignore:end */
+
+test('test unixSeconds', function(t) {
 	t.equal(utils.unixSeconds(), Math.round(Date.now() / 1000));
 	t.end();
 });
 
-test('test getDefaultConfig', (t) => {
-	let config = utils.getDefaultConfig();
+test('test getDefaultConfig', function(t) {
+	var config = utils.getDefaultConfig();
 	t.equal(config.seconds, 0);
 	t.equal(config.duration, null);
 	t.equal(config.editable, false);
@@ -17,7 +23,7 @@ test('test getDefaultConfig', (t) => {
 	t.end();
 });
 
-test('test secondsToFormattedTime', (t) => {
+test('test secondsToFormattedTime', function(t) {
 	t.equal(utils.secondsToFormattedTime(100, '%m:%s'), '1:40');
 	t.equal(utils.secondsToFormattedTime(3, '%m:%s'), '0:3');
 	t.equal(utils.secondsToFormattedTime(1000, '%M minutes'), '16 minutes');
@@ -32,7 +38,7 @@ test('test secondsToFormattedTime', (t) => {
 	t.end();
 });
 
-test('test durationTimeToSeconds', (t) => {
+test('test durationTimeToSeconds', function(t) {
 	t.equal(utils.durationTimeToSeconds(330), 330);
 	t.equal(utils.durationTimeToSeconds('5m30s'), 330);
 	t.equal(utils.durationTimeToSeconds('30s'), 30);
@@ -50,7 +56,7 @@ test('test durationTimeToSeconds', (t) => {
 	t.end();
 });
 
-test('test secondsToPrettyTime', (t) => {
+test('test secondsToPrettyTime', function(t) {
 	t.equal(utils.secondsToPrettyTime(100), '1:40 min');
 	t.equal(utils.secondsToPrettyTime(1000), '16:40 min');
 	t.equal(utils.secondsToPrettyTime(1234), '20:34 min');
@@ -59,7 +65,7 @@ test('test secondsToPrettyTime', (t) => {
 	t.end();
 });
 
-test('test prettyTimeToSeconds', (t) => {
+test('test prettyTimeToSeconds', function(t) {
 	t.equal(utils.prettyTimeToSeconds('1:40 min'), 100);
 	t.equal(utils.prettyTimeToSeconds('16:40 min'), 1000);
 	t.equal(utils.prettyTimeToSeconds('20:34 min'), 1234);
