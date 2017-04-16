@@ -16,7 +16,7 @@
 Load the plugin in a script tag (right after loading jQuery) directly from CDNjs using this URL,
 
 ```html
-https://cdnjs.cloudflare.com/ajax/libs/timer.jquery/0.6.5/timer.jquery.min.js
+https://cdnjs.cloudflare.com/ajax/libs/timer.jquery/0.7.0/timer.jquery.js
 ```
 
 If you are using bower,
