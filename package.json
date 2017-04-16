@@ -8,7 +8,7 @@
     "url": "git://github.com/walmik/timer.jquery.git"
   },
   "scripts": {
-    "test": "./node_modules/.bin/tape ./test/*.js",
+    "test": "./node_modules/.bin/tape ./test/utils-test.js",
     "build": "./node_modules/.bin/grunt",
     "watch": "./node_modules/.bin/grunt watch",
     "karma": "./node_modules/.bin/karma start"
