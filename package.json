@@ -10,7 +10,8 @@
   "scripts": {
     "test": "./node_modules/.bin/tape ./test/*.js",
     "build": "./node_modules/.bin/grunt",
-    "watch": "./node_modules/.bin/grunt watch"
+    "watch": "./node_modules/.bin/grunt watch",
+    "karma": "./node_modules/.bin/karma start"
   },
   "engines": {
     "node": "> 0.10.0"
@@ -22,6 +23,14 @@
     "grunt-contrib-uglify": "^2.3.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-jscs": "^3.0.1",
+    "grunt-karma": "^2.0.0",
+    "jasmine": "^2.5.3",
+    "jasmine-core": "^2.5.2",
+    "jasmine-jquery": "^2.1.1",
+    "karma": "^1.6.0",
+    "karma-firefox-launcher": "^1.0.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-jasmine-jquery": "^0.1.1",
     "tape": "^4.5.1"
   },
   "license": "MIT"
