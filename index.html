@@ -194,28 +194,40 @@
 				<div class='col-md-9'>
 <pre>$('#divId').timer(); <em>//Same as $('#divId').timer('start')</em></pre>
 				</div>
+			</div>
+			<div class='row'>
 				<div class='col-md-3 action'>Start at a particular time:</div>
 				<div class='col-md-9'>
 <pre>$('#divId').timer({
     seconds: 100 <em>//Specify start time in seconds</em>
 });</pre>
 				</div>
+			</div>
+			<div class='row'>
 				<div class='col-md-3 action'>Pause:</div>
 				<div class='col-md-9'>
 <pre>$('#divId').timer('pause');</pre>
 				</div>
+			</div>
+			<div class='row'>
 				<div class='col-md-3 action'>Resume:</div>
 				<div class='col-md-9'>
 <pre>$('#divId').timer('resume');</pre>
 				</div>
+			</div>
+			<div class='row'>
 				<div class='col-md-3 action'>Remove Timer:</div>
 				<div class='col-md-9'>
 <pre>$('#divId').timer('remove');</pre>
 				</div>
+			</div>
+			<div class='row'>
 				<div class='col-md-3 action'>Get number of seconds:</div>
 				<div class='col-md-9'>
 <pre>$('#divId').data('seconds');</pre>
 				</div>
+			</div>
+			<div class='row'>
 				<div class='col-md-3 action'>Get notified:</div>
 				<div class='col-md-9'>
 <pre>
@@ -228,6 +240,8 @@ $('#divId').timer({
 });
 </pre>
 				</div>
+			</div>
+			<div class='row'>
 				<div class='col-md-3 action'>Get notified repeatedly:</div>
 				<div class='col-md-9'>
 <pre>
@@ -241,6 +255,8 @@ $('#divId').timer({
 });
 </pre>
 				</div>
+			</div>
+			<div class='row'>
 				<div class='col-md-3 action'>Repeat callback & reset timer:</div>
 				<div class='col-md-9'>
 <pre>
@@ -254,6 +270,8 @@ $('#divId').timer({
 });
 </pre>
 				</div>
+			</div>
+			<div class='row'>
 				<div class='col-md-3 action'>
                     Format:
                     By default the timer will display a pretty output (30 sec OR 1:06). You can change this format if you like.
@@ -274,13 +292,13 @@ $('#divId').timer({
     <strong>format:</strong> '%M minutes %s seconds'  <em>Display time as 3 minutes 45 seconds</em>
 });</pre>
                 </div>
-
-
+            </div>
+			<div class='row'>
 				<div class='col-md-3 action'>
 					Change display format dynamically: If you'd like to change the format of the timer display, you can do so by defining a callback function that udpates the timer's format after a specific duration.
 				</div>
 				<div class='col-md-9'>
-<pre>$('#divId')..timer({
+<pre>$('#divId').timer({
 	<strong>duration:</strong> '61s', //since 3599 is divisible by 59 or 61
 	<strong>seconds:</strong> 3590, //simulation purposes
 	<strong>format:</strong> '%M:%S',
@@ -294,19 +312,24 @@ $('#divId').timer({
 	}
 });</pre>
 				</div>
-
-
-
+			</div>
+			<div class='row'>
 				<div class='col-md-3 action'>Update frequency: By default the timer display updates every 500ms to show an accurate update of time. You can change this by specifying the update frequency in milliseconds.</div>
 				<div class='col-md-9'>
 <pre>$('#divId').timer({
 	updateFrequency: 2000 	// Update the timer display every 2 seconds.
 });</pre>
 				</div>
-
-
-
-			</div><!-- /row -->
+			</div>
+			<div class='row'>
+				<div class='col-md-3 action'>Countdown: You can set up a fixed duration countdown timer by setting the countdown property to true.</div>
+				<div class='col-md-9'>
+<pre>$('#divId').timer({
+	countdown: true,
+	duration: '25m'	// Set the duration to 25 minutes
+});</pre>
+				</div>
+			</div>
 
 			<br>
 
