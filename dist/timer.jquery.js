@@ -1,5 +1,5 @@
-/*! timer.jquery 0.7.0 2017-04-15*/
-(function() {
+/*! timer.jquery 0.7.1 2017-09-27*/
+(function($) {
 var Constants = {
 	PLUGIN_NAME: 'timer',
 	TIMER_RUNNING: 'running',
@@ -421,4 +421,4 @@ $.fn.timer = function(options) {
 		}
 	});
 };
-} ());
+} (jQuery));

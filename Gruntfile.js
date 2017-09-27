@@ -4,20 +4,20 @@ module.exports = function(grunt) {
 		pkg: grunt.file.readJSON('package.json'),
 
 		jscs: {
-			src: ['Gruntfile.js', 'src/*.js', 'test/*.js']
+			src: ['Gruntfile.js', 'src/*.js', 'test/utils-test.js', 'test/basicTimerSpec', 'test/timedFuncSpec.js']
 		},
 
 		jshint: {
-			all: ['Gruntfile.js', 'src/*.js', 'test/*.js']
+			all: ['Gruntfile.js', 'src/*.js', 'test/utils-test.js', 'test/basicTimerSpec', 'test/timedFuncSpec.js']
 		},
 
 		concat: {
 			options: {
 				banner: [
 					'/*! <%= pkg.name %> <%= pkg.version %> <%=grunt.template.today("yyyy-mm-dd")%>*/\n',
-					'(function() {\n'
+					'(function($) {\n'
 				].join(''),
-				footer: '} ());'
+				footer: '} (jQuery));'
 			},
 			dist: {
 				src: [
