@@ -54,7 +54,8 @@ $("#div-id").timer({
 	duration: 	{String},	// The time to countdown from. `seconds` and `duration` are mutually exclusive
 	callback: 	{Function},	// If duration is set, this function is called after `duration` has elapsed
 	repeat: 	{Bool},		// If duration is set, `callback` will be called repeatedly
-	format:		{String}	// Format to show time in
+	format:		{String},	// Format to show time in
+	editable:	{Bool}		// If click and edit time is enabled
 });
 ```
 
