@@ -122,7 +122,7 @@ $('#div-id').timer({
 You can get the current state of timer by querying the `state` property on it's data object
 
 ```javascript
-$('#div-id').data('state'); 	// running | paused | stopped
+$('#div-id').data('state'); 	// running | paused | stopped | removed
 ```
 
 ##### Duration Syntax
