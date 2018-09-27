@@ -4,6 +4,7 @@ var Constants = {
 	PLUGIN_NAME: 'timer',
 	TIMER_RUNNING: 'running',
 	TIMER_PAUSED: 'paused',
+	TIMER_REMOVED: 'removed',
 	DAYINSECONDS: 86400
 };
 
@@ -369,6 +370,7 @@ Timer.prototype.resume = function() {
 
 Timer.prototype.remove = function() {
 	clearInterval(this.intervalId);
+	utils.setState(this, Constants.TIMER_REMOVED);
 	$(this.element).data(Constants.PLUGIN_NAME, null);
 	$(this.element).data('seconds', null);
 };
