@@ -56,6 +56,7 @@ $("#div-id").timer({
 	repeat: 	{Bool},		// If duration is set, `callback` will be called repeatedly
 	format:		{String},	// Format to show time in
 	editable:	{Bool}		// If click and edit time is enabled
+	hidden;		{Bool}		// If true, the timer is not displayed in the selected item.
 });
 ```
 

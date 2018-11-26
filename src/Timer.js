@@ -59,7 +59,9 @@ function Timer(element, config) {
 Timer.prototype.start = function() {
 	if (this.state !== Constants.TIMER_RUNNING) {
 		utils.setState(this, Constants.TIMER_RUNNING);
-		this.render();
+		if (this.config.hidden !== true) {
+			this.render();
+		}
 		this.intervalId = setInterval(utils.intervalHandler.bind(null, this), this.config.updateFrequency);
 	}
 };
