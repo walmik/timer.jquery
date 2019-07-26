@@ -8,6 +8,10 @@ function Timer(element, config) {
 	this.originalConfig = $.extend({}, config);
 	this.totalSeconds = 0;
 	this.intervalId = null;
+	
+	//Flag for single call to callback when timer completes in continuous run.
+        this.isCallbackCalled = false;
+	
 	// A HTML element will have the html() method in jQuery to inject content,
 	this.html = 'html';
 	if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {

@@ -52,7 +52,8 @@ function getDefaultConfig() {
 		repeat: false,				// This will repeat callback every n times duration is elapsed
 		countdown: false,			// If true, this will render the timer as a countdown (must have duration)
 		format: null,				// This sets the format in which the time will be printed
-		updateFrequency: 500		// How often should timer display update
+		updateFrequency: 500,		// How often should timer display update
+            	stopTimerOnDuration: true,	// If set to false than timer will keep on running even after duration is completed.
 	};
 }
 
@@ -227,11 +228,15 @@ function intervalHandler(timerInstance) {
 
 	if (timerInstance.config.countdown) {
 		timerInstance.totalSeconds = timerInstance.config.duration - timerInstance.totalSeconds;
-
-		if (timerInstance.totalSeconds === 0) {
+		
+		//Added isCallbackCalled flag, to avoid multiple calls to the callback.
+		if (!timerInstance.isCallbackCalled && timerInstance.totalSeconds === 0) {
 			clearInterval(timerInstance.intervalId);
 			setState(timerInstance, Constants.TIMER_STOPPED);
 			timerInstance.config.callback();
+			
+			// Updated the flag to avoid repeated callback calls
+			timerInstance.isCallbackCalled = true;
 			$(timerInstance.element).data('seconds');
 		}
 
@@ -240,17 +245,23 @@ function intervalHandler(timerInstance) {
 	}
 
 	timerInstance.render();
-	if (!timerInstance.config.duration) {
+	
+	//Added isCallbackCalled flag, to avoid multiple calls to the callback.
+	if (timerInstance.isCallbackCalled || !timerInstance.config.duration) {
 		return;
 	}
 
 	// If the timer was called with a duration parameter,
 	// run the callback if duration is complete
 	// and remove the duration if `repeat` is not requested
+	
+	// Added new Condition of checking the timer completed or not
 	if (timerInstance.totalSeconds > 0 &&
-		timerInstance.totalSeconds % timerInstance.config.duration === 0) {
+		(timerInstance.totalSeconds % timerInstance.config.duration === 0 || timerInstance.totalSeconds > timerInstance.config.duration )) {
 		if (timerInstance.config.callback) {
 			timerInstance.config.callback();
+			// Updated the flag to avoid repeated callback calls
+			timerInstance.isCallbackCalled = true;
 		}
 
 		if (!timerInstance.config.repeat) {
