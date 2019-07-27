@@ -238,7 +238,6 @@ function intervalHandler(timerInstance) {
 	if (timerInstance.config.countdown) {
 		timerInstance.totalSeconds = timerInstance.config.duration - timerInstance.totalSeconds;
 
-		//Added isCallbackCalled flag, to avoid multiple calls to the callback.
 		if (timerInstance.totalSeconds === 0) {
 			clearInterval(timerInstance.intervalId);
 			setState(timerInstance, Constants.TIMER_STOPPED);
