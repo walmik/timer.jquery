@@ -2,7 +2,7 @@
   "name": "timer.jquery",
   "description": "Start/Stop/Resume/Remove a pretty timer inside any HTML element.",
   "author": "Walmik Deshpande",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "repository": {
     "type": "git",
     "url": "git://github.com/walmik/timer.jquery.git"
