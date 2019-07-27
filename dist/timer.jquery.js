@@ -63,7 +63,6 @@ function getDefaultConfig() {
 		countdown: false,			// If true, this will render the timer as a countdown (must have duration)
 		format: null,				// This sets the format in which the time will be printed
 		updateFrequency: 500,		// How often should timer display update
-            	stopTimerOnDuration: true,	// If set to false than timer will keep on running even after duration is completed
 	};
 }
 
@@ -240,13 +239,10 @@ function intervalHandler(timerInstance) {
 		timerInstance.totalSeconds = timerInstance.config.duration - timerInstance.totalSeconds;
 
 		//Added isCallbackCalled flag, to avoid multiple calls to the callback.
-		if (!timerInstance.isCallbackCalled && timerInstance.totalSeconds === 0) {
+		if (timerInstance.totalSeconds === 0) {
 			clearInterval(timerInstance.intervalId);
 			setState(timerInstance, Constants.TIMER_STOPPED);
-			timerInstance.config.callback();
-			
-			// Updated the flag to avoid repeated callback calls
-			timerInstance.isCallbackCalled = true;
+			timerInstance.config.callback()
 			$(timerInstance.element).data('seconds');
 		}
 
@@ -256,8 +252,7 @@ function intervalHandler(timerInstance) {
 
 	timerInstance.render();
 	
-	//Added isCallbackCalled flag, to avoid multiple calls to the callback.
-	if (timerInstance.isCallbackCalled || !timerInstance.config.duration) {
+	if (!timerInstance.config.duration) {
 		return;
 	}
 
@@ -270,8 +265,6 @@ function intervalHandler(timerInstance) {
 		(timerInstance.totalSeconds % timerInstance.config.duration === 0 || timerInstance.totalSeconds > timerInstance.config.duration )) {
 		if (timerInstance.config.callback) {
 			timerInstance.config.callback();
-			// Updated the flag to avoid repeated callback calls
-			timerInstance.isCallbackCalled = true;
 		}
 
 		if (!timerInstance.config.repeat) {
@@ -304,9 +297,6 @@ function Timer(element, config) {
 	this.originalConfig = $.extend({}, config);
 	this.totalSeconds = 0;
 	this.intervalId = null;
-	
-	//Flag for single call to callback when timer completes in continuous run.
-        this.isCallbackCalled = false;
 	
 	// A HTML element will have the html() method in jQuery to inject content,
 	this.html = 'html';
