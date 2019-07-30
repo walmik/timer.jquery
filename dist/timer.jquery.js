@@ -241,7 +241,7 @@ function intervalHandler(timerInstance) {
 		if (timerInstance.totalSeconds === 0) {
 			clearInterval(timerInstance.intervalId);
 			setState(timerInstance, Constants.TIMER_STOPPED);
-			timerInstance.config.callback()
+			timerInstance.config.callback();
 			$(timerInstance.element).data('seconds');
 		}
 
@@ -256,10 +256,8 @@ function intervalHandler(timerInstance) {
 	}
 
 	// If the timer was called with a duration parameter,
-	// run the callback if duration is complete
+	// run the callback if duration is complete or total seconds is more than duration
 	// and remove the duration if `repeat` is not requested
-	
-	// Added new Condition of checking the timer completed or not
 	if (timerInstance.totalSeconds > 0 &&
 		(timerInstance.totalSeconds % timerInstance.config.duration === 0 || timerInstance.totalSeconds > timerInstance.config.duration )) {
 		if (timerInstance.config.callback) {
