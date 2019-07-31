@@ -62,7 +62,7 @@ function getDefaultConfig() {
 		repeat: false,				// This will repeat callback every n times duration is elapsed
 		countdown: false,			// If true, this will render the timer as a countdown (must have duration)
 		format: null,				// This sets the format in which the time will be printed
-		updateFrequency: 500		// How often should timer display update
+		updateFrequency: 500,		// How often should timer display update
 	};
 }
 
@@ -250,15 +250,16 @@ function intervalHandler(timerInstance) {
 	}
 
 	timerInstance.render();
+	
 	if (!timerInstance.config.duration) {
 		return;
 	}
 
 	// If the timer was called with a duration parameter,
-	// run the callback if duration is complete
+	// run the callback if duration is complete or total seconds is more than duration
 	// and remove the duration if `repeat` is not requested
 	if (timerInstance.totalSeconds > 0 &&
-		timerInstance.totalSeconds % timerInstance.config.duration === 0) {
+		(timerInstance.totalSeconds % timerInstance.config.duration === 0 || timerInstance.totalSeconds > timerInstance.config.duration )) {
 		if (timerInstance.config.callback) {
 			timerInstance.config.callback();
 		}
@@ -293,6 +294,7 @@ function Timer(element, config) {
 	this.originalConfig = $.extend({}, config);
 	this.totalSeconds = 0;
 	this.intervalId = null;
+	
 	// A HTML element will have the html() method in jQuery to inject content,
 	this.html = 'html';
 	if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {

@@ -8,6 +8,7 @@ function Timer(element, config) {
 	this.originalConfig = $.extend({}, config);
 	this.totalSeconds = 0;
 	this.intervalId = null;
+	
 	// A HTML element will have the html() method in jQuery to inject content,
 	this.html = 'html';
 	if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
