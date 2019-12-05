@@ -52,7 +52,7 @@ function getDefaultConfig() {
 		repeat: false,				// This will repeat callback every n times duration is elapsed
 		countdown: false,			// If true, this will render the timer as a countdown (must have duration)
 		format: null,				// This sets the format in which the time will be printed
-		updateFrequency: 500,		// How often should timer display update
+		updateFrequency: 500		// How often should timer display update
 	};
 }
 
@@ -227,7 +227,7 @@ function intervalHandler(timerInstance) {
 
 	if (timerInstance.config.countdown) {
 		timerInstance.totalSeconds = timerInstance.config.duration - timerInstance.totalSeconds;
-		
+
 		if (timerInstance.totalSeconds === 0) {
 			clearInterval(timerInstance.intervalId);
 			setState(timerInstance, Constants.TIMER_STOPPED);
@@ -240,17 +240,15 @@ function intervalHandler(timerInstance) {
 	}
 
 	timerInstance.render();
-	
 	if (!timerInstance.config.duration) {
 		return;
 	}
 
 	// If the timer was called with a duration parameter,
-	// run the callback if duration is complete or total seconds is more than duration
+	// run the callback if duration is complete
 	// and remove the duration if `repeat` is not requested
-	
 	if (timerInstance.totalSeconds > 0 &&
-		(timerInstance.totalSeconds % timerInstance.config.duration === 0 || timerInstance.totalSeconds > timerInstance.config.duration )) {
+		timerInstance.totalSeconds % timerInstance.config.duration === 0) {
 		if (timerInstance.config.callback) {
 			timerInstance.config.callback();
 		}
