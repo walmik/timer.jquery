@@ -8,7 +8,7 @@
 
 [Demo & Instructions][demo] | [Download][min]
 
-[demo]: http://jquerytimer.com/
+[demo]: https://walmik.github.io/timer.jquery/
 [min]: https://raw.githubusercontent.com/walmik/timer.jquery/master/dist/timer.jquery.min.js
 
 ## Getting started
