@@ -8,10 +8,10 @@
     "url": "git://github.com/walmik/timer.jquery.git"
   },
   "scripts": {
-    "test": "./node_modules/.bin/tape ./test/utils-test.js",
-    "build": "./node_modules/.bin/grunt",
-    "watch": "./node_modules/.bin/grunt watch",
-    "karma": "./node_modules/.bin/karma start"
+    "test": "npx tape ./test/utils-test.js",
+    "build": "npx grunt",
+    "watch": "npx grunt watch",
+    "karma": "npx karma start"
   },
   "engines": {
     "node": "> 0.10.0"
