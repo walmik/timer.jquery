@@ -228,14 +228,14 @@ function intervalHandler(timerInstance) {
 	if (timerInstance.config.countdown) {
 		timerInstance.totalSeconds = timerInstance.config.duration - timerInstance.totalSeconds;
 		
+		timerInstance.render();
+
 		if (timerInstance.totalSeconds === 0) {
 			clearInterval(timerInstance.intervalId);
 			setState(timerInstance, Constants.TIMER_STOPPED);
 			timerInstance.config.callback();
 			$(timerInstance.element).data('seconds');
 		}
-
-		timerInstance.render();
 		return;
 	}
 
